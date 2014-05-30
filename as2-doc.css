@@ -1,0 +1,285 @@
+@charset "utf-8";
+
+/*
+This style is a mix of inspiration from MSDN and Stack Overflow styles
+
+Written by DeathByNukes in 2013. Some lines of this file may have been copied verbatim from MSDN and/or Stack Overflow.
+Portions of this file that can be considered copyrighted by me (DeathByNukes) are released under the WTFPL and CC0 licenses. Pick one or both.
+*/
+
+body {
+	font-family: 'Segoe UI', 'Lucida Grande', Verdana, Arial, Helvetica, sans-serif;
+	color: #000;
+	background-color: #FFF;
+}
+a[href^="#"] {
+	/* css3 selector */
+	text-decoration: none;
+	/*border-bottom-width: 1px;
+	border-bottom-style: dashed;*/
+}
+a[href^="#"]:hover {
+	text-decoration: underline;
+}
+code a[href|="#type"],
+code .func,
+code .type,
+h1 a[href|="#type"],
+h2 a[href|="#type"],
+dfn[id|="type"],
+.example_type {
+	color: blue;
+	text-decoration: none;
+}
+code a[href|="#type"]:hover,
+code a.func:hover,
+code a.type:hover,
+h1 a[href|="#type"]:hover,
+h2 a[href|="#type"]:hover {
+	color: #007FFF;
+	text-decoration: underline;
+}
+h1, h2 {
+	font-family: 'Segoe UI Light','Segoe UI','Lucida Grande',Verdana,Arial,Helvetica,sans-serif;
+	font-weight: lighter;
+	padding: 0px;
+	margin: 0.2em 0px;
+	margin-top: 1em;
+}
+h1 {
+	font-size: 2.4em;
+}
+h2 {
+	font-size: 1.5em;
+}
+
+pre {
+	display: block;
+	font-size: 1em;
+	font-style: normal;
+	font-weight: normal;
+}
+pre code {
+	display: inline-block;
+}
+code, pre, .codeDefs dfn {
+	font-family: Consolas, Courier, monospace;
+	background-color: #eeeeee;
+}
+code, .codeDefs dfn {
+	padding: 1px 5px 1px 5px;
+	font-style: normal;
+}
+.codeDefs dfn {
+	font-style: normal;
+	font-weight: normal;
+}
+dd.typesList {
+	vertical-align: top;
+}
+dt {
+	font-weight: bold;
+}
+
+code em {
+	font-style: normal;
+	font-weight: normal;
+	color: #009900;
+}
+ul#navigation {
+	margin: 0px;
+	padding: 0px;
+}
+ul#navigation, #navigation ul {
+	list-style-type: none;
+}
+
+span[title] {
+	cursor: help;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #999999;
+	border-bottom-color: rgba(0,0,0,0.6);
+}
+
+
+
+.seealso {
+	display: block;
+	list-style-type: none;
+	text-indent: 0;
+	margin: 0px;
+	padding: 0px;
+}
+.seealso li {
+	display: inline-block;
+	margin: 0.4em 0.25em;
+	margin-left: 0px;
+	padding: 0px;
+}
+.seealso:before {
+	content: "See also: ";
+	font-style: italic;
+	color: #666666;
+}
+.seealso a {
+	background-color: #E1F0FF;
+	padding: 3px;
+	text-decoration: none;
+	list-style-type: none;
+	border: 1px solid #A6D2FF;
+	border-top-style: none;
+	border-left-style: none;
+}
+.seealso a:hover {
+	background-color: #BBDDFF;
+	text-decoration: none;
+}
+.seealso a[href^="https://en.wikipedia.org/"]:before,
+.seealso a[href^="https://docs.unity3d.com/"]:before,
+.seealso a[href^="http://forum.unity3d.com/"]:before,
+.seealso a[href^="http://wiki.blender.org/"]:before,
+.seealso a[href^="http://www.lua.org/"]:before {
+    background-size: 16px;
+    content: "";
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin: 3px;
+	margin-right: 0.25em;
+	vertical-align: bottom;
+}
+.seealso a[href^="https://en.wikipedia.org/"]:before {
+    background-image: url(https://en.wikipedia.org/favicon.ico);
+}
+.seealso a[href^="https://docs.unity3d.com/"]:before,
+.seealso a[href^="http://forum.unity3d.com/"]:before {
+    background-image: url(http://unity3d.com/resources/favicons/favicon.png);
+}
+.seealso a[href^="http://wiki.blender.org/"]:before {
+    background-image: url(http://www.blender.org/wp-content/themes/bthree/assets/images/favicon.ico);
+}
+.seealso a[href^="http://www.lua.org/"]:before {
+    background-image: url(lua.png);
+}
+dt dfn{
+	font-style: normal;
+}
+
+
+/* "Lua" tab across the top of Lua scripts to differentiate them from standard documentation. */
+.NppLua, .NppCg {
+	position: relative;
+	margin-top: 1.5625em;
+	border-top: 0.15em solid #00257A;
+}
+.NppLua:before, .NppCg:before {
+	content: "Lua";
+	display: block;
+	position: absolute;
+	top: -1.25em;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 1.25em;
+	background-color: #00257A;
+	color: #FFF;
+	padding: 0px 1.5em;
+}
+
+.NppCg {
+	border-top: 0.15em solid #81C60B;
+}
+.NppCg:before {
+	content: "Cg";
+	background-color: #81C60B;
+	color: #000;
+}
+
+/* Notepad++ NppExport plugin output */
+
+.NppLua .sc0 {
+}
+.NppLua .sc1 {
+	color: #008000;
+}
+.NppLua .sc2 {
+	color: #008000;
+}
+.NppLua .sc4 {
+	color: #FF8000;
+}
+.NppLua .sc5 {
+	font-weight: bold;
+	color: #0000FF;
+}
+.NppLua .sc6 {
+	color: #808080;
+}
+.NppLua .sc7 {
+	color: #808080;
+}
+.NppLua .sc10 {
+	font-weight: bold;
+	color: #000080;
+}
+.NppLua .sc11 {
+}
+.NppLua .sc13 {
+	font-weight: bold;
+	color: #0080C0;
+}
+.NppLua .sc14 {
+	font-weight: bold;
+	color: #8000FF;
+}
+.NppLua .sc15 {
+	font-weight: bold;
+	font-style: italic;
+	color: #0000A0;
+}
+
+
+.NppCg .sc0 {
+}
+.NppCg .sc1 {
+	color: #008000;
+}
+.NppCg .sc2 {
+	color: #008000;
+}
+.NppCg .sc3 {
+	color: #008080;
+}
+.NppCg .sc4 {
+	color: #FF8000;
+}
+.NppCg .sc5 {
+	font-weight: bold;
+	color: #0000FF;
+}
+.NppCg .sc6 {
+	color: #808080;
+}
+.NppCg .sc7 {
+	color: #808080;
+}
+.NppCg .sc9 {
+	color: #804000;
+}
+.NppCg .sc10 {
+	font-weight: bold;
+	color: #000080;
+}
+.NppCg .sc11 {
+}
+.NppCg .sc16 {
+	color: #8000FF;
+}
+.NppCg .sc17 {
+	font-weight: bold;
+	color: #008080;
+}
+.NppCg .sc18 {
+	color: #008080;
+}
+.NppCg .sc23 {
+}
