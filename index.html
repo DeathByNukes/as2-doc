@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>DBN's Audiosurf 2 Scripting Doc</title>
+<link href="as2-doc.css" rel="stylesheet" type="text/css">
+<!-- leaving unused js references in this page so they will be preloaded -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="as2-doc.js" type="text/javascript"></script>
+</head>
+<body>
+<h1 id="about">About</h1>
+<address>
+Author: <a href="#contact">DeathByNukes</a>
+</address>
+<p>I analyzed Audiosurf 2's code to find information on all possible skin/mod settings and have written my findings here. I will probably try to keep it up to date as <a href="changelog.html">new releases</a> appear.</p>
+<p>This documentation is meant to be a  complete reference of all the things scripts can and cannot do; this is not a tutorial. The text content of the pages listed below is released under the <a href="http://www.wtfpl.net/about/">WTFPL</a>.  This documentation is not guaranteed to be correct and may change or disappear at any time.</p>
+<p>Some of the documentation content  is generated with Javascript so be sure not to block it.</p>
+<h1 id="format">Pages</h1>
+<ul id="navigation">
+<li><a href="changelog.html">Changelog</a></li>
+<li><a href="skins.html">Skin Documentation</a>
+		<ul>
+			<li><a href="skins.html#format">Documentation Format</a></li>
+			<li><a href="skins.html#contents">Contents</a></li>
+			<li><a href="skins.html#types">Types</a></li>
+			<li><a href="skins.html#script-execution">Script Execution</a></li>
+			<li><a href="skins.html#script-functions">Script Functions</a></li>
+			<li><a href="skins.html#customization-functions">Customization Functions</a></li>
+		</ul>
+	</li>
+<li><a href="mods.html">Mod Documentation</a>
+		<ul>
+			<li><a href="mods.html#format">Documentation Format</a></li>
+			<li><a href="mods.html#contents">Contents</a></li>
+			<li><a href="mods.html#types">Types</a></li>
+			<li><a href="mods.html#script-execution">Script Execution</a></li>
+			<li><a href="mods.html#script-functions">Script Functions</a></li>
+			<li><a href="mods.html#customization-functions">Customization Functions</a></li>
+		</ul>
+	</li>
+<li><a href="header.html">Header</a></li>
+<li><a href="magic-literals.html">Magic Literals</a>
+		<ul>
+			<li><a href="magic-literals.html#layers">Layers</a></li>
+			<li><a href="magic-literals.html#render-queue">Render Queue</a></li>
+			<li><a href="magic-literals.html#special-textures">Special Textures</a></li>
+		</ul>
+	</li>
+<li><a href="shaders.html">Shaders</a>
+		<ul>
+			<li><a href="shaders.html#contents">Contents</a></li>
+			<li><a href="shaders.html#overview">Overview</a></li>
+			<li><a href="shaders.html#skyscreen">Sky Screen Shaders</a></li>
+		</ul>
+	</li>
+<li><a href="glossary.html">Glossary</a></li>
+<li><a href="lib/index.html">Lua Code Library</a></li>
+</ul>
+<h1 id="help">Getting Help</h1>
+<p>The official Audiosurf forums are at <a href="http://www.audio-surf.com/forum/">www.audio-surf.com/forum</a>. Dylan (the game's developer) is known to read and reply to some posts there. There's also the <a href="https://steamcommunity.com/app/235800/discussions/">Steam community hub forums</a> but I don't know much about them.</p>
+<p>I am also open to helping people  directly.</p>
+<h1 id="contact">Contact</h1>
+<ul>
+<script type="text/javascript">
+(function(){
+	// hide this address from evil robots. (yes, this is overkill but it's fun :)
+	var list = ['RW1haWw6IDxhIGhyZWY9Im1haWx0bzo=','Ij4=','PC9hPg=='];
+	for (var i = list.length-1; i > 0; --i)
+		list.splice(i, 0, 'ZGJu','QA==','ZGVhdGhieW51a2Vz','Lg==','Y29t');
+	for (var i = 0; i < list.length; ++i)
+		list[i] = atob(list[i]);
+	document.write('<li>' + list.join('') + '</li>');
+})();
+</script>
+  <li>Steam: <a href="https://steamcommunity.com/id/DeathByNukes">DBN</a></li>
+  <li>Twitter: <a href="https://twitter.com/DeathByNukes">@DeathByNukes</a></li>
+</ul>
+<p>I also idle the IRC channel <a href="https://qchat2.rizon.net/?channels=Audiosurf">#Audiosurf</a> at <a href="https://rizon.net/">Rizon</a>. (I wish IRC was more popular here)</p>
+</body>
+</html>
