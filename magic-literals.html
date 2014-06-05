@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html><!-- InstanceBegin template="/Templates/as2-doc.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta charset="utf-8">
+<link href="as2-doc.css" rel="stylesheet" type="text/css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="as2-doc.js" type="text/javascript"></script>
+<!-- InstanceBeginEditable name="head" -->
+<title>Magic Literals</title>
+<!-- InstanceEndEditable -->
+</head>
+<body>
+<h1 id="about">About</h1>
+<address>Author: <a href="index.html#contact">DeathByNukes</a></address>
+<p>This is a part of my <a href="index.html">Audiosurf 2 scripting documentation</a>.</p>
+<!-- InstanceBeginEditable name="pre-content" --><!-- InstanceEndEditable -->
+<h1 id="contents">Contents</h1>
+<script type="text/javascript">writeNavigation();</script>
+<!-- InstanceBeginEditable name="content" -->
+<h1 id="overview">Overview</h1>
+<p>This is a list of various &quot;special&quot; values that can be used in some of the Lua API functions.</p>
+<ul class="seealso">
+	<li><a href="https://en.wikipedia.org/wiki/Magic_number_(programming)">Magic number (programming)</a></a></li>
+	<li><a href="https://en.wikipedia.org/wiki/Literal_(computer_programming)">Literal (computer programming)</a></a></li>
+</ul>
+<h1 id="layers"><a href="glossary.html#layer">Layers</a></h1>
+<p>This list is incomplete because I'm unable to extract the layer definitions from the game files. Word from Dylan would be helpful here.</p>
+<dl>
+  <dt>11</dt>
+  <dd>The default layer. Referred to in the neon skin as the &quot;background&quot;:<br>
+    <code><a href="#SetWake" class="func">SetWake</a>{<strong>layer</strong> = 13} <em>-- looks better not rendered in background when water surface is not type 2</em></code></dd>
+  <dt>13</dt>
+  <dd>The &quot;main camera's layer&quot;. Objects in this layer &quot;won't be part of the glow effect&quot;.<br>
+      Observed uses:
+      <ul><li>neon skin
+          <ul>
+            <li>skywires when layer 18 is disabled</li>
+            <li>transparent glass portion of track edge rails</li>
+            <li>aurora</li>
+          </ul>
+      </li>
+        <li>sandstorm skin
+          <ul>
+            <li>cliff</li>
+            <li>aurora </li>
+          </ul>
+        </li>
+        <li><a href="#SetSkybox">skysphere</a> if <code><a href="#GetQualityLevel" class="func">GetQualityLevel()</a> <= 1</code></li>
+        <li>water</li>
+        <li>&quot;block stash&quot;</li>
+      </ul>
+  </dd>
+  <dt>14</dt>
+  <dd>The foreground layer. This is for important objects that are close to the camera like the player model. Objects in this layer are drawn on top of the other layers and it appears to have a much smaller <a href="glossary.html#culling-plane">far culling plane</a>.</dd>
+  <dd>Observed uses:
+  	<ul>
+  		<li>classic skin vehicles</li>
+  		<li>the first 5 <a href="#SetPlayer">towrope</a> spheres in first person mode. (the rest of the spheres are on layer 13)</li>
+	</ul></dd>
+  <dt>15</dt>
+  <dd>The "close camera", used for the ship in the new neon skin. <code><a href="skins.html#SetScene">SetScene</a>{closecam_near,closecam_far}</code> options affect this layer.</dd>
+  <dt>18</dt>
+  <dd>The &quot;glow camera&quot;. Dev says it is disabled in <a href="#GetQualityLevel">quality levels</a> less than 3. Used for skywires.</dd>
+  <dt>31</dt>
+  <dd>Pause screen.</dd>
+</dl>
+<h1 id="render-queue"><a href="glossary.html#render-queue">Render Queue</a></h1>
+<ol>
+	<li value="1000"><strong>Background</strong>, skywires (neon, sandstorm, classic)</li>
+  <li value="2000"><strong>Geometry (solid objects)</strong></li>
+  <li value="2001">Stars</li>
+  <li value="2002">Cirrus clouds</li>
+  <li value="2450"><strong>AlphaTest</strong></li>
+  <li value="2997">Water  (the front water chunk gets 2997 and other chunks are lower numbers, in order)</li>
+  <li value="3000"><strong>Transparent</strong></li>
+  <li value="3099"><a href="skins.html#SetRings">Rings</a></li>
+  <li value="3376"><a href="skins.html#SetBlockFlashes">Block flashes</a></li>
+  <li value="3899"><a href="skins.html#SetScene">Air debris</a></li>
+  <li value="3998"><a href="skins.html#SetWake">Water wakes</a></li>
+  <li value="3999">Surfboard (neon, sandstorm, classic), Vehicle thrusters (classic)</li>
+  <li value="4000"><strong>Overlay</strong></li>
+</ol>
+<h1 id="special-textures">Special <a href="glossary.html#texture">Textures</a></h1>
+<p>The texture loading is hidden behind some multithreading code that's hard to read so I'm just going to repeat <a href="http://www.audio-surf.com/forum/index.php/topic,13163.msg93835.html#msg93835">Dylan's announcement</a>.</p>
+<p>You can set any texture to one of these special values:</p>
+<ul>
+  <li><code>&quot;&lt;ALBUMART&gt;&quot;</code></li>
+  <li><code>&quot;&lt;ALBUMART_DOUBLEWIDTH&gt;&quot;</code></li>
+  <li><code>&quot;&lt;ALBUMART_DOUBLEWIDTHMIRRORED&gt;&quot;</code> (handy for a wrapping skysphere)</li>
+</ul>
+<p>The logo is used if a song with no art is selected. You can also append &quot;GREY&quot; in any of the 3 to convert the art to greyscale. For example: <code>&quot;&lt;ALBUMART_DOUBLEWIDTHMIRRORED_GREY&gt;&quot;</code></p>
+<!-- InstanceEndEditable -->
+</body>
+<!-- InstanceEnd --></html>
