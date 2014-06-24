@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html><!-- InstanceBegin template="/Templates/as2-doc-main.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta charset="utf-8">
+<link href="as2-doc.css" rel="stylesheet" type="text/css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="as2-doc.js" type="text/javascript"></script>
+<!-- InstanceBeginEditable name="head" -->
+<title>Mods</title>
+<!-- InstanceEndEditable -->
+</head>
+<body>
+<h1 id="about">About</h1>
+<address>Author: <a href="index.html#contact">DeathByNukes</a></address>
+<p>This is a part of my <a href="index.html">Audiosurf 2 scripting documentation</a>.</p>
+<!-- InstanceBeginEditable name="pre-content" -->
+<p>This page documents the version released <a href="changelog.html#11">February ‎21, ‎2014</a> and isn't complete yet.</p><!-- InstanceEndEditable -->
+<h1 id="format">Documentation Format</h1>
+<code><span class="example_type">type</span> <strong>name</strong> = default or choice2 or choice3 <em>-- extra information</em></code>
+<p>If I write <code><strong>?=</strong></code> instead of <code><strong>=</strong></code> that means omitting the value will cause the existing value or default to be preserved. Only matters if you're calling the function more than once.</p>
+<h1 id="contents">Contents</h1>
+<script type="text/javascript">writeNavigation();</script>
+<h1 id="types">Types</h1>
+<script type="text/javascript">writeTypes();</script>
+<!-- InstanceBeginEditable name="content" -->
+<h1 id="script-execution">Script Execution</a></h1>
+<p>The mod script is executed during the loading screen when starting a song. A function in the script named <code><a href="#Update" class="func">Update()</a></code>, if present, will be executed every frame during actual gameplay.</p>
+<h2 id="Update">Update(<a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-table">table</a>, <a href="#type-float">float</a>)</h2>
+<p>This function is executed inside of <a href="http://docs.unity3d.com/Documentation/ScriptReference/MonoBehaviour.LateUpdate.html">Unity's LateUpdate</a> function.<br>
+Arguments:</p>
+<pre><code><a href="#type-float">float</a> <strong>dt</strong> <em>-- the current value of <a href="http://docs.unity3d.com/Documentation/ScriptReference/Time-deltaTime.html">Unity's deltaTime</a> value</em>
+<a href="#type-float">float</a> <strong>tracklocation</strong> <em>-- The fractional index of the track node that the player is currently &quot;on&quot;. (When the player is halfway between nodes 3 and 4, CurrentNode is 3.5)</em>
+<a href="#type-float">float</a> <strong>playerstrafe</strong> <em>-- the player's current offset from the center of the track</em>
+<a href="#type-table">table</a> <strong>input</strong> <em>-- the same table returned by <a href="#GetInput" class="func">GetInput()</a></em>
+<a href="#type-float">float</a> <strong>currentWakeboarderJumpHeight</strong></code></pre>
+<h2 id="OnTrackCreated">OnTrackCreated(table)</h2>
+<p>This function is executed [].<br>
+Arguments:</p>
+<pre><code><a href="#type-float">float</a> <strong>dt</strong> <em>-- the current value of <a href="http://docs.unity3d.com/Documentation/ScriptReference/Time-deltaTime.html">Unity's deltaTime</a> value</em>
+<a href="#type-float">float</a> <strong>tracklocation</strong> <em>-- The fractional index of the track node that the player is currently &quot;on&quot;. (When the player is halfway between nodes 3 and 4, CurrentNode is 3.5)</em>
+<a href="#type-float">float</a> <strong>playerstrafe</strong> <em>-- the player's current offset from the center of the track</em>
+<a href="#type-table">table</a> <strong>input</strong> <em>-- the same table returned by <a href="#GetInput" class="func">GetInput()</a></em>
+<a href="#type-float">float</a> <strong>currentWakeboarderJumpHeight</strong></code></pre>
+<h1 id="script-functions">Script Functions</a></h1>
+<p>TODO</p>
+<h2 id="AutomagicTable"><a href="#type-table">table</a> AutomagicTable()</h2>
+<p>Creates an &quot;automagic table&quot;. Attempting to access a sub-table inside the table automatically generates that table.</p>
+<pre class="NppLua"><span class="sc11">a</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">AutomagicTable</span><span class="sc10">()</span><span class="sc0">
+</span><span class="sc11">a.b.c.d</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"a.b and a.b.c are automatically created"</span></pre>
+<p>It is the exact same thing as this: <a href="http://lua-users.org/wiki/AutomagicTables">http://lua-users.org/wiki/AutomagicTables</a></p>
+<h1 id="customization-functions">Customization Functions</a></h1>
+<h2 id="GameplaySettings">GameplaySettings{}</h2>
+<pre><code><a href="#type-float">float</a> <strong>jumpheightscaler</strong> = 1
+<a href="#type-float">float</a> <strong>gravity</strong> = -0.45
+<a href="#type-bool">bool</a> <strong>usetraffic</strong> = true
+<a href="#type-bool">bool</a> <strong>airstrafing</strong> ?= false
+<a href="#type-bool">bool</a> <strong>usejumpmarkers</strong> = false
+<a href="#type-float">float</a> <strong>fullgrid_collectiongracetime</strong> = 0.0
+<a href="#type-bool">bool</a> <strong>smoothstrafetowake</strong> = false
+<a href="#type-float">float</a> <strong>puzzleblockfallinterval</strong> ?= 0.1
+<a href="#type-float">float</a> <strong>blockflight_secondstopuzzle</strong> ?= 0.35
+<a href="#type-bool">bool</a> <strong>automatic_traffic_collisions</strong> = true
+<a href="#type-bool">bool</a> <strong>usepuzzlegrid</strong> = true
+<a href="#type-int">int</a> <strong>puzzlerows</strong> = 7
+<a href="#type-int">int</a> <strong>puzzlecols</strong> = 3
+<a href="#type-bool">bool</a> <strong>cleargridonlanding</strong> ?= true
+<a href="#type-bool">bool</a> <strong>cleargridonlanding</strong> ?= true
+<a href="#type-bool">bool</a> <strong>forceclearsinglecolumns</strong> ?= true
+<a href="#type-bool">bool</a> <strong>forcecollectiononoverfill</strong> ?= true
+<a href="#type-bool">bool</a> <strong>show_x_in_a_row_text</strong> ?= false
+<a href="#type-bool">bool</a> <strong>useBlockTrailToOptimalJumps</strong> = false
+<a href="#type-int">int</a> <strong>removeBlocksNearOptimalJumps</strong> = 0
+<a href="#type-bool">bool</a> <strong>usePinatas</strong> = false
+<a href="#type-bool">bool</a> <strong>useAirBlocks</strong> = false
+<a href="#type-bool">bool</a> <strong>blocksInLanes</strong> = true
+<a href="#type-bool">bool</a> <strong>useLivingScoreboardGhosts</strong> = true
+<a href="#type-bool">bool</a> <strong>cancrash</strong> ?= false
+<a href="#type-bool">bool</a> <strong>canpush</strong> ?= false
+<a href="#type-bool">bool</a> <strong>canScoop</strong> ?= false
+<a href="#type-bool">bool</a> <strong>multilane</strong> ?= false
+<a href="#type-int">int</a> <strong>colorcount</strong> ?= 1
+<a href="#type-int">int</a> <strong>blocktype_grey</strong> ?= 5
+<a href="#type-int">int</a> <strong>blocktype_highway</strong> ?= 6
+<a href="#type-int">int</a> <strong>blocktype_highwayinverted</strong> ?= 7
+<a href="#type-float">float</a> <strong>greypercent</strong> ?= 0.3
+<a href="#type-bool">bool</a> <strong>greyrandomdistribution</strong> ?= false
+<a href="#type-bool">bool</a> <strong>usecaterpillars</strong> ?= false
+<a href="#type-float">float</a> <strong>minimummultiplier</strong> ?= 0
+<a href="#type-float">float</a> <strong>jumpautofixscaler</strong> ?= 1
+<a href="#type-bool">bool</a> <strong>sideview</strong> ?= false
+<a href="#type-bool">bool</a> <strong>degreyatlandingzone</strong> ?= false
+<a href="#type-float">float</a> <strong>launchtrickmultiplier</strong> ?= 1
+<a href="#type-bool">bool</a> <strong>autofinishgamepadjumps</strong> ?= true
+<a href="#type-bool">bool</a> <strong>autofinishmousejumps</strong> ?= true
+<a href="#type-float">float</a> <strong>puzzlematchmultiplier</strong> ?= 1
+<a href="#type-float">float</a> <strong>stealthscoremultiplier</strong> ?= 1
+<a href="#type-float">float</a> <strong>secondstoblockjumpsafterlanding</strong> ?= 0
+<a href="#type-bool">bool</a> <strong>easytraffic</strong> ?= false
+<a href="#type-string">string</a> <strong>jumpmode</strong> ?= "wake" or "none" or "ramps" or "button" or "auto"
+<a href="#type-float">float</a> <strong>minimumjump_airtime</strong> ?= 0.9
+<a href="#type-float">float</a> <strong>minimumjump_height</strong> ?= 3.5
+<a href="#type-float">float</a> <strong>startingscore</strong> ?= 0
+<a href="#type-float">float</a> <strong>pointspergrey</strong> ?= 0
+<a href="#type-float">float</a> <strong>pointspercolor</strong> ?= 0
+<a href="#type-float">float</a> <strong>matchcollectionseconds</strong> = 1.5
+<a href="#type-int">int</a> <strong>minmatchsize</strong> ?= 3
+<a href="#type-string">string</a> <strong>greyaction</strong> ?= ("eraseone" / "erasesingle" / "eraseblock") or "normal" or ("clog" / "stuck" / "permanent") or "erasecolumn" or ("erasegrid" / "eraseall")
+<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>trickdurations</strong> ?= {1,2,3,5}
+<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>trickpoints</strong> ?= {400,1000,3000,10000}
+<a href="#type-float">float</a> <strong>playerminspeed</strong> ?= 0.1
+<a href="#type-float">float</a> <strong>playermaxspeed</strong> ?= 2.9
+<a href="#type-float">float</a> <strong>minimumbestjumptime</strong> ?= 2.5
+<a href="#type-float">float</a> <strong>uphilltiltscaler</strong> ?= 0.8
+<a href="#type-float">float</a> <strong>downhilltiltscaler</strong> ?= 1.55
+<a href="#type-float">float</a> <strong>uphilltiltsmoother</strong> ?= 0.03
+<a href="#type-float">float</a> <strong>downhilltiltsmoother</strong> ?= 0.06
+<a href="#type-bool">bool</a> <strong>useadvancedsteepalgorithm</strong> ?= true
+<a href="#type-bool">bool</a> <strong>alldownhill</strong> ?= false
+<a href="#type-bool">bool</a> <strong>railedblockscanbegrey</strong> ?= false
+<a href="#type-float">float</a> <strong>trafficcompression</strong> ?= 0.65
+<a href="#type-float">float</a> <strong>watercompression</strong> ?= 0.45
+<a href="#type-bool">bool</a> <strong>autocenter</strong> ?= false
+<a href="#type-float">float</a> <strong>maxstrafe</strong> ?= -- this is directly assigned to many internal settings, which each have different defaults (maxStrafe 15, maxStrafeJump 9, maxStrafeMouse 2.2, maxStrafeMouseJump 2.2, nonMouseMaxStrafe 15, nonMouseMaxStrafeJump 9)
+<a href="#type-bool">bool</a> <strong>usesnowboardphysics</strong> ?= false
+<a href="#type-int">int</a> <strong>freqtrafficbins</strong> = 0 -- numbers greater than 256 are treated as 256</code></pre>
+<h2 id="SetRenderViewports">SetRenderViewports(<a href="#type-table">table</a><a href="#type-array">[]</a>)</h2>
+<pre><code><a href="#type-vector3">vector3</a> <strong>pos</strong> = {0,0,0}
+<a href="#type-vector3">vector3</a> <strong>rot</strong> = {0,0,0} <em>-- Quaternion.Euler</em>
+<a href="#type-vector3">vector3</a> <strong>scale</strong> = {0,0,0}</code></pre>
+<h2 id="print">print(*)</h2>
+<p>Takes any lua object/table, converts it to a string, and outputs it to &quot;Audiosurf2_Data\output_log.txt&quot;.</p>
+<p>This print is different from the <code><a href="skins.html#print" class="func">print(string)</a></code> in skin scripts. (it's better)</p>
+<h2 id="navigation"><a href="#type-table">table</a> GetPuzzle()</h2>
+<p>returned table:</p>
+<pre><code><a href="#type-int">int</a> <strong>matchedcellscount</strong>
+<a href="#type-table">table</a><a href="#type-array">[]</a><a href="#type-array">[]</a> <strong>cells</strong> {{{ <em>-- outer array iterates horizontally and inner arrays iterate vertically</em>
+	<a href="#type-int">int</a> <strong>type</strong> <em>-- "color ID"</em>
+	<a href="#type-bool">bool</a> <strong>matched</strong>
+	<a href="#type-int">int</a> <strong>matchsize</strong>
+	<a href="#type-bool">bool</a><a href="#type-array">[]</a> <strong>matchcols</strong>
+}, ...}, ...}</code></pre>
+<h2 id="GetTrack"><a href="#type-table">table</a><a href="#type-array">[]</a> GetTrack()</h2>
+<pre><code><a href="#type-float">float</a> <strong>maxair</strong>
+<a href="#type-float">float</a> <strong>maxAir</strong> <em>-- same thing</em>
+<a href="#type-float">float</a> <strong>jumpairtime</strong>
+<a href="#type-table">table</a> <strong>pos</strong> {
+    <a href="#type-float">float</a> <strong>x</strong>
+    <a href="#type-float">float</a> <strong>y</strong>
+    <a href="#type-float">float</a> <strong>z</strong>
+}
+<a href="#type-float">float</a> <strong>seconds</strong>
+<a href="#type-table">table</a> <strong>color</strong> {
+    <a href="#type-float">float</a> <strong>r</strong>
+    <a href="#type-float">float</a> <strong>g</strong>
+    <a href="#type-float">float</a> <strong>b</strong>
+    <a href="#type-float">float</a> <strong>a</strong>
+}
+<em>-- the following rotation values are in degrees. they are the node's absolute rotation not delta</em>
+<a href="#type-float">float</a> <strong>pan</strong> <em>-- rotation around the y axis</em>
+<a href="#type-float">float</a> <strong>tilt</strong> <em>-- x</em>
+<a href="#type-float">float</a> <strong>roll</strong> <em>-- z</em>
+vector3 rot <em>-- same as {tilt, pan, roll}</em>
+<a href="#type-float">float</a> <strong>intensity</strong> <em>-- normalized</em>
+bool funkyrot <em>-- if this is in a corkscrew or loop</em>
+float antiairtime <em>-- "anti jump seconds"</em>
+float trafficstrength
+float antitrafficstrength</code></pre>
+<h2 id="BatchRenderEveryFrame">BatchRenderEveryFrame{}</h2>
+<p>Identical to skins' <code><a href="skins.html#BatchRenderEveryFrame" class="func">BatchRenderEveryFrame{}</a></code> but includes an extra setting:</p>
+<pre><code><a href="#type-string">string</a> <strong>uniqueName</strong> = nil</code></pre>
+<h2 id="BatchRender">BatchRender{}</h2>
+<pre><code><a href="#type-string">string</a> <strong>prefabName</strong> <em>-- mandatory</em>
+<a href="#type-int">int</a><a href="#type-array">[]</a> <strong>locations</strong> <em>-- mandatory</em>
+<a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>offsets</strong> = nil
+<a href="#type-bool">bool</a> <strong>rotateWithTrack</strong> = true
+<a href="#type-int">int</a> <strong>maxShown</strong> = 50
+<a href="#type-int">int</a> <strong>maxDistanceShown</strong> = 1000</code></pre>
+<h2 id="UpdateBatchRenderer">UpdateBatchRenderer{}</h2>
+<pre><code><a href="#type-string">string</a> <strong>uniqueName</strong> <em>-- mandatory. matches a name in BatchRenderEveryFrame{}</em>
+<a href="#type-int">int</a><a href="#type-array">[]</a> <strong>hideLocations</strong> = nil
+<a href="#type-int">int</a><a href="#type-array">[]</a> <strong>showLocations</strong> = nil</code></pre>
+<p>An instance hidden in this manner still counts toward the <code><strong>maxShown</strong></code> limit.</p>
+<h2 id="GetCurrentTrackLocation"><a href="#type-float">float</a> GetCurrentTrackLocation()</h2>
+<h2 id="GetCurrentTrackWorldPosition"><a href="#type-vector3">vector3</a> GetCurrentTrackWorldPosition()</h2>
+<p>The vector3 is a combination of both styles. (<code>vector3[1]</code> and <code>vector3.x</code> are equivalent)</p>
+<h2 id="CreateClone">CreateClone{}</h2>
+<pre><code><a href="#type-string">string</a> <strong>prefabName</strong> = "AvatarBot" <em>-- can be "vehicle" or the name of an object</em>
+<em>-- if <strong>prefabName</strong> == "vehicle"</em>
+<a href="#type-float">float</a> <strong>attachToTrackWithNodeOffset</strong> = 0
+<em>-- else</em>
+<a href="#type-float">float</a> <strong>attachToTrackWithNodeOffset</strong> = nil
+<a href="#type-bool">bool</a> <strong>inheritAttachedRotation</strong> = true <em>-- only used if <strong>attachToTrackWithNodeOffset</strong> is set</em>
+<em>-- end</em>
+<a href="#type-transform2">transform2</a> <strong>transform</strong> = nil
+<a href="#type-string">string</a> <strong>name</strong> = "clonename1" <em>-- auto increments</em></code></pre>
+<h2 id="SendCommand">SendCommand{}</h2>
+<p>one of the 3 below tables</p>
+<dl>
+<dt><pre><code><a href="#type-string">string</a> <strong>command</strong> = nil or "ChangeShaderColors" or "SetTransform" or "Blink" or "ChangeTrackNodeOffset"
+<a href="#type-string">string</a> <strong>name</strong> <em>-- must be set to a string. this is the name of a clone</em>
+<a href="#type-table">table</a> <strong>param</strong> <em>-- must be set to a table</em></code></pre></dt>
+<dd><dl>
+  <dt>ChangeShaderColors</dt>
+  <dd><strong>param</strong> is <code><a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a></code></dd>
+  <dt>SetTransform</dt>
+  <dd><strong>param</strong> is a <code><a href="#type-transform2">transform2</a></code></dd>
+  <dt>Blink</dt>
+  <dd><strong>param</strong> is a <code><a href="#type-table">table</a></code>:
+<pre><code><a href="#type-int">int</a> <strong>numBlinks</strong> = 5
+<a href="#type-float">float</a> <strong>duration</strong> = 2</code></pre></dd>
+  <dt>ChangeTrackNodeOffset</dt>
+  <dd><strong>param</strong> is a <code><a href="#type-table">table</a></code>:
+<pre><code><a href="#type-float">float</a> <strong>offset</strong> ?= ?</code></pre></dd>
+</dl></dd>
+<dt><pre><code><a href="#type-string">string</a> command = nil
+<a href="#type-string">string</a> name <em>-- must be set to a string. this is the name of a clone</em></code></pre></dt>
+<dd><p>Invokes Unity's <a href="http://docs.unity3d.com/Documentation/ScriptReference/GameObject.BroadcastMessage.html">GameObject.BroadcastMessage</a> on the specified clone with null arguments, where command is the name of the method to call. I'm not quite sure what all this can actually do. I can't see how the vehicle is constructed in the place I'm looking so I don't know what children it has.</p>
+<p>Known commands:</p>
+<ul>
+  <li>Show</li>
+  <li>Hide</li>
+</ul></dd>
+<dt><pre><code><a href="#type-string">string</a> command = nil</code></pre></dt>
+<dd><p>Sends a generic message to AS2's message system. It uses this internally a lot so you can probably break something with some of these commands:</p>
+<pre><code>AboutToLoadGameplayScene
+AdvancingPastLobby
+BeforeBuildHighway
+BlockAddedToPuzzle
+ClearScoreMultiplier
+ClearScoreMultiplier
+ControllerDisconnected
+EndCleanup
+FinishedScoringLandingPoints
+GameplayEnd
+GameplayModeSet
+GameplayStart
+GameplayStart_LateOne
+GameplayStart_EarlyOne
+HoverUp <em>-- causes the hovering vehicle to bounce up a bit</em>
+IntroFlyinComplete
+JumpNow
+LobbyClose
+ModeChanged
+OverrideColorsNow
+PlayerCrashLanded
+PlayerFailedToJump
+PlayerHitGrey
+PlayerLanded
+PlayerMissedRamp
+PuzzleCollectingMatches
+PuzzleOverfill
+PuzzleOverfillWarning
+RequestFinalScoring
+ResolutionChanged
+SkinChanged
+SkinCodeAboutToRun
+SkinFileComplete
+SongEnded
+SongStartedPlaying
+TrickSafeFailed
+TricksUnlocked
+TriedToLaunchMultiplayerWithNoFollowers
+TutorialChallengeComplete
+UnlockedElite
+UpdatedTrackColors
+WakeboarderCrossedOptimalJumpSpot</code></pre></dd>
+</dl>
+<h2 id="GetInput"><a href="#type-table">table</a> GetInput()</h2>
+<pre><code><a href="#type-table">table</a> <strong>mouse</strong> {
+	<a href="#type-float">float</a> <strong>x</strong>
+	<a href="#type-float">float</a> <strong>y</strong>
+	<a href="#type-bool">bool</a> <strong>LMB</strong>
+	<a href="#type-bool">bool</a> <strong>RMB</strong>
+	<a href="#type-bool">bool</a> <strong>MMB</strong>
+	<a href="#type-float">float</a> <strong>wheel</strong>
+}
+<a href="#type-table">table</a> <strong>keyboard</strong> { <em>-- all the entries in this table are either true or nil. lua "if" treats nil like false</em>
+	<a href="#type-bool">bool</a> <strong>anykey</strong> <em>-- a key is pressed. it might be a key that this table doesn't have an entry for</em>
+	<a href="#type-bool">bool</a> <strong>nokeys</strong> <em>-- if this is true then it is guaranteed to be the only entry in this table</em>
+	<a href="#type-bool">bool</a> <strong>a b c d e f g h i j k l m n o p q r s r u v w x y z uparrow downarrow leftarrow rightarrow semicolon comma period 1 2 3 4 5 6 7 8 9 0 space</strong>
+}
+<a href="#type-table">table</a><a href="#type-array">[4]</a> <strong>players</strong> {{
+	<a href="#type-float">float</a> <strong>Horizontal</strong>
+	<a href="#type-float">float</a> <strong>Vertical</strong>
+	<a href="#type-float">float</a> <strong>Horizontal2</strong>
+	<a href="#type-float">float</a> <strong>Vertical2</strong>
+	<a href="#type-bool">bool</a> <strong>button1</strong>
+	<a href="#type-bool">bool</a> <strong>button2</strong>
+	<a href="#type-bool">bool</a> <strong>button3</strong>
+	<a href="#type-bool">bool</a> <strong>button4</strong>
+	<a href="#type-table">table</a> <strong>mouse</strong> <em>-- the contents are identical to the main mouse table</em>
+}, ...}</code></pre>
+<h2 id="SetLocalScore">SetLocalScore{}</h2>
+<pre><code><a href="#type-string">string</a> <strong>name</strong> = "nameless"
+<a href="#type-int">int</a> <strong>score</strong> = 0
+<a href="#type-string">string</a> <strong>displayScore</strong> = nil</code></pre>
+<h2 id="SetGlobalScore">SetGlobalScore{}</h2>
+<pre><code><a href="#type-int">int</a> <strong>score</strong> = 0
+<a href="#type-bool">bool</a> <strong>showdelta</strong> = true</code></pre>
+<h2 id="PlayBuiltInSound">PlayBuiltInSound{}</h2>
+<pre><code><a href="#type-string">string</a> <strong>soundType</strong> = "none" or "grunt"
+<a href="#type-string">string</a> <strong>avatar</strong> = "AvatarMcFly" or "AvatarIphoneLady" or "AvatarBear" or "AvatarRobot"</code></pre>
+<h2 id="GetJumpHeights"><a href="#type-float">float</a><a href="#type-array">[]</a> GetJumpHeights{}</h2>
+<p>input table or launchNode can be nil to use the current node</p>
+<pre><code><a href="#type-int">int</a> <strong>launchNode</strong> = nil</code></pre>
+<h2 id="SetPuzzle">SetPuzzle{}</h2>
+<pre><code><a href="#type-float">float</a> <strong>trackoffset</strong> ?= ?
+<a href="#type-table">table</a><a href="#type-array">[]</a> <strong>newblocks</strong> ?= ? or {{
+	<a href="#type-int">int</a> <strong>type</strong> = 0
+	<a href="#type-float">float</a> <strong>collision_strafe</strong> = 0
+	<a href="#type-int">int</a> <strong>puzzle_col</strong> = 0
+	<a href="#type-bool">bool</a> <strong>add_top</strong> = false
+}, ...}
+<a href="#type-table[]">table</a><a href="#type-array">[]</a><a href="#type-array">[]</a> <strong>cells</strong> ?= ? or {{{
+	<a href="#type-int">int</a> <strong>type</strong> = -1
+}, ...}, ...}
+<a href="#type-table">table</a> <strong>timing</strong> ?= ? or {
+	<a href="#type-float">float</a> <strong>matchtimer</strong> ?= ?
+	<a href="#type-float">float</a> <strong>matchtimerthreshold</strong> ?= 1.5
+	<a href="#type-float">float</a> <strong>collectnow_usingmultiplier</strong> = nil
+}</code></pre>
+<h2 id="HideBuiltinPlayerObjects">HideBuiltinPlayerObjects()</h2>
+<p>Takes no parameters and returns nothing. Hides the surfer, vehicle, and rooster <a href="skins.html#SetPlayer">set by the skin</a>.</p>
+<h2 id="SetCamera">SetCamera{}</h2>
+<pre><code><a href="#type-vector3">vector3</a> <strong>pos</strong> = nil
+<em>-- if <strong>pos</strong> is set</em>
+<a href="#type-vector3">vector3</a> <strong>rot</strong> = {0,0,0}
+<a href="#type-string">string</a>/<a href="#type-float">float</a> <strong>railoffset</strong> = nil or "detached"
+<em>-- else</em>
+<a href="#type-table">table</a> <strong>nearcam</strong> ?= ? or { <em>-- if nil, none of the values will be altered</em>
+	<a href="#type-vector3">vector3</a> <strong>pos</strong> = {0,0,0}
+	<a href="#type-vector3">vector3</a> <strong>rot</strong> = {0,0,0}
+	<a href="#type-float">float</a> <strong>strafiness</strong> = 0
+}
+<a href="#type-table">table</a> <strong>farcam</strong> ?= ? or { <em>-- if nil, none of the values will be altered</em>
+	<a href="#type-vector3">vector3</a> <strong>pos</strong> = {0,0,0}
+	<a href="#type-vector3">vector3</a> <strong>rot</strong> = {0,0,0}
+	<a href="#type-float">float</a> <strong>strafiness</strong> = 0
+}
+<em>-- end</em></code></pre>
+<h2 id="HideTraffic">HideTraffic(<a href="#type-int">int</a><a href="#type-array">[]</a>)</h2>
+<p>Numbers less than 1 will be treated as 1.</p>
+<h2 id="SetSkinProperties">SetSkinProperties{}</h2>
+<p>Sets the values the skin will see when calling <code><a href="skins.html#GetSkinProperties" class="func">GetSkinProperties()</a></code></p>
+<pre><code><a href="#type-float">float</a><a href="#type-array">[]</a> <strong>lanedividers</strong> ?= {-1.5,1.5}
+<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>shoulderlines</strong> ?= {4.5,-4.5}
+<a href="#type-float">float</a> <strong>trackwidth</strong> ?= 11.6
+<a href="#type-bool">bool</a> <strong>prefersteep</strong> = false
+<a href="#type-double">double</a><a href="#type-array">[]</a> <strong>*</strong> <em>-- any double values in the table will be passed through</em>
+<a href="#type-string">string</a><a href="#type-array">[]</a> <strong>*</strong> <em>-- strings too</em>
+<em>-- note: if you try to call SetSkinProperties more than once, setting a double or string that was already set previously will cause an error. (uses <a href="http://msdn.microsoft.com/en-us/library/k7z0zy8k(v=vs.110).aspx">Dictionary<>.Add()</a>)</em></code></pre>
+<h2 id="PlaySound">PlaySound{}</h2>
+<pre><code><a href="#type-string">string</a> <strong>name</strong>
+<a href="#type-float">float</a> <strong>volume</strong> = 1
+<a href="#type-float">float</a> <strong>pitch</strong> = 1
+<a href="#type-float">float</a> <strong>loopseconds</strong> = 0</code></pre>
+<h2 id="GetQualityLevel"><a href="#type-int">int</a> GetQualityLevel()</h2>
+<p>Same as skins' <code><a href="skins.html#GetQualityLevel" class="func">GetQualityLevel()</a></code></p>
+<h2 id="SetScoreboardNote">SetScoreboardNote{}</h2>
+<pre><code><a href="#type-float">float</a> <strong>secondsvisible</strong> = 0
+<a href="#type-color">color</a> <strong>color</strong> = {195,195,195,255}
+<a href="#type-string">string</a> <strong>text</strong> = ""</code></pre>
+<h2 id="DoJump">DoJump()</h2>
+<p>Takes no parameters and returns nothing.</p>
+<h2 id="ChangeTraffic">ChangeTraffic(<a href="#type-table">table</a><a href="#type-array">[]</a>)</h2>
+<pre><code><a href="#type-int">int</a> <strong>index</strong>
+<a href="#type-string">string</a> <strong>powerupname</strong> ?= ?
+<a href="#type-int">int</a> <strong>type</strong> ?= ?
+<a href="#type-vector3">vector3</a> <strong>v3offset</strong> ?= ?</code></pre>
+<h2 id="SetBlockColors">SetBlockColors(<a href="#type-color">color</a><a href="#type-array">[]</a>)</h2>
+<p>Skins  override this if they supply as many or more colors than you.</p>
+<h2 id="GetBlockColors"><a href="#type-color">color</a><a href="#type-array">[]</a> GetBlockColors()</h2>
+<p>Colors are <code>{<strong>r</strong>=0-1, <strong>g</strong>=0-1, <strong>b</strong>=0-1, <strong>a</strong>=0-1}</code> format.</p>
+<h2 id="CreateObject">CreateObject{}</h2>
+<p>Identical to skins' <code><a href="skins.html#CreateObject" class="func">CreateObject{}</a></code></p>
+<h2 id="SetBlocks">SetBlocks</h2>
+<p>Identical to skins' <code><a href="skins.html#SetBlocks" class="func">SetBlocks{}</a></code></p>
+<!-- InstanceEndEditable -->
+</body>
+<!-- InstanceEnd --></html>
