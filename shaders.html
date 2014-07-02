@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html><!-- InstanceBegin template="/Templates/as2-doc.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta charset="utf-8">
+<link href="as2-doc.css" rel="stylesheet" type="text/css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="as2-doc.js" type="text/javascript"></script>
+<!-- InstanceBeginEditable name="head" -->
+<title>Shaders</title>
+<link href="as2-doc.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+.shadersList dt a {
+	visibility: hidden;
+	color: blue;
+	text-decoration: none;
+}
+.shadersList dt:hover a {
+	visibility: visible;
+}
+.shadersList dt:hover a:hover {
+	color: #007FFF;
+	text-decoration: underline;
+}
+.shadersList dfn {
+	background-color: transparent;
+}
+.shadersList dfn:before {
+	content: '"';
+}
+.shadersList dfn:after {
+	content: '"';
+}
+</style>
+<!-- InstanceEndEditable -->
+</head>
+<body>
+<h1 id="about">About</h1>
+<address>Author: <a href="index.html#contact">DeathByNukes</a></address>
+<p>This is a part of my <a href="index.html">Audiosurf 2 scripting documentation</a>.</p>
+<!-- InstanceBeginEditable name="pre-content" --><!-- InstanceEndEditable -->
+<h1 id="contents">Contents</h1>
+<script type="text/javascript">writeNavigation();</script>
+<!-- InstanceBeginEditable name="content" -->
+<h1 id="overview">Overview</h1>
+<p>Property types we can set:</p>
+<ul>
+  <li><strong>2D</strong>: _MainTex via <code>texture=...</code> and all others via <code><a href="#type-material">textures</a>={_Property=...}</code></li>
+  <li><strong>Color</strong>: _Color via <code>color=...</code>, <code><a href="#SetScene" class="func">watertint</a>=...</code>, etc. and all others via <code><a href="#type-material">shadercolors</a>={_Property=...}</code></li>
+  <li><strong>Float</strong> and <strong>Range(a,b)</strong>: <code><a href="#type-material">shadersettings</a>={_Property=..., ...}</code> and <code><a href="#type-materialcolor">shadercolors</a>={...={... , param=&quot;_Property&quot;, paramMin=a, paramMax=b}}</code></li>
+  <li><strong>Vector</strong>: &quot;Four component vectors and colors are <a href="http://docs.unity3d.com/Documentation/ScriptReference/Material.SetVector.html">the same</a> in Unity shaders. (xyzw in the vector becomes rgba in the color).&quot;</li>
+</ul>
+<p>If you specify a shader that ends in &quot;.shader&quot; or &quot;.txt&quot; it will load that shader file from your skin folder. It does this by feeding the contents of the file into <a href="glossary.html#unity">Unity</a>'s <a href="http://docs.unity3d.com/Documentation/ScriptReference/Material-ctor.html">Material constructor</a> so it must be a <a href="http://docs.unity3d.com/Documentation/Manual/ShaderTut1.html">fixed function</a> shader or one that was compiled by the Unity editor.</p>
+<p>Textures can be loaded from JPG and PNG file formats. All textures will be compressed to <a href="https://en.wikipedia.org/wiki/S3_Texture_Compression">DXT1</a> format (<a href="https://udn.epicgames.com/Two/TextureComparison.html">lossy</a>) unless the path ends in &quot;.png&quot;, in which case RGBA32 (lossless) format is used. The image loader is capable of recognizing the true file type even if the extension is wrong, so it should be possible to trick AS2 into loading PNGs with compression and vice versa by changing the filename. The Unity engine documentation implies that in this situation PNGs will be loaded with DXT5 and JPGs will be loaded with RGB24. Format descriptions are <a href="http://docs.unity3d.com/Documentation/Components/class-Texture2D.html">here</a> in the &quot;Desktop&quot; section.</p>
+<ul class="seealso">
+	<li><a href="glossary.html#shader">shader</a></li>
+	<li><a href="glossary.html#vertex-shader">vertex shader</a></li>
+	<li><a href="glossary.html#pixel-shader">pixel shader</a></li>
+</ul>
+<h1 id="skyscreen">Sky Screen Shaders</h1>
+<p>TODO: write this</p>
+<ul class="seealso">
+	<li><a href="skins.html#SetSkybox">SetSkybox</a></li>
+	<li><a href="skins.html#CreateRail">CreateRail</a></li>
+</ul>
+<h2 id="skyscreen-params">Shader Variables</h2>
+<pre class="NppCg"><code><span class="sc16">float4</span><span class="sc0"> </span><span class="sc11">iPrimaryColor</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// highway color
+</span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">iIntensity</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// normalized intensity
+</span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">iFloorHeight</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// <a href="lib/track_bounds.html">track_bounds</a>.min[2]);
+</span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">iCeilingHeight</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// track_bounds.max[2]);
+</span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">iIntensityTime</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// a counter which gains <a href="https://docs.unity3d.com/Documentation/ScriptReference/Time-deltaTime.html">deltaTime</a> * iIntensity every frame
+</span><span class="sc16">float4x4</span><span class="sc0"> </span><span class="sc11">_ViewProjectInverse</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// <a href="https://docs.unity3d.com/Documentation/ScriptReference/Camera.html">Camera</a>.<a href="https://docs.unity3d.com/Documentation/ScriptReference/Camera-main.html">main</a>.<a href="https://docs.unity3d.com/Documentation/ScriptReference/Camera-worldToCameraMatrix.html">worldToCameraMatrix</a>.<a href="https://docs.unity3d.com/Documentation/ScriptReference/Matrix4x4-inverse.html">inverse</a>
+</span><span class="sc16">float4x4</span><span class="sc0"> </span><span class="sc11">_ProjectInverse</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// Camera.main.<a href="https://docs.unity3d.com/Documentation/ScriptReference/Camera-projectionMatrix.html">projectionMatrix</a>.inverse
+</span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">_Scale</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// always 1
+</span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">_TrackLocation</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// the interpolated current node index
+</span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">iNumTrackNodes</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// the number of nodes
+// The following are only sent if <strong>skyScreen_TrackOffset</strong> was set
+</span><span class="sc16">sampler2D</span><span class="sc0"> </span><span class="sc11">iTrackTex</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// 1024 x 4, RGBA32, no mipmaps, point filtering, clamped, 0 aniso
+</span><span class="sc16">sampler2D</span><span class="sc0"> </span><span class="sc11">iTrackColors</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// 8192 x ceil(iNumTrackNodes / 8192.0), no mipmaps, bilinear filtering, clamped, 0 aniso
+</span><span class="sc16">sampler2D</span><span class="sc0"> </span><span class="sc11">iTrackNodes</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// 8192 x 12*ceil(iNumTrackNodes / 8192.0), no mipmaps, point filtering, clamped, 0 aniso
+// The following is only sent if <strong>skyScreen_FixedTrackOffset</strong> was set
+</span><span class="sc16">float4</span><span class="sc0"> </span><span class="sc11">trackOffset</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// the 3 values that were provided to <strong>skyScreen_FixedTrackOffset</strong>. the 4th value is always 0</span></code></pre>
+<h1>Shader List</h1>
+<p>Here's a list of built-in shaders and their <a href="http://docs.unity3d.com/Documentation/Components/SL-Properties.html">properties</a>. This list may be out of date relative to the rest of the documentation. Let me know if you think a new shader has been added and I will update it.</p>
+<dl class="codeDefs shadersList">
+<dt><dfn id="AlphaBumpDiffuse">AlphaBumpDiffuse</dfn> <a href="#AlphaBumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color",           <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong> ("Base (RGB) Trans (A)", <span class=type>2D</span>   ) = "white" {}
+<strong>_BumpMap</strong> ("Normalmap",            <span class=type>2D</span>   ) = "bump" {}</code></pre></dd>
+<dt><dfn id="AlphaBumpDiffuseAdd">AlphaBumpDiffuseAdd</dfn> <a href="#AlphaBumpDiffuseAdd">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color",           <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong> ("Base (RGB) Trans (A)", <span class=type>2D</span>   ) = "white" {}
+<strong>_BumpMap</strong> ("Normalmap",            <span class=type>2D</span>   ) = "bump" {}</code></pre></dd>
+<dt><dfn id="AlphaBumpDiffuseMult">AlphaBumpDiffuseMult</dfn> <a href="#AlphaBumpDiffuseMult">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color",           <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong> ("Base (RGB) Trans (A)", <span class=type>2D</span>   ) = "white" {}
+<strong>_BumpMap</strong> ("Normalmap",            <span class=type>2D</span>   ) = "bump" {}</code></pre></dd>
+<dt><dfn id="AlphaBumpDiffuseNoZWrite">AlphaBumpDiffuseNoZWrite</dfn> <a href="#AlphaBumpDiffuseNoZWrite">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color",           <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong> ("Base (RGB) Trans (A)", <span class=type>2D</span>   ) = "white" {}
+<strong>_BumpMap</strong> ("Normalmap",            <span class=type>2D</span>   ) = "bump" {}</code></pre></dd>
+<dt><dfn id="Bumped Specular">Bumped Specular</dfn> <a href="#Bumped Specular">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>     ("Main Color",           <span class=type>Color</span>        ) = (1,1,1,1)
+<strong>_SpecColor</strong> ("Specular Color",       <span class=type>Color</span>        ) = (0.5,0.5,0.5,1)
+<strong>_Shininess</strong> ("Shininess",            <span class=type>Range(0.03,1)</span>) = 0.078125
+<strong>_MainTex</strong>   ("Base (RGB) Gloss (A)", <span class=type>2D</span>           ) = "white" {}
+<strong>_BumpMap</strong>   ("Normalmap",            <span class=type>2D</span>           ) = "bump" {}</code></pre></dd>
+<dt><dfn id="Cliff">Cliff</dfn> <a href="#Cliff">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="CliffAdd">CliffAdd</dfn> <a href="#CliffAdd">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="CliffNew">CliffNew</dfn> <a href="#CliffNew">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="CliffRail">CliffRail</dfn> <a href="#CliffRail">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="Custom/Cirrus">Custom/Cirrus</dfn> <a href="#Custom/Cirrus">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color",           <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong> ("Base (RGB) Trans (A)", <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="custom/radialBlur">custom/radialBlur</dfn> <a href="#custom/radialBlur">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong>      ("Input", <span class=type>2D</span>   ) = "white" {}
+<strong>_BlurStrength</strong> ("",      <span class=type>Float</span>) = 0.5
+<strong>_BlurWidth</strong>    ("",      <span class=type>Float</span>) = 0.5</code></pre></dd>
+<dt><dfn id="Custom/SilverLining Sky">Custom/SilverLining Sky</dfn> <a href="#Custom/SilverLining Sky">#</a></dt>
+  <dd>No properties.</dd>
+<dt><dfn id="Custom/Stratus">Custom/Stratus</dfn> <a href="#Custom/Stratus">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>     ("Main Color",           <span class=type>Color</span>     ) = (1,1,1,1)
+<strong>_MainTex</strong>   ("Base (RGB) Trans (A)", <span class=type>2D</span>        ) = "white" {}
+<strong>_Density</strong>   ("Density",              <span class=type>Range(0,1)</span>) = 0.8
+<strong>_CloudSize</strong> ("Cloud Size",           <span class=type>Float</span>     ) = 150000</code></pre></dd>
+<dt><dfn id="Custom/StratusNoFog">Custom/StratusNoFog</dfn> <a href="#Custom/StratusNoFog">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>     ("Main Color",           <span class=type>Color</span>     ) = (1,1,1,1)
+<strong>_MainTex</strong>   ("Base (RGB) Trans (A)", <span class=type>2D</span>        ) = "white" {}
+<strong>_Density</strong>   ("Density",              <span class=type>Range(0,1)</span>) = 0.8
+<strong>_CloudSize</strong> ("Cloud Size",           <span class=type>Float</span>     ) = 150000</code></pre></dd>
+<dt><dfn id="Custom/Translucent">Custom/Translucent</dfn> <a href="#Custom/Translucent">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong>    ("Base (RGB)",            <span class=type>2D</span>           ) = "white" {}
+<strong>_BumpMap</strong>    ("Normal (Normal)",       <span class=type>2D</span>           ) = "bump" {}
+<strong>_Color</strong>      ("Main Color",            <span class=type>Color</span>        ) = (1,1,1,1)
+<strong>_SpecColor</strong>  ("Specular Color",        <span class=type>Color</span>        ) = (0.5,0.5,0.5,1)
+<strong>_Shininess</strong>  ("Shininess",             <span class=type>Range(0.03,1)</span>) = 0.078125
+<strong>_Thickness</strong>  ("Thickness (R)",         <span class=type>2D</span>           ) = "bump" {}
+<strong>_Power</strong>      ("Subsurface Power",      <span class=type>Float</span>        ) = 1
+<strong>_Distortion</strong> ("Subsurface Distortion", <span class=type>Float</span>        ) = 0
+<strong>_Scale</strong>      ("Subsurface Scale",      <span class=type>Float</span>        ) = 0.5
+<strong>_SubColor</strong>   ("Subsurface Color",      <span class=type>Color</span>        ) = (1,1,1,1)</code></pre></dd>
+<dt><dfn id="DiffuseSelectiveColoredHatched">DiffuseSelectiveColoredHatched</dfn> <a href="#DiffuseSelectiveColoredHatched">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong>      ("Base (RGB) Trans (A)", <span class=type>2D</span>   ) = "white" {}
+<strong>_DynColor</strong>     ("Dynamic Color",        <span class=type>Color</span>) = (1,1,1,1)
+<strong>_HatchSpacing</strong> ("Hatch Spacing",        <span class=type>Float</span>) = 10</code></pre></dd>
+<dt><dfn id="DiffuseSelectiveColoredHatchedNeon">DiffuseSelectiveColoredHatchedNeon</dfn> <a href="#DiffuseSelectiveColoredHatchedNeon">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong>      ("Base (RGB) Trans (A)", <span class=type>2D</span>   ) = "white" {}
+<strong>_DynColor</strong>     ("Dynamic Color",        <span class=type>Color</span>) = (1,1,1,1)
+<strong>_HatchSpacing</strong> ("Hatch Spacing",        <span class=type>Float</span>) = 10</code></pre></dd>
+<dt><dfn id="DiffuseVertexColored">DiffuseVertexColored</dfn> <a href="#DiffuseVertexColored">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB) Trans (A)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="DiffuseVertexColored2">DiffuseVertexColored2</dfn> <a href="#DiffuseVertexColored2">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB) Trans (A)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="DiffuseVertexColored2">DiffuseVertexColored2</dfn> <a href="#DiffuseVertexColored2">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB) Trans (A)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="DiffuseVertexColoredAlphaTint">DiffuseVertexColoredAlphaTint</dfn> <a href="#DiffuseVertexColoredAlphaTint">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong>  ("Base (RGB) Trans (A)", <span class=type>2D</span>   ) = "white" {}
+<strong>_DynColor</strong> ("Dynamic Color",        <span class=type>Color</span>) = (1,1,1,1)</code></pre></dd>
+<dt><dfn id="DiffuseVertexColoredOpaque">DiffuseVertexColoredOpaque</dfn> <a href="#DiffuseVertexColoredOpaque">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB) Trans (A)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="FX/Glass/Stained BumpDistort">FX/Glass/Stained BumpDistort</dfn> <a href="#FX/Glass/Stained BumpDistort">#</a></dt>
+  <dd><pre><code><strong>_BumpAmt</strong> ("Distortion",       <span class=type>Range(0,128)</span>) = 10
+<strong>_MainTex</strong> ("Tint Color (RGB)", <span class=type>2D</span>          ) = "white" {}
+<strong>_BumpMap</strong> ("Normalmap",        <span class=type>2D</span>          ) = "bump" {}</code></pre></dd>
+<dt><dfn id="GpuOffsetCubes">GpuOffsetCubes</dfn> <a href="#GpuOffsetCubes">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}
+<strong>_PosTex</strong>  ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="GpuOffsetCubesLit">GpuOffsetCubesLit</dfn> <a href="#GpuOffsetCubesLit">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)", <span class=type>2D</span>) = "white" {}
+<strong>_PosTex</strong>  ("Base (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="GpuOffsetCubesNoLines">GpuOffsetCubesNoLines</dfn> <a href="#GpuOffsetCubesNoLines">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}
+<strong>_PosTex</strong>  ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="Hidden/Contrast Stretch Adaptation">Hidden/Contrast Stretch Adaptation</dfn> <a href="#Hidden/Contrast Stretch Adaptation">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)", <span class=type>2D</span>) = "white" {}
+<strong>_CurTex</strong>  ("Base (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="Hidden/Contrast Stretch Apply">Hidden/Contrast Stretch Apply</dfn> <a href="#Hidden/Contrast Stretch Apply">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong>  ("Base (RGB)", <span class=type>2D</span>) = "white" {}
+<strong>_AdaptTex</strong> ("Base (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="Hidden/Contrast Stretch Luminance">Hidden/Contrast Stretch Luminance</dfn> <a href="#Hidden/Contrast Stretch Luminance">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="Hidden/Contrast Stretch Reduction">Hidden/Contrast Stretch Reduction</dfn> <a href="#Hidden/Contrast Stretch Reduction">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="Hidden/ContrastComposite">Hidden/ContrastComposite</dfn> <a href="#Hidden/ContrastComposite">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong>        ("Base (RGB)",         <span class=type>2D</span>) = "" {}
+<strong>_MainTexBlurred</strong> ("Base Blurred (RGB)", <span class=type>2D</span>) = "" {}</code></pre></dd>
+<dt><dfn id="Hidden/ConvertDepth">Hidden/ConvertDepth</dfn> <a href="#Hidden/ConvertDepth">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)", <span class=type>2D</span>) = "" {}</code></pre></dd>
+<dt><dfn id="Hidden/CreaseApply">Hidden/CreaseApply</dfn> <a href="#Hidden/CreaseApply">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong>    ("Base (RGB)", <span class=type>2D</span>) = "white" {}
+<strong>_HrDepthTex</strong> ("Base (RGB)", <span class=type>2D</span>) = "white" {}
+<strong>_LrDepthTex</strong> ("Base (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="Hidden/Glow Downsample">Hidden/Glow Downsample</dfn> <a href="#Hidden/Glow Downsample">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Color", <span class=type>Color</span>) = (1,1,1,0)
+<strong>_MainTex</strong> ("",      <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="Hidden/GlowCompose">Hidden/GlowCompose</dfn> <a href="#Hidden/GlowCompose">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Glow Amount", <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong> ("",            <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="Hidden/GlowConeTap">Hidden/GlowConeTap</dfn> <a href="#Hidden/GlowConeTap">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Color", <span class=type>Color</span>) = (1,1,1,0)
+<strong>_MainTex</strong> ("",      <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="Hidden/MotionBlur">Hidden/MotionBlur</dfn> <a href="#Hidden/MotionBlur">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong>   ("Base (RGB)", <span class=type>2D</span>   ) = "white" {}
+<strong>_AccumOrig</strong> ("AccumOrig",  <span class=type>Float</span>) = 0.65</code></pre></dd>
+<dt><dfn id="Hidden/SeparableBlur">Hidden/SeparableBlur</dfn> <a href="#Hidden/SeparableBlur">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)", <span class=type>2D</span>) = "" {}</code></pre></dd>
+<dt><dfn id="Hidden/SimpleClear">Hidden/SimpleClear</dfn> <a href="#Hidden/SimpleClear">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="Hidden/SunShaftsComposite">Hidden/SunShaftsComposite</dfn> <a href="#Hidden/SunShaftsComposite">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong>     ("Base",   <span class=type>2D</span>) = "" {}
+<strong>_ColorBuffer</strong> ("Color",  <span class=type>2D</span>) = "" {}
+<strong>_Skybox</strong>      ("Skybox", <span class=type>2D</span>) = "" {}</code></pre></dd>
+<dt><dfn id="IlluminDiffuse">IlluminDiffuse</dfn> <a href="#IlluminDiffuse">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>      ("Main Color",             <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong>    ("Base (RGB) Gloss (A)",   <span class=type>2D</span>   ) = "white" {}
+<strong>_Illum</strong>      ("Illumin (A)",            <span class=type>2D</span>   ) = "white" {}
+<strong>_EmissionLM</strong> ("Emission (Lightmapper)", <span class=type>Float</span>) = 0</code></pre></dd>
+<dt><dfn id="Image Effects/Refraction">Image Effects/Refraction</dfn> <a href="#Image Effects/Refraction">#</a></dt>
+  <dd><pre><code><strong>_SpeedStrength</strong>    ("Speed (XY), Strength (ZW)",      <span class=type>Vector</span>) = (1,1,1,1)
+<strong>_RefractTexTiling</strong> ("Refraction Tilefac",             <span class=type>Float</span> ) = 1
+<strong>_RefractTex</strong>       ("Refraction (RG), Colormask (B)", <span class=type>2D</span>    ) = "bump" {}
+<strong>_Color</strong>            ("Color (RGB)",                    <span class=type>Color</span> ) = (1,1,1,1)
+<strong>_MainTex</strong>          ("Base (RGB) DON`T TOUCH IT! :)",  <span class=type>2D</span>    ) = "white" {}</code></pre></dd>
+<dt><dfn id="LitHatched">LitHatched</dfn> <a href="#LitHatched">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="MatCap/Bumped/Plain">MatCap/Bumped/Plain</dfn> <a href="#MatCap/Bumped/Plain">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color",   <span class=type>Color</span>) = (0.5,0.5,0.5,1)
+<strong>_BumpMap</strong> ("Normal Map",   <span class=type>2D</span>   ) = "bump" {}
+<strong>_MatCap</strong>  ("MatCap (RGB)", <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="MatCap/Bumped/Textured Add">MatCap/Bumped/Textured Add</dfn> <a href="#MatCap/Bumped/Textured Add">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)",   <span class=type>2D</span>) = "white" {}
+<strong>_BumpMap</strong> ("Normal Map",   <span class=type>2D</span>) = "bump" {}
+<strong>_MatCap</strong>  ("MatCap (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="MatCap/Bumped/Textured Multiply">MatCap/Bumped/Textured Multiply</dfn> <a href="#MatCap/Bumped/Textured Multiply">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)",   <span class=type>2D</span>) = "white" {}
+<strong>_BumpMap</strong> ("Normal Map",   <span class=type>2D</span>) = "bump" {}
+<strong>_MatCap</strong>  ("MatCap (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="MatCap/Vertex/Plain">MatCap/Vertex/Plain</dfn> <a href="#MatCap/Vertex/Plain">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>  ("Main Color",   <span class=type>Color</span>) = (0.5,0.5,0.5,1)
+<strong>_MatCap</strong> ("MatCap (RGB)", <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="MatCap/Vertex/Plain Additive">MatCap/Vertex/Plain Additive</dfn> <a href="#MatCap/Vertex/Plain Additive">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>  ("Main Color",   <span class=type>Color</span>) = (0.5,0.5,0.5,1)
+<strong>_MatCap</strong> ("MatCap (RGB)", <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="MatCap/Vertex/Plain Additive Z">MatCap/Vertex/Plain Additive Z</dfn> <a href="#MatCap/Vertex/Plain Additive Z">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>  ("Main Color",   <span class=type>Color</span>) = (0.5,0.5,0.5,1)
+<strong>_MatCap</strong> ("MatCap (RGB)", <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="MatCap/Vertex/Textured Add">MatCap/Vertex/Textured Add</dfn> <a href="#MatCap/Vertex/Textured Add">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)",   <span class=type>2D</span>) = "white" {}
+<strong>_MatCap</strong>  ("MatCap (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="MatCap/Vertex/Textured Lit">MatCap/Vertex/Textured Lit</dfn> <a href="#MatCap/Vertex/Textured Lit">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Color",        <span class=type>Color</span>) = (0.5,0.5,0.5,1)
+<strong>_MainTex</strong> ("Base (RGB)",   <span class=type>2D</span>   ) = "white" {}
+<strong>_MatCap</strong>  ("MatCap (RGB)", <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="MatCap/Vertex/Textured Multiply">MatCap/Vertex/Textured Multiply</dfn> <a href="#MatCap/Vertex/Textured Multiply">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)",   <span class=type>2D</span>) = "white" {}
+<strong>_MatCap</strong>  ("MatCap (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="OrderIndependent">OrderIndependent</dfn> <a href="#OrderIndependent">#</a></dt>
+  <dd>No properties.</dd>
+<dt><dfn id="Particles/Additive">Particles/Additive</dfn> <a href="#Particles/Additive">#</a></dt>
+  <dd><pre><code><strong>_TintColor</strong> ("Tint Color",            <span class=type>Color</span>        ) = (0.5,0.5,0.5,0.5)
+<strong>_MainTex</strong>   ("Particle Texture",      <span class=type>2D</span>           ) = "white" {}
+<strong>_InvFade</strong>   ("Soft Particles Factor", <span class=type>Range(0.01,3)</span>) = 1</code></pre></dd>
+<dt><dfn id="Particles/Additive (Soft)">Particles/Additive (Soft)</dfn> <a href="#Particles/Additive (Soft)">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Particle Texture",      <span class=type>2D</span>           ) = "white" {}
+<strong>_InvFade</strong> ("Soft Particles Factor", <span class=type>Range(0.01,3)</span>) = 1</code></pre></dd>
+<dt><dfn id="Particles/Alpha Blended">Particles/Alpha Blended</dfn> <a href="#Particles/Alpha Blended">#</a></dt>
+  <dd><pre><code><strong>_TintColor</strong> ("Tint Color",            <span class=type>Color</span>        ) = (0.5,0.5,0.5,0.5)
+<strong>_MainTex</strong>   ("Particle Texture",      <span class=type>2D</span>           ) = "white" {}
+<strong>_InvFade</strong>   ("Soft Particles Factor", <span class=type>Range(0.01,3)</span>) = 1</code></pre></dd>
+<dt><dfn id="Particles/Multiply">Particles/Multiply</dfn> <a href="#Particles/Multiply">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Particle Texture",      <span class=type>2D</span>           ) = "white" {}
+<strong>_InvFade</strong> ("Soft Particles Factor", <span class=type>Range(0.01,3)</span>) = 1</code></pre></dd>
+<dt><dfn id="Particles/SilverLiningPuff">Particles/SilverLiningPuff</dfn> <a href="#Particles/SilverLiningPuff">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Particle Texture",      <span class=type>2D</span>           ) = "white" {}
+<strong>_InvFade</strong> ("Soft Particles Factor", <span class=type>Range(0.01,3)</span>) = 1</code></pre></dd>
+<dt><dfn id="Particles/Stars">Particles/Stars</dfn> <a href="#Particles/Stars">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Particle Texture",      <span class=type>2D</span>           ) = "white" {}
+<strong>_InvFade</strong> ("Soft Particles Factor", <span class=type>Range(0.01,3)</span>) = 1</code></pre></dd>
+<dt><dfn id="Particles/Stars No Fog">Particles/Stars No Fog</dfn> <a href="#Particles/Stars No Fog">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Particle Texture",      <span class=type>2D</span>           ) = "white" {}
+<strong>_InvFade</strong> ("Soft Particles Factor", <span class=type>Range(0.01,3)</span>) = 1</code></pre></dd>
+<dt><dfn id="proximity/1way/Color-Bump">proximity/1way/Color-Bump</dfn> <a href="#proximity/1way/Color-Bump">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>         ("_Color",         <span class=type>Color</span>) = (1,1,1,1)
+<strong>_Normal</strong>        ("_Normal",        <span class=type>2D</span>   ) = "black" {}
+<strong>_FullDistance</strong>  ("_FullDistance",  <span class=type>Float</span>) = 10
+<strong>_StartDistance</strong> ("_StartDistance", <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/1way/Color-Emission">proximity/1way/Color-Emission</dfn> <a href="#proximity/1way/Color-Emission">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>         ("_Color",         <span class=type>Color</span>) = (1,1,1,1)
+<strong>_Emission</strong>      ("_Emission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_FullDistance</strong>  ("_FullDistance",  <span class=type>Float</span>) = 10
+<strong>_StartDistance</strong> ("_StartDistance", <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/1way/Color-EmissionBump">proximity/1way/Color-EmissionBump</dfn> <a href="#proximity/1way/Color-EmissionBump">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>         ("_Color",         <span class=type>Color</span>) = (1,1,1,1)
+<strong>_Normal</strong>        ("_Normal",        <span class=type>2D</span>   ) = "black" {}
+<strong>_Emission</strong>      ("_Emission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_FullDistance</strong>  ("_FullDistance",  <span class=type>Float</span>) = 10
+<strong>_StartDistance</strong> ("_StartDistance", <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/1way/Color-SpecularEmissionBump">proximity/1way/Color-SpecularEmissionBump</dfn> <a href="#proximity/1way/Color-SpecularEmissionBump">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>         ("_Color",         <span class=type>Color</span>) = (1,1,1,1)
+<strong>_Normal</strong>        ("_Normal",        <span class=type>2D</span>   ) = "black" {}
+<strong>_Emission</strong>      ("_Emission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_Specular</strong>      ("_Specular",      <span class=type>2D</span>   ) = "black" {}
+<strong>_FullDistance</strong>  ("_FullDistance",  <span class=type>Float</span>) = 10
+<strong>_StartDistance</strong> ("_StartDistance", <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/1way/Diffuse-Bump">proximity/1way/Diffuse-Bump</dfn> <a href="#proximity/1way/Diffuse-Bump">#</a></dt>
+  <dd><pre><code><strong>_Diffuse</strong>       ("_Diffuse",       <span class=type>2D</span>   ) = "black" {}
+<strong>_Normal</strong>        ("_Normal",        <span class=type>2D</span>   ) = "black" {}
+<strong>_FullDistance</strong>  ("_FullDistance",  <span class=type>Float</span>) = 10
+<strong>_StartDistance</strong> ("_StartDistance", <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/1way/Diffuse-Emission">proximity/1way/Diffuse-Emission</dfn> <a href="#proximity/1way/Diffuse-Emission">#</a></dt>
+  <dd><pre><code><strong>_Diffuse</strong>       ("_Diffuse",       <span class=type>2D</span>   ) = "black" {}
+<strong>_Emission</strong>      ("_Emission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_FullDistance</strong>  ("_FullDistance",  <span class=type>Float</span>) = 10
+<strong>_StartDistance</strong> ("_StartDistance", <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/1way/Diffuse-EmissionBump">proximity/1way/Diffuse-EmissionBump</dfn> <a href="#proximity/1way/Diffuse-EmissionBump">#</a></dt>
+  <dd><pre><code><strong>_Diffuse</strong>       ("_Diffuse",       <span class=type>2D</span>   ) = "black" {}
+<strong>_Normal</strong>        ("_Normal",        <span class=type>2D</span>   ) = "black" {}
+<strong>_Emission</strong>      ("_Emission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_FullDistance</strong>  ("_FullDistance",  <span class=type>Float</span>) = 10
+<strong>_StartDistance</strong> ("_StartDistance", <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/1way/Diffuse-SpecularEmissionBump">proximity/1way/Diffuse-SpecularEmissionBump</dfn> <a href="#proximity/1way/Diffuse-SpecularEmissionBump">#</a></dt>
+  <dd><pre><code><strong>_Diffuse</strong>       ("_Diffuse",       <span class=type>2D</span>   ) = "black" {}
+<strong>_Normal</strong>        ("_Normal",        <span class=type>2D</span>   ) = "black" {}
+<strong>_Emission</strong>      ("_Emission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_Specular</strong>      ("_Specular",      <span class=type>2D</span>   ) = "black" {}
+<strong>_FullDistance</strong>  ("_FullDistance",  <span class=type>Float</span>) = 10
+<strong>_StartDistance</strong> ("_StartDistance", <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/2way/2BumpColor">proximity/2way/2BumpColor</dfn> <a href="#proximity/2way/2BumpColor">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>        ("_Color",        <span class=type>Color</span>) = (1,1,1,1)
+<strong>_nearNormal</strong>   ("_nearNormal",   <span class=type>2D</span>   ) = "black" {}
+<strong>_farNormal</strong>    ("_farNormal",    <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/2way/2BumpDiffuse">proximity/2way/2BumpDiffuse</dfn> <a href="#proximity/2way/2BumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_diffuse</strong>      ("_diffuse",      <span class=type>2D</span>   ) = "black" {}
+<strong>_nearNormal</strong>   ("_nearNormal",   <span class=type>2D</span>   ) = "black" {}
+<strong>_farNormal</strong>    ("_farNormal",    <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/2way/2EmissionColor">proximity/2way/2EmissionColor</dfn> <a href="#proximity/2way/2EmissionColor">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>        ("_Color",        <span class=type>Color</span>) = (0.69403,0.222711,0.222711,1)
+<strong>_nearEmission</strong> ("_nearEmission", <span class=type>2D</span>   ) = "black" {}
+<strong>_farEmission</strong>  ("_farEmission",  <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/2way/2EmissionDiffuse">proximity/2way/2EmissionDiffuse</dfn> <a href="#proximity/2way/2EmissionDiffuse">#</a></dt>
+  <dd><pre><code><strong>_diffuse</strong>      ("_diffuse",      <span class=type>2D</span>   ) = "black" {}
+<strong>_nearEmission</strong> ("_nearEmission", <span class=type>2D</span>   ) = "black" {}
+<strong>_farEmission</strong>  ("_farEmission",  <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/2way/BumpColor">proximity/2way/BumpColor</dfn> <a href="#proximity/2way/BumpColor">#</a></dt>
+  <dd><pre><code><strong>_nearColor</strong>    ("_nearColor",    <span class=type>Color</span>) = (1,1,1,1)
+<strong>_farColor</strong>     ("_farColor",     <span class=type>Color</span>) = (1,1,1,1)
+<strong>_nearNormal</strong>   ("_nearNormal",   <span class=type>2D</span>   ) = "black" {}
+<strong>_farNormal</strong>    ("_farNormal",    <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/2way/BumpDiffuse">proximity/2way/BumpDiffuse</dfn> <a href="#proximity/2way/BumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_nearDiffuse</strong>  ("_nearDiffuse",  <span class=type>2D</span>   ) = "black" {}
+<strong>_farDiffuse</strong>   ("_farDiffuse",   <span class=type>2D</span>   ) = "black" {}
+<strong>_nearNormal</strong>   ("_nearNormal",   <span class=type>2D</span>   ) = "black" {}
+<strong>_farNormal</strong>    ("_farNormal",    <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/2way/ColorAlpha">proximity/2way/ColorAlpha</dfn> <a href="#proximity/2way/ColorAlpha">#</a></dt>
+  <dd><pre><code><strong>_nearColor</strong>    ("_nearColor",    <span class=type>Color</span>) = (0.985075,0,0,1)
+<strong>_farColor</strong>     ("_farColor",     <span class=type>Color</span>) = (0.00980173,0.656716,0.60243,1)
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/2way/Diffuse">proximity/2way/Diffuse</dfn> <a href="#proximity/2way/Diffuse">#</a></dt>
+  <dd><pre><code><strong>_nearTexture</strong>  ("_nearTexture",  <span class=type>2D</span>   ) = "black" {}
+<strong>_farTexture</strong>   ("_farTexture",   <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/2way/EmissionDiffuse">proximity/2way/EmissionDiffuse</dfn> <a href="#proximity/2way/EmissionDiffuse">#</a></dt>
+  <dd><pre><code><strong>_nearDiffuse</strong>  ("_nearDiffuse",  <span class=type>2D</span>   ) = "black" {}
+<strong>_farDiffuse</strong>   ("_farDiffuse",   <span class=type>2D</span>   ) = "black" {}
+<strong>_nearEmission</strong> ("_nearEmission", <span class=type>2D</span>   ) = "black" {}
+<strong>_farEmission</strong>  ("_farEmission",  <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/2way/SpecularBumpDiffuse">proximity/2way/SpecularBumpDiffuse</dfn> <a href="#proximity/2way/SpecularBumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_nearDiffuse</strong>  ("_nearDiffuse",  <span class=type>2D</span>   ) = "black" {}
+<strong>_farDiffuse</strong>   ("_farDiffuse",   <span class=type>2D</span>   ) = "black" {}
+<strong>_nearNormal</strong>   ("_nearNormal",   <span class=type>2D</span>   ) = "black" {}
+<strong>_farNormal</strong>    ("_farNormal",    <span class=type>2D</span>   ) = "black" {}
+<strong>_nearSpecular</strong> ("_nearSpecular", <span class=type>2D</span>   ) = "black" {}
+<strong>_farSpecular</strong>  ("_farSpecular",  <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/2way/SpecularEmisionBumpDiffuse">proximity/2way/SpecularEmisionBumpDiffuse</dfn> <a href="#proximity/2way/SpecularEmisionBumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_nearDiffuse</strong>  ("_nearDiffuse",  <span class=type>2D</span>   ) = "black" {}
+<strong>_farDiffuse</strong>   ("_farDiffuse",   <span class=type>2D</span>   ) = "black" {}
+<strong>_nearNormal</strong>   ("_nearNormal",   <span class=type>2D</span>   ) = "black" {}
+<strong>_farNormal</strong>    ("_farNormal",    <span class=type>2D</span>   ) = "black" {}
+<strong>_nearEmission</strong> ("_nearEmission", <span class=type>2D</span>   ) = "black" {}
+<strong>_farEmission</strong>  ("_farEmission",  <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="proximity/3way/3BumpColor">proximity/3way/3BumpColor</dfn> <a href="#proximity/3way/3BumpColor">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>            ("_Color",            <span class=type>Color</span>) = (1,1,1,1)
+<strong>_nearNormal</strong>       ("_nearNormal",       <span class=type>2D</span>   ) = "black" {}
+<strong>_midENormal</strong>       ("_midENormal",       <span class=type>2D</span>   ) = "black" {}
+<strong>_farNormal</strong>        ("_farNormal",        <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong>     ("_nearDistance",     <span class=type>Float</span>) = 10
+<strong>_midStartDistance</strong> ("_midStartDistance", <span class=type>Float</span>) = 20
+<strong>_midEndDistance</strong>   ("_midEndDistance",   <span class=type>Float</span>) = 30
+<strong>_farDistance</strong>      ("_farDistance",      <span class=type>Float</span>) = 40</code></pre></dd>
+<dt><dfn id="proximity/3way/3BumpDiffuse">proximity/3way/3BumpDiffuse</dfn> <a href="#proximity/3way/3BumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_diffuse</strong>          ("_diffuse",          <span class=type>2D</span>   ) = "black" {}
+<strong>_nearNormal</strong>       ("_nearNormal",       <span class=type>2D</span>   ) = "black" {}
+<strong>_midENormal</strong>       ("_midENormal",       <span class=type>2D</span>   ) = "black" {}
+<strong>_farNormal</strong>        ("_farNormal",        <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong>     ("_nearDistance",     <span class=type>Float</span>) = 10
+<strong>_midStartDistance</strong> ("_midStartDistance", <span class=type>Float</span>) = 20
+<strong>_midEndDistance</strong>   ("_midEndDistance",   <span class=type>Float</span>) = 30
+<strong>_farDistance</strong>      ("_farDistance",      <span class=type>Float</span>) = 40</code></pre></dd>
+<dt><dfn id="proximity/3way/3Diffuse">proximity/3way/3Diffuse</dfn> <a href="#proximity/3way/3Diffuse">#</a></dt>
+  <dd><pre><code><strong>_nearTexture</strong>      ("_nearTexture",      <span class=type>2D</span>   ) = "black" {}
+<strong>_midTexture</strong>       ("_midTexture",       <span class=type>2D</span>   ) = "black" {}
+<strong>_farTexture</strong>       ("_farTexture",       <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong>     ("_nearDistance",     <span class=type>Float</span>) = 10
+<strong>_midStartDistance</strong> ("_midStartDistance", <span class=type>Float</span>) = 20
+<strong>_midEndDistance</strong>   ("_midEndDistance",   <span class=type>Float</span>) = 30
+<strong>_farDistance</strong>      ("_farDistance",      <span class=type>Float</span>) = 40</code></pre></dd>
+<dt><dfn id="proximity/3way/3EmissionBumpDiffuse">proximity/3way/3EmissionBumpDiffuse</dfn> <a href="#proximity/3way/3EmissionBumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_nearEmission</strong>     ("_nearEmission",     <span class=type>2D</span>   ) = "black" {}
+<strong>_midEmission</strong>      ("_midEmission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_farEmission</strong>      ("_farEmission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_normalMap</strong>        ("_normalMap",        <span class=type>2D</span>   ) = "black" {}
+<strong>_diffuse</strong>          ("_diffuse",          <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong>     ("_nearDistance",     <span class=type>Float</span>) = 10
+<strong>_midStartDistance</strong> ("_midStartDistance", <span class=type>Float</span>) = 20
+<strong>_midEndDistance</strong>   ("_midEndDistance",   <span class=type>Float</span>) = 30
+<strong>_farDistance</strong>      ("_farDistance",      <span class=type>Float</span>) = 40</code></pre></dd>
+<dt><dfn id="proximity/3way/3EmissionBumpDiffuse">proximity/3way/3EmissionBumpDiffuse</dfn> <a href="#proximity/3way/3EmissionBumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_diffuse</strong>          ("_diffuse",          <span class=type>2D</span>   ) = "black" {}
+<strong>_nearEmission</strong>     ("_nearEmission",     <span class=type>2D</span>   ) = "black" {}
+<strong>_midEmission</strong>      ("_midEmission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_farEmission</strong>      ("_farEmission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong>     ("_nearDistance",     <span class=type>Float</span>) = 10
+<strong>_midStartDistance</strong> ("_midStartDistance", <span class=type>Float</span>) = 20
+<strong>_midEndDistance</strong>   ("_midEndDistance",   <span class=type>Float</span>) = 30
+<strong>_farDistance</strong>      ("_farDistance",      <span class=type>Float</span>) = 40</code></pre></dd>
+<dt><dfn id="proximity/3way/3EmissionColor">proximity/3way/3EmissionColor</dfn> <a href="#proximity/3way/3EmissionColor">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>            ("_Color",            <span class=type>Color</span>) = (1,1,1,1)
+<strong>_nearEmission</strong>     ("_nearEmission",     <span class=type>2D</span>   ) = "black" {}
+<strong>_midEmission</strong>      ("_midEmission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_farEmission</strong>      ("_farEmission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong>     ("_nearDistance",     <span class=type>Float</span>) = 10
+<strong>_midStartDistance</strong> ("_midStartDistance", <span class=type>Float</span>) = 20
+<strong>_midEndDistance</strong>   ("_midEndDistance",   <span class=type>Float</span>) = 30
+<strong>_farDistance</strong>      ("_farDistance",      <span class=type>Float</span>) = 40</code></pre></dd>
+<dt><dfn id="proximity/3way/Color">proximity/3way/Color</dfn> <a href="#proximity/3way/Color">#</a></dt>
+  <dd><pre><code><strong>_nearColor</strong>        ("_nearColor",        <span class=type>Color</span>) = (0.972028,1,0,1)
+<strong>_midColor</strong>         ("_midColor",         <span class=type>Color</span>) = (1,0,0,1)
+<strong>_farColor</strong>         ("_farColor",         <span class=type>Color</span>) = (0,0.118881,1,1)
+<strong>_nearDistance</strong>     ("_nearDistance",     <span class=type>Float</span>) = 10
+<strong>_midStartDistance</strong> ("_midStartDistance", <span class=type>Float</span>) = 20
+<strong>_midEndDistance</strong>   ("_midEndDistance",   <span class=type>Float</span>) = 30
+<strong>_farDistance</strong>      ("_farDistance",      <span class=type>Float</span>) = 40</code></pre></dd>
+<dt><dfn id="proximity/3way/Specular3EmissionDiffuse">proximity/3way/Specular3EmissionDiffuse</dfn> <a href="#proximity/3way/Specular3EmissionDiffuse">#</a></dt>
+  <dd><pre><code><strong>_diffuse</strong>          ("_diffuse",          <span class=type>2D</span>   ) = "black" {}
+<strong>_nearEmission</strong>     ("_nearEmission",     <span class=type>2D</span>   ) = "black" {}
+<strong>_midEmission</strong>      ("_midEmission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_farEmission</strong>      ("_farEmission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_specular</strong>         ("_specular",         <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong>     ("_nearDistance",     <span class=type>Float</span>) = 10
+<strong>_midStartDistance</strong> ("_midStartDistance", <span class=type>Float</span>) = 20
+<strong>_midEndDistance</strong>   ("_midEndDistance",   <span class=type>Float</span>) = 30
+<strong>_farDistance</strong>      ("_farDistance",      <span class=type>Float</span>) = 40</code></pre></dd>
+<dt><dfn id="proximity/3way/SpecularBump3Diffuse">proximity/3way/SpecularBump3Diffuse</dfn> <a href="#proximity/3way/SpecularBump3Diffuse">#</a></dt>
+  <dd><pre><code><strong>_nearTexture</strong>      ("_nearTexture",      <span class=type>2D</span>   ) = "black" {}
+<strong>_midTexture</strong>       ("_midTexture",       <span class=type>2D</span>   ) = "black" {}
+<strong>_farTexture</strong>       ("_farTexture",       <span class=type>2D</span>   ) = "black" {}
+<strong>_normalMap</strong>        ("_normalMap",        <span class=type>2D</span>   ) = "black" {}
+<strong>_specularMap</strong>      ("_specularMap",      <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong>     ("_nearDistance",     <span class=type>Float</span>) = 10
+<strong>_midStartDistance</strong> ("_midStartDistance", <span class=type>Float</span>) = 20
+<strong>_midEndDistance</strong>   ("_midEndDistance",   <span class=type>Float</span>) = 30
+<strong>_farDistance</strong>      ("_farDistance",      <span class=type>Float</span>) = 40</code></pre></dd>
+<dt><dfn id="proximity/3way/SpecularEmissionBumpDiffuse">proximity/3way/SpecularEmissionBumpDiffuse</dfn> <a href="#proximity/3way/SpecularEmissionBumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_nearEmission</strong>     ("_nearEmission",     <span class=type>2D</span>   ) = "black" {}
+<strong>_midEmission</strong>      ("_midEmission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_farEmission</strong>      ("_farEmission",      <span class=type>2D</span>   ) = "black" {}
+<strong>_normalMap</strong>        ("_normalMap",        <span class=type>2D</span>   ) = "black" {}
+<strong>_specularMap</strong>      ("_specularMap",      <span class=type>2D</span>   ) = "black" {}
+<strong>_diffuse</strong>          ("_diffuse",          <span class=type>2D</span>   ) = "black" {}
+<strong>_nearDistance</strong>     ("_nearDistance",     <span class=type>Float</span>) = 10
+<strong>_midStartDistance</strong> ("_midStartDistance", <span class=type>Float</span>) = 20
+<strong>_midEndDistance</strong>   ("_midEndDistance",   <span class=type>Float</span>) = 30
+<strong>_farDistance</strong>      ("_farDistance",      <span class=type>Float</span>) = 40</code></pre></dd>
+<dt><dfn id="proximity/Rim/2Bump2Diffuse">proximity/Rim/2Bump2Diffuse</dfn> <a href="#proximity/Rim/2Bump2Diffuse">#</a></dt>
+  <dd><pre><code><strong>_NearDiffuse</strong>       ("_NearDiffuse",       <span class=type>2D</span>          ) = "black" {}
+<strong>_FarDiffuse</strong>        ("_FarDiffuse",        <span class=type>2D</span>          ) = "black" {}
+<strong>_NearNormal</strong>        ("_NearNormal",        <span class=type>2D</span>          ) = "black" {}
+<strong>_FarNormal</strong>         ("_FarNormal",         <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (0,0.034965,1,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/2BumpDiffuse">proximity/Rim/2BumpDiffuse</dfn> <a href="#proximity/Rim/2BumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_Diffuse</strong>           ("_Diffuse",           <span class=type>2D</span>          ) = "black" {}
+<strong>_NearNormal</strong>        ("_NearNormal",        <span class=type>2D</span>          ) = "black" {}
+<strong>_FarNormal</strong>         ("_FarNormal",         <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (0,0.034965,1,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/2Color">proximity/Rim/2Color</dfn> <a href="#proximity/Rim/2Color">#</a></dt>
+  <dd><pre><code><strong>_nearColor</strong>       ("_nearColor",       <span class=type>Color</span>       ) = (0,0.350746,0.306596,1)
+<strong>_farColor</strong>        ("_farColor",        <span class=type>Color</span>       ) = (0.00980173,0.656716,0.60243,1)
+<strong>_rimColor</strong>        ("_rimColor",        <span class=type>Color</span>       ) = (0.0991312,0.664179,0.521929,1)
+<strong>_rimLightingBias</strong> ("_rimLightingBias", <span class=type>Range(0.1,3)</span>) = 2.16
+<strong>_nearDistance</strong>    ("_nearDistance",    <span class=type>Float</span>       ) = 10
+<strong>_farDistance</strong>     ("_farDistance",     <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/2Diffuse">proximity/Rim/2Diffuse</dfn> <a href="#proximity/Rim/2Diffuse">#</a></dt>
+  <dd><pre><code><strong>_NearDiffuse</strong>  ("_NearDiffuse",  <span class=type>2D</span>          ) = "black" {}
+<strong>_FarDiffuse</strong>   ("_FarDiffuse",   <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>     ("_rimColor",     <span class=type>Color</span>       ) = (0,0.034965,1,1)
+<strong>_lightingBias</strong> ("_lightingBias", <span class=type>Range(0.1,3)</span>) = 3
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>       ) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/2Emission2Bump2Diffuse">proximity/Rim/2Emission2Bump2Diffuse</dfn> <a href="#proximity/Rim/2Emission2Bump2Diffuse">#</a></dt>
+  <dd><pre><code><strong>_NearDiffuse</strong>       ("_NearDiffuse",       <span class=type>2D</span>          ) = "black" {}
+<strong>_FarDiffuse</strong>        ("_FarDiffuse",        <span class=type>2D</span>          ) = "black" {}
+<strong>_NearNormal</strong>        ("_NearNormal",        <span class=type>2D</span>          ) = "black" {}
+<strong>_FarNormal</strong>         ("_FarNormal",         <span class=type>2D</span>          ) = "black" {}
+<strong>_NearEmission</strong>      ("_NearEmission",      <span class=type>2D</span>          ) = "black" {}
+<strong>_FarEmission</strong>       ("_FarEmission",       <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (1,0,0.0209789,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/Bump2Diffuse">proximity/Rim/Bump2Diffuse</dfn> <a href="#proximity/Rim/Bump2Diffuse">#</a></dt>
+  <dd><pre><code><strong>_NearDiffuse</strong>      ("_NearDiffuse",      <span class=type>2D</span>          ) = "black" {}
+<strong>_FarDiffuse</strong>       ("_FarDiffuse",       <span class=type>2D</span>          ) = "black" {}
+<strong>_Normal</strong>           ("_Normal",           <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>         ("_rimColor",         <span class=type>Color</span>       ) = (0,0.034965,1,1)
+<strong>_lightingBias</strong>     ("_lightingBias",     <span class=type>Range(0.1,3)</span>) = 3
+<strong>_nearDistance</strong>     ("_nearDistance",     <span class=type>Float</span>       ) = 10
+<strong>_farStartDistance</strong> ("_farStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/BumpDiffuse">proximity/Rim/BumpDiffuse</dfn> <a href="#proximity/Rim/BumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_Diffuse</strong>           ("_Diffuse",           <span class=type>2D</span>          ) = "black" {}
+<strong>_Normal</strong>            ("_Normal",            <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (0,0.034965,1,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/Color">proximity/Rim/Color</dfn> <a href="#proximity/Rim/Color">#</a></dt>
+  <dd><pre><code><strong>_color</strong>           ("_color",           <span class=type>Color</span>       ) = (0,0.350746,0.306596,1)
+<strong>_rimColor</strong>        ("_rimColor",        <span class=type>Color</span>       ) = (0.0991312,0.664179,0.521929,1)
+<strong>_rimLightingBias</strong> ("_rimLightingBias", <span class=type>Range(0.1,3)</span>) = 2.16
+<strong>_nearDistance</strong>    ("_nearDistance",    <span class=type>Float</span>       ) = 10
+<strong>_midDistance</strong>     ("_midDistance",     <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/Diffuse">proximity/Rim/Diffuse</dfn> <a href="#proximity/Rim/Diffuse">#</a></dt>
+  <dd><pre><code><strong>_NearDiffuse</strong>       ("_NearDiffuse",       <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (0,0.034965,1,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/Emission2Bump2Diffuse">proximity/Rim/Emission2Bump2Diffuse</dfn> <a href="#proximity/Rim/Emission2Bump2Diffuse">#</a></dt>
+  <dd><pre><code><strong>_NearDiffuse</strong>       ("_NearDiffuse",       <span class=type>2D</span>          ) = "black" {}
+<strong>_FarDiffuse</strong>        ("_FarDiffuse",        <span class=type>2D</span>          ) = "black" {}
+<strong>_NearNormal</strong>        ("_NearNormal",        <span class=type>2D</span>          ) = "black" {}
+<strong>_FarNormal</strong>         ("_FarNormal",         <span class=type>2D</span>          ) = "black" {}
+<strong>_Emission</strong>          ("_Emission",          <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (1,0,0.0209789,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/Emission2BumpDiffuse">proximity/Rim/Emission2BumpDiffuse</dfn> <a href="#proximity/Rim/Emission2BumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_Diffuse</strong>           ("_Diffuse",           <span class=type>2D</span>          ) = "black" {}
+<strong>_NearNormal</strong>        ("_NearNormal",        <span class=type>2D</span>          ) = "black" {}
+<strong>_FarNormal</strong>         ("_FarNormal",         <span class=type>2D</span>          ) = "black" {}
+<strong>_Emission</strong>          ("_Emission",          <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (1,0,0.0209789,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/EmissionBump2Diffuse">proximity/Rim/EmissionBump2Diffuse</dfn> <a href="#proximity/Rim/EmissionBump2Diffuse">#</a></dt>
+  <dd><pre><code><strong>_NearDiffuse</strong>       ("_NearDiffuse",       <span class=type>2D</span>          ) = "black" {}
+<strong>_FarDiffuse</strong>        ("_FarDiffuse",        <span class=type>2D</span>          ) = "black" {}
+<strong>_Normal</strong>            ("_Normal",            <span class=type>2D</span>          ) = "black" {}
+<strong>_Emission</strong>          ("_Emission",          <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (1,0,0.0209789,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/EmissionBumpDiffuse">proximity/Rim/EmissionBumpDiffuse</dfn> <a href="#proximity/Rim/EmissionBumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_Diffuse</strong>           ("_Diffuse",           <span class=type>2D</span>          ) = "black" {}
+<strong>_Normal</strong>            ("_Normal",            <span class=type>2D</span>          ) = "black" {}
+<strong>_Emission</strong>          ("_Emission",          <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (1,0,0.0209789,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/EmissionDiffuse">proximity/Rim/EmissionDiffuse</dfn> <a href="#proximity/Rim/EmissionDiffuse">#</a></dt>
+  <dd><pre><code><strong>_Diffuse</strong>           ("_Diffuse",           <span class=type>2D</span>          ) = "black" {}
+<strong>_Emission</strong>          ("_Emission",          <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (1,0,0.0209789,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/SpecularEmission2Bump2Diffuse">proximity/Rim/SpecularEmission2Bump2Diffuse</dfn> <a href="#proximity/Rim/SpecularEmission2Bump2Diffuse">#</a></dt>
+  <dd><pre><code><strong>_NearDiffuse</strong>       ("_NearDiffuse",       <span class=type>2D</span>          ) = "black" {}
+<strong>_FarDiffuse</strong>        ("_FarDiffuse",        <span class=type>2D</span>          ) = "black" {}
+<strong>_NearNormal</strong>        ("_NearNormal",        <span class=type>2D</span>          ) = "black" {}
+<strong>_FarNormal</strong>         ("_FarNormal",         <span class=type>2D</span>          ) = "black" {}
+<strong>_Emission</strong>          ("_Emission",          <span class=type>2D</span>          ) = "black" {}
+<strong>_Specular</strong>          ("_Specular",          <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (1,0,0.0209789,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/SpecularEmissionBump2Diffuse">proximity/Rim/SpecularEmissionBump2Diffuse</dfn> <a href="#proximity/Rim/SpecularEmissionBump2Diffuse">#</a></dt>
+  <dd><pre><code><strong>_NearDiffuse</strong>       ("_NearDiffuse",       <span class=type>2D</span>          ) = "black" {}
+<strong>_FarDiffuse</strong>        ("_FarDiffuse",        <span class=type>2D</span>          ) = "black" {}
+<strong>_Normal</strong>            ("_Normal",            <span class=type>2D</span>          ) = "black" {}
+<strong>_Emission</strong>          ("_Emission",          <span class=type>2D</span>          ) = "black" {}
+<strong>_Specular</strong>          ("_Specular",          <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (1,0,0.0209789,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity/Rim/SpecularEmissionBumpDiffuse">proximity/Rim/SpecularEmissionBumpDiffuse</dfn> <a href="#proximity/Rim/SpecularEmissionBumpDiffuse">#</a></dt>
+  <dd><pre><code><strong>_Diffuse</strong>           ("_Diffuse",           <span class=type>2D</span>          ) = "black" {}
+<strong>_Normal</strong>            ("_Normal",            <span class=type>2D</span>          ) = "black" {}
+<strong>_Emission</strong>          ("_Emission",          <span class=type>2D</span>          ) = "black" {}
+<strong>_Specular</strong>          ("_Specular",          <span class=type>2D</span>          ) = "black" {}
+<strong>_rimColor</strong>          ("_rimColor",          <span class=type>Color</span>       ) = (1,0,0.0209789,1)
+<strong>_lightingBias</strong>      ("_lightingBias",      <span class=type>Range(0.1,3)</span>) = 3
+<strong>_glowFullDistance</strong>  ("_glowFullDistance",  <span class=type>Float</span>       ) = 10
+<strong>_glowStartDistance</strong> ("_glowStartDistance", <span class=type>Float</span>       ) = 20</code></pre></dd>
+<dt><dfn id="proximity_2way_Color">proximity_2way_Color</dfn> <a href="#proximity_2way_Color">#</a></dt>
+  <dd><pre><code><strong>_nearColor</strong>    ("_nearColor",    <span class=type>Color</span>) = (0.985075,0,0,1)
+<strong>_farColor</strong>     ("_farColor",     <span class=type>Color</span>) = (0.00980173,0.656716,0.60243,1)
+<strong>_nearDistance</strong> ("_nearDistance", <span class=type>Float</span>) = 10
+<strong>_farDistance</strong>  ("_farDistance",  <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="ProximityEmissionVertexColor">ProximityEmissionVertexColor</dfn> <a href="#ProximityEmissionVertexColor">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>         ("_Color",         <span class=type>Color</span>) = (1,1,1,1)
+<strong>_FullDistance</strong>  ("_FullDistance",  <span class=type>Float</span>) = 10
+<strong>_StartDistance</strong> ("_StartDistance", <span class=type>Float</span>) = 20</code></pre></dd>
+<dt><dfn id="PsychoBuilding">PsychoBuilding</dfn> <a href="#PsychoBuilding">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="PsychoBuilding2">PsychoBuilding2</dfn> <a href="#PsychoBuilding2">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="RageSpline/3D AA">RageSpline/3D AA</dfn> <a href="#RageSpline/3D AA">#</a></dt>
+  <dd>No properties.</dd>
+<dt><dfn id="RageSpline/3D Basic Fill">RageSpline/3D Basic Fill</dfn> <a href="#RageSpline/3D Basic Fill">#</a></dt>
+  <dd>No properties.</dd>
+<dt><dfn id="RageSpline/3D Textured">RageSpline/3D Textured</dfn> <a href="#RageSpline/3D Textured">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture1 (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="RageSpline/3D Textured AA">RageSpline/3D Textured AA</dfn> <a href="#RageSpline/3D Textured AA">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture1 (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="RageSpline/Basic">RageSpline/Basic</dfn> <a href="#RageSpline/Basic">#</a></dt>
+  <dd>No properties.</dd>
+<dt><dfn id="RageSpline/Basic (Double)">RageSpline/Basic (Double)</dfn> <a href="#RageSpline/Basic (Double)">#</a></dt>
+  <dd>No properties.</dd>
+<dt><dfn id="RageSpline/MultiTextured">RageSpline/MultiTextured</dfn> <a href="#RageSpline/MultiTextured">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong>  ("Texture1 (RGB)", <span class=type>2D</span>) = "white" {}
+<strong>_MainTex2</strong> ("Texture2 (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="RageSpline/Textured">RageSpline/Textured</dfn> <a href="#RageSpline/Textured">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture1 (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="RageSpline/Textured (alpha transparent)">RageSpline/Textured (alpha transparent)</dfn> <a href="#RageSpline/Textured (alpha transparent)">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture1 (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="RageSpline/Textured (alpha)">RageSpline/Textured (alpha)</dfn> <a href="#RageSpline/Textured (alpha)">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture1 (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="RageSpline/Textured (double)">RageSpline/Textured (double)</dfn> <a href="#RageSpline/Textured (double)">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture1 (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="Reflective/Diffuse">Reflective/Diffuse</dfn> <a href="#Reflective/Diffuse">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>        ("Main Color",                 <span class=type>Color</span>) = (1,1,1,1)
+<strong>_ReflectColor</strong> ("Reflection Color",           <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong>      ("Base (RGB) RefStrength (A)", <span class=type>2D</span>   ) = "white" {}
+<strong>_Cube</strong>         ("Reflection Cubemap",         <span class=type>CUBE</span> ) = "_Skybox" { TexGen CubeReflect }</code></pre></dd>
+<dt><dfn id="Reflective/VertexLit">Reflective/VertexLit</dfn> <a href="#Reflective/VertexLit">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>        ("Main Color",                 <span class=type>Color</span>        ) = (1,1,1,1)
+<strong>_SpecColor</strong>    ("Spec Color",                 <span class=type>Color</span>        ) = (1,1,1,1)
+<strong>_Shininess</strong>    ("Shininess",                  <span class=type>Range(0.03,1)</span>) = 0.7
+<strong>_ReflectColor</strong> ("Reflection Color",           <span class=type>Color</span>        ) = (1,1,1,0.5)
+<strong>_MainTex</strong>      ("Base (RGB) RefStrength (A)", <span class=type>2D</span>           ) = "white" {}
+<strong>_Cube</strong>         ("Reflection Cubemap",         <span class=type>CUBE</span>         ) = "_Skybox" { TexGen CubeReflect }</code></pre></dd>
+<dt><dfn id="ReflectiveDiffuseDiag">ReflectiveDiffuseDiag</dfn> <a href="#ReflectiveDiffuseDiag">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>        ("Main Color",                 <span class=type>Color</span>) = (1,1,1,1)
+<strong>_ReflectColor</strong> ("Reflection Color",           <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong>      ("Base (RGB) RefStrength (A)", <span class=type>2D</span>   ) = "white" {}
+<strong>_Cube</strong>         ("Reflection Cubemap",         <span class=type>CUBE</span> ) = "_Skybox" { TexGen CubeReflect }</code></pre></dd>
+<dt><dfn id="RenderFX/Skybox">RenderFX/Skybox</dfn> <a href="#RenderFX/Skybox">#</a></dt>
+  <dd><pre><code><strong>_Tint</strong>     ("Tint Color", <span class=type>Color</span>) = (0.5,0.5,0.5,0.5)
+<strong>_FrontTex</strong> ("Front (+Z)", <span class=type>2D</span>   ) = "white" {}
+<strong>_BackTex</strong>  ("Back (-Z)",  <span class=type>2D</span>   ) = "white" {}
+<strong>_LeftTex</strong>  ("Left (+X)",  <span class=type>2D</span>   ) = "white" {}
+<strong>_RightTex</strong> ("Right (-X)", <span class=type>2D</span>   ) = "white" {}
+<strong>_UpTex</strong>    ("Up (+Y)",    <span class=type>2D</span>   ) = "white" {}
+<strong>_DownTex</strong>  ("down (-Y)",  <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="Rim Light">Rim Light</dfn> <a href="#Rim Light">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>    ("Main Color", <span class=type>Color</span>) = (1,1,1,1)
+<strong>_RimColor</strong> ("Rim Color",  <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong>  ("Base (RGB)", <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="RimLightHatched">RimLightHatched</dfn> <a href="#RimLightHatched">#</a></dt>
+  <dd><pre><code><strong>_Threshold</strong> ("Render Threshold", <span class=type>Float</span>) = 0.3
+<strong>_Color</strong>     ("Main Color",       <span class=type>Color</span>) = (1,1,1,1)
+<strong>_RimColor</strong>  ("Rim Color",        <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong>   ("Base (RGB)",       <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="RimLightHatchedDark">RimLightHatchedDark</dfn> <a href="#RimLightHatchedDark">#</a></dt>
+  <dd><pre><code><strong>_Threshold</strong> ("Render Threshold", <span class=type>Float</span>) = 0.3
+<strong>_Color</strong>     ("Main Color",       <span class=type>Color</span>) = (1,1,1,1)
+<strong>_RimColor</strong>  ("Rim Color",        <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong>   ("Base (RGB)",       <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="RimLightHatchedDriver">RimLightHatchedDriver</dfn> <a href="#RimLightHatchedDriver">#</a></dt>
+  <dd><pre><code><strong>_Threshold</strong> ("Render Threshold", <span class=type>Float</span>) = 0.3
+<strong>_Color</strong>     ("Main Color",       <span class=type>Color</span>) = (1,1,1,1)
+<strong>_RimColor</strong>  ("Rim Color",        <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong>   ("Base (RGB)",       <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="RimLightHatchedSurfer">RimLightHatchedSurfer</dfn> <a href="#RimLightHatchedSurfer">#</a></dt>
+  <dd><pre><code><strong>_Threshold</strong> ("Render Threshold", <span class=type>Float</span>) = 0.3
+<strong>_Color</strong>     ("Main Color",       <span class=type>Color</span>) = (1,1,1,1)
+<strong>_RimColor</strong>  ("Rim Color",        <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong>   ("Base (RGB)",       <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="RimLightHatchedSurferExternal">RimLightHatchedSurferExternal</dfn> <a href="#RimLightHatchedSurferExternal">#</a></dt>
+  <dd><pre><code><strong>_Threshold</strong> ("Render Threshold", <span class=type>Float</span>) = 0.3
+<strong>_Color</strong>     ("Main Color",       <span class=type>Color</span>) = (1,1,1,1)
+<strong>_RimColor</strong>  ("Rim Color",        <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong>   ("Base (RGB)",       <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="RimLightHatchedSurferRight">RimLightHatchedSurferRight</dfn> <a href="#RimLightHatchedSurferRight">#</a></dt>
+  <dd><pre><code><strong>_Threshold</strong> ("Render Threshold", <span class=type>Float</span>) = 0.3
+<strong>_Color</strong>     ("Main Color",       <span class=type>Color</span>) = (1,1,1,1)
+<strong>_RimColor</strong>  ("Rim Color",        <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong>   ("Base (RGB)",       <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="Self-Illumin/Bumped Specular">Self-Illumin/Bumped Specular</dfn> <a href="#Self-Illumin/Bumped Specular">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>      ("Main Color",             <span class=type>Color</span>        ) = (1,1,1,1)
+<strong>_SpecColor</strong>  ("Specular Color",         <span class=type>Color</span>        ) = (0.5,0.5,0.5,1)
+<strong>_Shininess</strong>  ("Shininess",              <span class=type>Range(0.01,1)</span>) = 0.078125
+<strong>_MainTex</strong>    ("Base (RGB) Gloss (A)",   <span class=type>2D</span>           ) = "white" {}
+<strong>_Illum</strong>      ("Illumin (A)",            <span class=type>2D</span>           ) = "white" {}
+<strong>_BumpMap</strong>    ("Normalmap",              <span class=type>2D</span>           ) = "bump" {}
+<strong>_EmissionLM</strong> ("Emission (Lightmapper)", <span class=type>Float</span>        ) = 0</code></pre></dd>
+<dt><dfn id="Self-Illumin/Diffuse">Self-Illumin/Diffuse</dfn> <a href="#Self-Illumin/Diffuse">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>      ("Main Color",             <span class=type>Color</span>) = (1,1,1,1)
+<strong>_MainTex</strong>    ("Base (RGB) Gloss (A)",   <span class=type>2D</span>   ) = "white" {}
+<strong>_Illum</strong>      ("Illumin (A)",            <span class=type>2D</span>   ) = "white" {}
+<strong>_EmissionLM</strong> ("Emission (Lightmapper)", <span class=type>Float</span>) = 0</code></pre></dd>
+<dt><dfn id="Self-Illumin/Parallax Specular">Self-Illumin/Parallax Specular</dfn> <a href="#Self-Illumin/Parallax Specular">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>       ("Main Color",             <span class=type>Color</span>            ) = (1,1,1,1)
+<strong>_SpecColor</strong>   ("Specular Color",         <span class=type>Color</span>            ) = (0.5,0.5,0.5,1)
+<strong>_Shininess</strong>   ("Shininess",              <span class=type>Range(0.01,1)</span>    ) = 0.078125
+<strong>_Parallax</strong>    ("Height",                 <span class=type>Range(0.005,0.08)</span>) = 0.02
+<strong>_MainTex</strong>     ("Base (RGB) Gloss (A)",   <span class=type>2D</span>               ) = "white" {}
+<strong>_Illum</strong>       ("Illumin (A)",            <span class=type>2D</span>               ) = "white" {}
+<strong>_BumpMap</strong>     ("Normalmap",              <span class=type>2D</span>               ) = "bump" {}
+<strong>_ParallaxMap</strong> ("Heightmap (A)",          <span class=type>2D</span>               ) = "black" {}
+<strong>_EmissionLM</strong>  ("Emission (Lightmapper)", <span class=type>Float</span>            ) = 0</code></pre></dd>
+<dt><dfn id="Self-Illumin/Specular">Self-Illumin/Specular</dfn> <a href="#Self-Illumin/Specular">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>      ("Main Color",             <span class=type>Color</span>        ) = (1,1,1,1)
+<strong>_SpecColor</strong>  ("Specular Color",         <span class=type>Color</span>        ) = (0.5,0.5,0.5,1)
+<strong>_Shininess</strong>  ("Shininess",              <span class=type>Range(0.01,1)</span>) = 0.078125
+<strong>_MainTex</strong>    ("Base (RGB) Gloss (A)",   <span class=type>2D</span>           ) = "white" {}
+<strong>_Illum</strong>      ("Illumin (A)",            <span class=type>2D</span>           ) = "white" {}
+<strong>_EmissionLM</strong> ("Emission (Lightmapper)", <span class=type>Float</span>        ) = 0</code></pre></dd>
+<dt><dfn id="Self-Illumin/VertexLit">Self-Illumin/VertexLit</dfn> <a href="#Self-Illumin/VertexLit">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>      ("Main Color",             <span class=type>Color</span>       ) = (1,1,1,1)
+<strong>_SpecColor</strong>  ("Spec Color",             <span class=type>Color</span>       ) = (1,1,1,1)
+<strong>_Shininess</strong>  ("Shininess",              <span class=type>Range(0.1,1)</span>) = 0.7
+<strong>_MainTex</strong>    ("Base (RGB)",             <span class=type>2D</span>          ) = "white" {}
+<strong>_Illum</strong>      ("Illumin (A)",            <span class=type>2D</span>          ) = "white" {}
+<strong>_EmissionLM</strong> ("Emission (Lightmapper)", <span class=type>Float</span>       ) = 0</code></pre></dd>
+<dt><dfn id="Specular">Specular</dfn> <a href="#Specular">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>     ("Main Color",           <span class=type>Color</span>        ) = (1,1,1,1)
+<strong>_SpecColor</strong> ("Specular Color",       <span class=type>Color</span>        ) = (0.5,0.5,0.5,1)
+<strong>_Shininess</strong> ("Shininess",            <span class=type>Range(0.01,1)</span>) = 0.078125
+<strong>_MainTex</strong>   ("Base (RGB) Gloss (A)", <span class=type>2D</span>           ) = "white" {}</code></pre></dd>
+<dt><dfn id="Star Field">Star Field</dfn> <a href="#Star Field">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong>      ("Texture",       <span class=type>2D</span>    ) = "white" {}
+<strong>cameraUp</strong>      ("cameraUp",      <span class=type>Vector</span>) = (0,1,0,0)
+<strong>cameraLeft</strong>    ("cameraLeft",    <span class=type>Vector</span>) = (1,0,0,0)
+<strong>cameraCenter</strong>  ("cameraCenter",  <span class=type>Vector</span>) = (0,0,0,0)
+<strong>cellSize</strong>      ("cellSize",      <span class=type>Float</span> ) = 1
+<strong>particleScale</strong> ("particleScale", <span class=type>Float</span> ) = 1
+<strong>particleColor</strong> ("particleColor", <span class=type>Float</span> ) = 1</code></pre></dd>
+<dt><dfn id="Transparent/Cutout/Diffuse">Transparent/Cutout/Diffuse</dfn> <a href="#Transparent/Cutout/Diffuse">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color",           <span class=type>Color</span>     ) = (1,1,1,1)
+<strong>_MainTex</strong> ("Base (RGB) Trans (A)", <span class=type>2D</span>        ) = "white" {}
+<strong>_Cutoff</strong>  ("Alpha cutoff",         <span class=type>Range(0,1)</span>) = 0.5</code></pre></dd>
+<dt><dfn id="Transparent/Cutout/VertexLit">Transparent/Cutout/VertexLit</dfn> <a href="#Transparent/Cutout/VertexLit">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>     ("Main Color",           <span class=type>Color</span>       ) = (1,1,1,1)
+<strong>_SpecColor</strong> ("Spec Color",           <span class=type>Color</span>       ) = (1,1,1,0)
+<strong>_Emission</strong>  ("Emissive Color",       <span class=type>Color</span>       ) = (0,0,0,0)
+<strong>_Shininess</strong> ("Shininess",            <span class=type>Range(0.1,1)</span>) = 0.7
+<strong>_MainTex</strong>   ("Base (RGB) Trans (A)", <span class=type>2D</span>          ) = "white" {}
+<strong>_Cutoff</strong>    ("Alpha cutoff",         <span class=type>Range(0,1)</span>  ) = 0.5</code></pre></dd>
+<dt><dfn id="Unlit/Texture">Unlit/Texture</dfn> <a href="#Unlit/Texture">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="Unlit/Transparent">Unlit/Transparent</dfn> <a href="#Unlit/Transparent">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB) Trans (A)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="Vertex color unlit">Vertex color unlit</dfn> <a href="#Vertex color unlit">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Texture", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColoredLit">VertexColoredLit</dfn> <a href="#VertexColoredLit">#</a></dt>
+  <dd><pre><code><strong>_MainTex</strong> ("Base (RGB)", <span class=type>2D</span>) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColoredLitHatched">VertexColoredLitHatched</dfn> <a href="#VertexColoredLitHatched">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Base (RGB)", <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorLitTinted">VertexColorLitTinted</dfn> <a href="#VertexColorLitTinted">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>      ("Main Color",             <span class=type>Color</span>       ) = (1,1,1,1)
+<strong>_SpecColor</strong>  ("Spec Color",             <span class=type>Color</span>       ) = (1,1,1,1)
+<strong>_Shininess</strong>  ("Shininess",              <span class=type>Range(0.1,1)</span>) = 0.7
+<strong>_MainTex</strong>    ("Base (RGB)",             <span class=type>2D</span>          ) = "white" {}
+<strong>_Illum</strong>      ("Illumin (A)",            <span class=type>2D</span>          ) = "white" {}
+<strong>_EmissionLM</strong> ("Emission (Lightmapper)", <span class=type>Float</span>       ) = 0</code></pre></dd>
+<dt><dfn id="VertexColorUnlitSkysphere">VertexColorUnlitSkysphere</dfn> <a href="#VertexColorUnlitSkysphere">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTinted">VertexColorUnlitTinted</dfn> <a href="#VertexColorUnlitTinted">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedAdd">VertexColorUnlitTintedAdd</dfn> <a href="#VertexColorUnlitTintedAdd">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedAddDepthWrite">VertexColorUnlitTintedAddDepthWrite</dfn> <a href="#VertexColorUnlitTintedAddDepthWrite">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedAddSmooth">VertexColorUnlitTintedAddSmooth</dfn> <a href="#VertexColorUnlitTintedAddSmooth">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedAddSmoothNoCull">VertexColorUnlitTintedAddSmoothNoCull</dfn> <a href="#VertexColorUnlitTintedAddSmoothNoCull">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedAddSmoothNoDepth">VertexColorUnlitTintedAddSmoothNoDepth</dfn> <a href="#VertexColorUnlitTintedAddSmoothNoDepth">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedAddSmoothNoDepthRead">VertexColorUnlitTintedAddSmoothNoDepthRead</dfn> <a href="#VertexColorUnlitTintedAddSmoothNoDepthRead">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedAddSmoothNoVertColors">VertexColorUnlitTintedAddSmoothNoVertColors</dfn> <a href="#VertexColorUnlitTintedAddSmoothNoVertColors">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedAlpha">VertexColorUnlitTintedAlpha</dfn> <a href="#VertexColorUnlitTintedAlpha">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedAlpha2">VertexColorUnlitTintedAlpha2</dfn> <a href="#VertexColorUnlitTintedAlpha2">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedAlphaNoCull">VertexColorUnlitTintedAlphaNoCull</dfn> <a href="#VertexColorUnlitTintedAlphaNoCull">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedAlphaNoDepthRead">VertexColorUnlitTintedAlphaNoDepthRead</dfn> <a href="#VertexColorUnlitTintedAlphaNoDepthRead">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedDouble">VertexColorUnlitTintedDouble</dfn> <a href="#VertexColorUnlitTintedDouble">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedHatched">VertexColorUnlitTintedHatched</dfn> <a href="#VertexColorUnlitTintedHatched">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedHatchedQuad">VertexColorUnlitTintedHatchedQuad</dfn> <a href="#VertexColorUnlitTintedHatchedQuad">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedMultiply">VertexColorUnlitTintedMultiply</dfn> <a href="#VertexColorUnlitTintedMultiply">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedMultiplyNoDepthWrite">VertexColorUnlitTintedMultiplyNoDepthWrite</dfn> <a href="#VertexColorUnlitTintedMultiplyNoDepthWrite">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedQuadruple">VertexColorUnlitTintedQuadruple</dfn> <a href="#VertexColorUnlitTintedQuadruple">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedSkywire">VertexColorUnlitTintedSkywire</dfn> <a href="#VertexColorUnlitTintedSkywire">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+<dt><dfn id="VertexColorUnlitTintedYardstick">VertexColorUnlitTintedYardstick</dfn> <a href="#VertexColorUnlitTintedYardstick">#</a></dt>
+  <dd><pre><code><strong>_Color</strong>   ("Main Color", <span class=type>Color</span>) = (1,1,1,0.5)
+<strong>_MainTex</strong> ("Texture",    <span class=type>2D</span>   ) = "white" {}</code></pre></dd>
+</dl>
+<!-- InstanceEndEditable -->
+</body>
+<!-- InstanceEnd --></html>
