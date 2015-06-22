@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html><!-- InstanceBegin template="/Templates/as2-doc-main.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta charset="utf-8">
+<link href="as2-doc.css" rel="stylesheet" type="text/css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="as2-doc.js" type="text/javascript"></script>
+<!-- InstanceBeginEditable name="head" -->
+<title>Skins</title>
+<!-- InstanceEndEditable -->
+</head>
+<body>
+<h1 id="about">About</h1>
+<address>Author: <a href="index.html#contact">DeathByNukes</a></address>
+<p>This is a part of my <a href="index.html">Audiosurf 2 scripting documentation</a>.</p>
+<!-- InstanceBeginEditable name="pre-content" -->
+<p>This page documents the version released <a href="changelog.html#14">May ‎29, ‎2014</a>.</p>
+<p>The documentation for <a href="#BatchRenderEveryFrame">BatchRenderEveryFrame</a> has the latest variables but the extended description doesn't account for the changes yet.</p>
+<!-- InstanceEndEditable -->
+<h1 id="format">Documentation Format</h1>
+<code><span class="example_type">type</span> <strong>name</strong> = default or choice2 or choice3 <em>-- extra information</em></code>
+<p>If I write <code><strong>?=</strong></code> instead of <code><strong>=</strong></code> that means omitting the value will cause the existing value or default to be preserved. Only matters if you're calling the function more than once.</p>
+<h1 id="contents">Contents</h1>
+<script type="text/javascript">writeNavigation();</script>
+<h1 id="types">Types</h1>
+<script type="text/javascript">writeTypes();</script>
+<!-- InstanceBeginEditable name="content" -->
+<h1 id="script-execution">Script Execution</h1>
+<p>The skin script is executed during the loading screen when starting a song. A function in the script named <code><a href="#Update" class="func">Update()</a></code>, if present, will be executed every frame during actual gameplay.</p>
+<h2 id="Update">Update(<a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-float">float</a>)</h2>
+<p>This function is executed inside of <a href="http://docs.unity3d.com/Documentation/ScriptReference/MonoBehaviour.LateUpdate.html">Unity's LateUpdate</a> function.<br>
+Arguments:</p>
+<pre><code><a href="#type-float">float</a> <strong>dt</strong> <em>-- the current value of <a href="http://docs.unity3d.com/Documentation/ScriptReference/Time-deltaTime.html">Unity's deltaTime</a> value</em>
+<a href="#type-float">float</a> <strong>tracklocation</strong> <em>-- The fractional index of the track node that the player is currently &quot;on&quot;. (When the player is halfway between nodes 3 and 4, CurrentNode is 3.5)</em>
+<a href="#type-float">float</a> <strong>playerstrafe</strong> <em>-- the player's current offset from the center of the track</em>
+<a href="#type-float">float</a> <strong>currentWakeboarderJumpHeight</strong>
+float intensity <em>-- the same as <a href="#GetIntensity">GetIntensity</a>()</em></code></pre>
+<h1 id="script-functions">Script Functions</h1>
+<h2 id="print">print(<a href="#type-string">string</a>)</h2>
+<p>Outputs the specified string to "Audiosurf2_Data\output_log.txt".</p>
+<pre class="NppLua"><code><span class="sc13">print</span><span class="sc10">(</span><span class="sc6">"Track width: "</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc11">trackWidth</span><span class="sc10">)</span></code></pre>
+<script type="text/javascript">writeScriptFunctions();</script>
+<h2 id="PlayerCanJump"><a href="#type-bool">bool</a> PlayerCanJump()</h2>
+<p>The current mod allows jumping. (wakeboard mod etc)</p>
+<h2 id="PlayerCanJump">Profile(<a href="#type-string">string</a>)</h2>
+<p><a href="#print">Prints</a> the amount of time elapsed since the last time this function was called. The argument should be the name of your skin.</p>
+<h2 id="GetTrack"><a href="#type-table">table</a><a href="#type-array">[]</a> GetTrack()</h2>
+<pre><code><a href="#type-table">table</a> <strong>pos</strong> {
+    <a href="#type-float">float</a> <strong>x</strong>
+    <a href="#type-float">float</a> <strong>y</strong>
+    <a href="#type-float">float</a> <strong>z</strong>
+}
+<a href="#type-float">float</a> <strong>seconds</strong>
+<a href="#type-table">table</a> <strong>color</strong> {
+    <a href="#type-float">float</a> <strong>r</strong>
+    <a href="#type-float">float</a> <strong>g</strong>
+    <a href="#type-float">float</a> <strong>b</strong>
+    <a href="#type-float">float</a> <strong>a</strong>
+}
+<em>-- the following rotation values are in degrees. they are the node's absolute rotation not delta</em>
+<a href="#type-float">float</a> <strong>pan</strong> <em>-- rotation around the y axis</em>
+<a href="#type-float">float</a> <strong>tilt</strong> <em>-- x</em>
+<a href="#type-float">float</a> <strong>roll</strong> <em>-- z</em>
+vector3 rot <em>-- same as {tilt, pan, roll}</em>
+<a href="#type-float">float</a> <strong>intensity</strong> <em>-- normalized <a href="glossary.html#intensity">intensity</a></em>
+bool funkyrot <em>-- if this is in a corkscrew or loop</em>
+float antiairtime <em>-- "anti jump seconds"</em>
+float trafficstrength
+float antitrafficstrength</code></pre>
+<h2 id="GetIntensity"><a href="#type-float">float</a> GetIntensity()</h2>
+<p>The current normalized <a href="glossary.html#intensity">intensity</a>.</p>
+<ul class="seealso">
+	<li><a href="#Update">Update</a></li>
+</ul>
+<h2 id="GetSpectrum"><a href="#type-float">float</a><a href="#type-array">[]</a> GetSpectrum()</h2>
+<p>Gets the <a href="https://en.wikipedia.org/wiki/Fast_Fourier_transform">Fast Fourier Transform</a> of the current point in song playback. (array contains 16 floats. a 512 version is available in the code but isn't exposed to lua yet)</p>
+<h2 id="GetLogSpectrum"><a href="#type-float">float</a><a href="#type-array">[]</a> GetLogSpectrum()</h2>
+<p>I have only skimmed the code but it looks like this splits up the 512 bin spectrum logarithmically rather than linearly before averaging them down to 16. (&quot;horizontal&quot; log scale) The numeric scale of the individual bins (&quot;vertical&quot; scale) is the same as the regular spectrum.</p>
+<h2 id="GetMillisecondsSinceStartup"><a href="#type-float">float</a> GetMillisecondsSinceStartup()</h2>
+<p>Unity's <a href="https://docs.unity3d.com/ScriptReference/Time-realtimeSinceStartup.html">Time.realtimeSinceStartup</a> * 1000.</p>
+<p>Note that this is the time since Audiosurf 2 started (potentially more than an hour ago) not the time since this particular track started. Can be useful as a seed to <code><a href="http://www.lua.org/manual/5.1/manual.html#pdf-math.randomseed">math.randomseed</a></code> if non-deterministic behavior is desired. (By default it is seeded with the song length.)</p>
+<h2 id="GetHighwayColor"><a href="#type-color">color</a> GetHighwayColor()</h2>
+<p>Gets the highway color at the current point in song playback. The returned table contains both styles of color. (<code>color.r</code> and <code>color[1]</code> are equivalent)</p>
+<h2 id="GetSongCompletionPercentage"><a href="#type-float">float</a> GetSongCompletionPercentage()</h2>
+<p>The current point in song playback. The returned number ranges from 0.0 to 1.0.</p>
+<h2 id="GetSkinProperties"><a href="#type-table">table</a> GetSkinProperties()</h2>
+<p>returned <code><a href="#type-table">table</a></code>:</p>
+<pre><code><a href="#type-float">float</a> <strong>trackwidth</strong>
+<a href="#type-bool">bool</a> <strong>prefersteep</strong>
+<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>lanedividers</strong>
+<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>shoulderlines</strong>
+<a href="#type-int">int</a> <strong>colorcount</strong>
+<em>-- arbitrary string and double values from the mod are also included here</em></code></pre>
+<h2 id="GetQualityLevel"><a href="#type-int">int</a> GetQualityLevel()</h2>
+<p>Returns <code><a href="http://www.lua.org/manual/5.1/manual.html#pdf-math.min" class="func">math.min</a>(3, <a href="#GetQualityLevel4" class="func">GetQualityLevel4</a>())</code></p>
+<h2 id="GetQualityLevel4"><a href="#type-int">int</a> GetQualityLevel4()</h2>
+<p>Returns the <a href="http://docs.unity3d.com/Documentation/ScriptReference/QualitySettings.GetQualityLevel.html">Unity quality level</a> plus 1.</p>
+<h2 id="GetAlbumArtPalette"><a href="#type-color">color</a><a href="#type-array">[]</a> GetAlbumArtPalette{}</h2>
+<pre><code><a href="#type-int">int</a> <strong>mincount</strong> = 3
+<a href="#type-int">int</a> <strong>maxcount</strong> = 5</code></pre>
+<p>... is how it's supposed to be, but it appears to be bugged. this is difficult to explain so here is the the C# code I am seeing:</p>
+<pre><code>LuaTable GetAlbumArtPalette(LuaTable table)
+{
+	int min = 3;
+	int max = 5;
+	if (table != null)
+	{
+		<em>// int LuaX.OtoI(object o, int defaultValue);</em>
+		LuaX.OtoI(table["mincount"], min); <em>// ignored</em>
+		min = LuaX.OtoI(table["maxcount"], max); <em>// max assigned to min using max's default</em>
+	}
+	if (max &lt; min)
+		max = min;
+	...
+}</code></pre>
+<p>The returned colors are in <code>{r=0-1, g=0-1, b=0-1, a=1}</code> format.</p>
+<h1 id="customization-functions">Customization Functions</h1>
+<p><a href="http://stackoverflow.com/questions/686931/are-curly-brackets-used-in-lua">In case you aren't familiar with Lua syntax</a>, a function name followed by braces is shorthand for calling the function with a single argument which is a table. So, <code>Foo{bar=1}</code> and <code>Foo({bar=1})</code> are equivalent.</p>
+<h2 id="SetScene">SetScene{}</h2>
+<pre><code><em>-- <a href="#script-execution">First run</a> only:</em>
+<a href="#type-float">float</a> <strong>maxAllowedTrackHeight</strong> = 10000000000
+<a href="#type-float">float</a> <strong>camStaticZone</strong> = 0
+<em>-- if this is a dedicated skin</em>
+<a href="#type-string">string</a>/<a href="#type-table">table</a> <strong>twistmode</strong> ?= nil or "cork" or "straight" or "straightish" or "straightisher" or "straightishest" or "straightishest_flatishest" or "straightishest_flatish" or "straightisher_flatish" or "straight_flat50" or "straight_flat25" or "straight_flatish" or "straight_flatisher" or "straight_flatishest" or "straight_flat" or "cork_flatish" or "circle" or "default" or table { <em>-- forced to be "straight" if mod sets GameplaySettings{sideview=true}</em>
+	<em>-- cork twist mode</em>
+	<a href="#type-float">float</a> <strong>curvescaler</strong> = 1
+	<a href="#type-float">float</a> <strong>steepscaler</strong> = 1
+}
+<em>-- end</em>
+<a href="#type-bool">bool</a> <strong>water</strong> = true
+<a href="#type-int">int</a> <strong>numvisiblewaterchunks</strong> = -1
+<a href="#type-bool">bool</a> <strong>towropes</strong> ?= false
+<em>-- End of first run only</em>
+<a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>waterclones</strong> = nil
+<a href="#type-color">color</a> <strong>skywirecolor</strong> ?= nil
+<a href="#type-string">string</a> <strong>minimap_colormode</strong> = "track" or "white" or "black" or "greyscale"
+<a href="#type-int">int</a> <strong>glowpasses</strong> ?= 4
+<a href="#type-float">float</a> <strong>glowspread</strong> ?= 0.5
+<a href="#type-float">float</a> <strong>radialblur_strength</strong> ?= 1.0
+float crease_strength ?= 0 <em>-- cannot be set back to 0 once changed</em>
+<a href="#type-bool">bool</a> <strong>dynamicFOV</strong> ?= false
+float closecam_near ?= ? <em>-- near clip plane of <a href="magic-literals.html#layers">layer 15</a></em>
+float closecam_far ?= 50
+<a href="#type-int">int</a> <strong>airdebris_count</strong> = 500 <em>-- &quot;sprites per chunk&quot;. <strong>airdebris_*</strong><strong></strong> are ?= set as a group; if one is supplied then all of them will be updated</em>
+<a href="#type-int">int</a> <strong>airdebris_density</strong> = 10 <em>-- &quot;sprites each ring&quot;</em>
+float <strong>airdebris_particlesize</strong> = 1 <em>-- &quot;particle scaler&quot;</em>
+float <strong>airdebris_fieldsize</strong> <em>-- &quot;cell size&quot;</em>
+int <strong>airdebris_layer</strong> = 11
+<a href="#type-color">color</a> <strong>watertint</strong> ?= ?
+bool widewater ?= false <em>-- turning this on then off again puts the internal settings in an inconsistent state. haven't tested to see what happens</em>
+<a href="#type-float">float</a> <strong>minwaterrandomdarkness</strong> ?= 0.5 <em>-- individual water cubes will be tinted to a random greyscale color between this and 1</em>
+<a href="#type-int">int</a> <strong>watertype</strong> = 0 <em>-- the only usage of it I could find is that type 2 has shader GpuOffsetCubesNoLines and all others have GpuOffsetCubes</em>
+<a href="#type-bool">bool</a> <strong>watertint_highway</strong> = false <em>-- water color changes to the current highway color automatically. if enabled, only the alpha of <strong>watertint</strong> will be used</em>
+<a href="#type-address">address</a> <strong>watertexture</strong> ?= ? <em>-- uses "clamp" wrapping and no mipmaps.</em>
+<a href="#type-bool">bool</a> <strong>usecubewater</strong> ?= true
+<a href="#type-bool">bool</a> <strong>usedefaultrails</strong> ?= false
+<a href="#type-bool">bool</a> <strong>fogenabled</strong> = false <em>-- sets UnityEngine.FogMode.Linear</em>
+<a href="#type-color">color</a> <strong>fogcolor</strong> ?= ?
+<a href="#type-float">float</a> <strong>fogdensity</strong> ?= ? <em>-- <a href="http://docs.unity3d.com/Documentation/ScriptReference/RenderSettings-fogDensity.html">unused</a> in this fog mode</em>
+<a href="#type-float">float</a> <strong>fogstart</strong> ?= ?
+<a href="#type-float">float</a> <strong>fogend</strong> ?= ?
+<a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>ambientlight</strong> = {51,51,51,255} or "highway" or "highwayinverted" -<em>- accessible in shaders via <a href="https://docs.unity3d.com/Manual/SL-BuiltinStateInPrograms.html">UNITY_LIGHTMODEL_AMBIENT</a></em>
+<a href="#type-bool">bool</a> <strong>useblackgrid</strong> ?= true
+<a href="#type-string">string</a> <strong>pullermodel</strong> ?= ? <em>-- the "boats"</em></code></pre>
+<h2 id="SetTrackColors">SetTrackColors(<a href="#type-color">color</a><a href="#type-array">[]</a>)</h2>
+<h2 id="SetBlockColors">SetBlockColors(<a href="#type-color">color</a><a href="#type-array">[]</a>)</h2>
+<h2 id="LoadSounds">LoadSounds(<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a>)</h2>
+<h2 id="SetPlayer">SetPlayer{}</h2>
+<pre><code><a href="#type-float">float</a> <strong>fov</strong> = 90
+bool cameraortho = false <em>-- orthographic cameras</em>
+<a href="#type-bool">bool</a> <strong>cameraignoreslope</strong> = false
+<a href="#type-float">float</a> <strong>cameraHeightTrackingRatio</strong> = 1
+<a href="#type-string">string</a> <strong>cameramode</strong> = "first" or third" or "first_jumpthird" or "first_trickthird" or "third_trickjumpthird" <em>-- case insensitive. generates an error if it is a string that doesn't match</em>
+<a href="#type-table">table</a> <strong>camfirst</strong> ?= nil or {
+	<a href="#type-vector3">vector3</a> <strong>pos</strong> = {0,0,0} <em>-- default if camfirst is nil: {1, 2.7, 3.50475}</em>
+	<a href="#type-vector3">vector3</a> <strong>rot</strong> = {0,0,0} <em>-- default if camfirst is nil: {20.49113, 0, 0}</em>
+	<a href="#type-float">float</a> <strong>strafefactor</strong> ?= 1
+	<a href="#type-float">float</a> <strong>puzzleoffset</strong> ?= 0 <em>-- "ring offset"</em>
+}
+<a href="#type-table">table</a> <strong>camthird</strong> ?= nil or { <em>-- pos/rot is called "near" and pos2/rot2 "far"</em>
+	<a href="#type-vector3">vector3</a> <strong>pos</strong> = {0,0,0} <em>-- default if camthird is nil: {1, 3.9, -0.23}</em>
+	<a href="#type-vector3">vector3</a> <strong>rot</strong> = {0,0,0} <em>-- default if camthird is nil: {20.49113, 0, 0}</em>
+	<a href="#type-float">float</a> <strong>strafefactor</strong> ?= 0.5
+	<em>-- if pos2 is nil, pos2/rot2/strafefactorFar are set to the current values of pos/rot/strafefactor and your settings for rot2/strafefactorFar are ignored</em>
+	<a href="#type-vector3">vector3</a> <strong>pos2</strong> = {0,0,0} <em>-- default if camthird is nil: {1, 1.8, -3.17}</em>
+	<a href="#type-vector3">vector3</a> <strong>rot2</strong> = {0,0,0} <em>-- default if camthird is nil: {25.836, 0, 0}</em>
+	<a href="#type-float">float</a> <strong>strafefactorFar</strong> ?= 1
+	<a href="#type-float">float</a> <strong>transitionspeed</strong> ?= 1 <em>-- "smooth bias speed"</em>
+	<a href="#type-float">float</a> <strong>puzzleoffset</strong> ?= 0 <em>-- "ring offset close"</em>
+	<a href="#type-float">float</a> <strong>puzzleoffset2</strong> ?= 0 <em>-- "ring offset far"</em>
+}
+<em>-- First run only:</em>
+<a href="#type-table">table</a> <strong>vehicle</strong> = ? or { <em>-- strange things may happen if this is omitted during the first run</em>
+	<a href="#type-gameobject">gameobject</a> <strong>*</strong> <em>-- all of the variables from gameobject are included directly inside this table</em>
+	bool reflect ?= false <em>-- cannot be disabled once set to true</em>
+	<a href="#type-float">float</a> <strong>min_hover_height</strong> = 0
+	<a href="#type-float">float</a> <strong>max_hover_height</strong> = 0
+	<a href="#type-bool">bool</a> <strong>use_water_rooster</strong> = true
+	<a href="#type-float">float</a> <strong>rollscaler</strong> = -1
+	<a href="#type-color">color</a> <strong>roostercolor</strong> = {0.133, 0.22, 0.486, 1}
+	<a href="#type-float">float</a> <strong>water_rooster_z_offset</strong> = -1.04
+	<a href="#type-bool">bool</a> <strong>smooth_tilting</strong> = false
+	<a href="#type-float">float</a> <strong>smooth_tilting_speed</strong> = 10
+	<a href="#type-float">float</a> <strong>smooth_tilting_max_offset</strong> = -20
+}
+<a href="#type-gameobject">gameobject</a> <strong>airvehicle</strong> ?= nil
+<a href="#type-gameobject">gameobject</a> <strong>watervehicle</strong> ?= nil
+<a href="#type-table">table</a> <strong>surfer</strong> ?= nil or {
+	<a href="#type-bool">bool</a> <strong>use_water_rooster</strong> = true
+	<a href="#type-color">color</a> <strong>roostercolor</strong> = {0.133, 0.22, 0.486, 1}
+	<a href="#type-float">float</a> <strong>water_rooster_z_offset</strong> ?= -1.04
+	<a href="#type-gameobject">gameobject</a> <strong>arms</strong> ?= nil
+	<a href="#type-gameobject">gameobject</a> <strong>leg</strong> ?= nil
+	<a href="#type-gameobject">gameobject</a> <strong>body</strong> ?= nil
+	<a href="#type-gameobject">gameobject</a> <strong>board</strong> ?= nil
+}
+<em>-- End of first run only</em></code></pre>
+<h2 id="SetBackgroundColor">SetBackgroundColor(<a href="#type-color">color</a>)</h2>
+<p>Example: <code>SetBackgroundColor{0, 127, 255} <em>-- #007FFF</em></code></p>
+<h2 id="SetSkybox">SetSkybox{}</h2>
+<p>Can be one of the following tables:</p>
+<pre><code><a href="#type-table">table</a> <strong>sky</strong> = {
+	<em>-- this is <a href="#silver-lining">Silver Lining</a></em>
+	<a href="#type-double">double</a> <strong>month</strong> = 2.0
+	<a href="#type-double">double</a> <strong>hour</strong> = 12.0
+	<a href="#type-double">double</a> <strong>minute</strong> = 0.0
+	<a href="#type-double">double</a> <strong>cloudmaxheight</strong> = 1.1 <em>-- cumulus clouds. 1.0 is the top of the level (track boundaries), -1.0 is the bottom, and 0 is the center.</em>
+	<a href="#type-double">double</a> <strong>cloudminheight</strong> = -1.1
+	<a href="#type-double">double</a> <strong>clouddensity</strong> = 0.6 <em>-- 0 or less disables cumulus clouds. setting this too high causes severe graphical glitches and lag</em>
+	<a href="#type-double">double</a> <strong>cirrusposition</strong> = 0.0 <em>-- 0 disables cirrus clouds. positive numbers are added to the top of the track, <strong>negative numbers</strong> are <strong>subtracted</strong> from the bottom of the track (bug)
+	-- the above values will be checked against the existing settings and the function will abort if they are the same. <strong>flare</strong> is applied before the abort though.</em>
+	<a href="#type-bool">bool</a> <strong>flare</strong> = true <em>-- once turned off it cannot be turned back on</em>
+	bool showsun = true
+	<a href="#type-float">float</a> <strong>latitude</strong> ?= 42 <em>-- bug: lat and long are stored as doubles but the lua values are needlessly downcast to floats before being assigned</em>
+	<a href="#type-float">float</a> <strong>longitude</strong> ?= 185.6
+	<a href="#type-bool">bool</a> <strong>useProceduralAmbientLight</strong> ?= true
+	<a href="#type-bool">bool</a> <strong>useProceduralSunLight</strong> ?= true
+}</code></pre>
+<pre><code><a href="#type-color">color</a> <strong>color</strong> = nil
+<a href="#type-string">string</a> <strong>sky</strong> = nil <em>-- loads an embedded skybox. TODO: make a list of these</em></code></pre>
+<pre><code><a href="#type-color">color</a> <strong>color</strong> = nil
+<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a> <strong>custom</strong> = nil <em>-- uses texture settings clamp/mipmaps=true/bilinear</em></code></pre>
+<pre><code><a href="#type-color">color</a> <strong>color</strong> = nil
+<a href="#type-vector2">vector2</a> <strong>texturescale</strong> ?= ?
+<a href="#type-vector2">vector2</a> <strong>textureoffset</strong> ?= ?
+<a href="#type-address">address</a> <strong>skysphere</strong> <em>-- this setting is only used on the first run. however, you MUST supply a string to it in all cases in order for SetSkybox to know you are trying to modify the skysphere</em></code></pre>
+<pre><code>string skyscreen <em>-- shader name</em>
+int skyscreenlayer = 18
+vector3 skyScreen_TrackOffset = null
+vector3 skyScreen_FixedTrackOffset = nil</code></pre>
+<ul class="seealso">
+	<li><a href="shaders.html#skyscreen">Sky Screen Shaders</a></li>
+</ul>
+<h3 id="silver-lining">Silver Lining</h3>
+<p><a href="http://forum.unity3d.com/threads/107166-SilverLining-for-Unity-3D-volumetric-clouds-sim-quality-procedural-skies">Silver Lining</a> is highly customizable but AS2 doesn't expose most of the interesting options or even most of the basic options. Here's some of the important locked settings:</p>
+<ul>
+	<li>year = 2010</li>
+	<li>day = 1</li>
+	<li>daylightSavingsTime = true</li>
+	<li>timeZone = -8.0</li>
+	<li>windVelocity = {10, 0, 10}</li>
+	<li>altitude = 0</li>
+</ul>
+<p>It's not possible to alter these by setting one of the other values by a really big number; it rejects the entire time setting if one of the values is out of range. The daylight savings time setting is active no matter which time of year you specify, so the effective time zone is UTC -7 (pacific daylight time).</p>
+<p>This is how the true  world-space cloud positions are calculated from our settings:</p>
+<pre class="NppLua"><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">SetSkybox</span><span class="sc10">(</span><span class="sc11">table</span><span class="sc10">)</span><span class="sc0">
+    </span><span class="sc2">...</span><span class="sc0">
+    </span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">lua_clouddensity</span><span class="sc0"> </span><span class="sc10">&lt;=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
+        </span><span class="sc11">silverLining.hasCumulusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">false</span><span class="sc0">
+    </span><span class="sc5">else</span><span class="sc0">
+        </span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11"><a href="lib/track_bounds.html">track_bounds</a>.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">lua_cloudmaxheight</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">])</span><span class="sc0">
+        </span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cloud_min</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">lua_cloudminheight</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">])</span><span class="sc0"> </span><span class="sc2">-- track_bounds.max is [sic]. doesn't matter though.
+</span><span class="sc0">        </span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc14">math.max</span><span class="sc10">(</span><span class="sc11">cloud_max</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">cloud_min</span><span class="sc10">)</span><span class="sc0">
+        
+        </span><span class="sc11">silverLining.hasCumulusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc0">
+        </span><span class="sc11">silverLining.cumulusCoverage</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">lua_clouddensity</span><span class="sc0">
+        </span><span class="sc11">silverLining.cumulusPosition</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
+            </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">],</span><span class="sc0">
+            </span><span class="sc10">(</span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">cloud_min</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">/</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc10">,</span><span class="sc0">
+            </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]</span><span class="sc0">
+        </span><span class="sc10">}</span><span class="sc0">
+        </span><span class="sc11">silverLining.cumulusDimensions</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
+            </span><span class="sc14">math.max</span><span class="sc10">(</span><span class="sc4">80000</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.min</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">])),</span><span class="sc0">
+            </span><span class="sc4">2</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">silverLining.cumulusPosition</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]),</span><span class="sc0">
+            </span><span class="sc14">math.max</span><span class="sc10">(</span><span class="sc4">80000</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.min</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]))</span><span class="sc0">
+        </span><span class="sc10">}</span><span class="sc0">
+    </span><span class="sc5">end</span><span class="sc0">
+    </span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
+        </span><span class="sc11">silverLining.hasCirrusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">false</span><span class="sc0">
+    </span><span class="sc5">else</span><span class="sc0">
+        </span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cirrus_y</span><span class="sc0">
+        </span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0"> </span><span class="sc10">&lt;=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
+            </span><span class="sc11">cirrus_y</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">track_bounds.min</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0"> </span><span class="sc2">-- BUG: subtracting a negative number
+</span><span class="sc0">        </span><span class="sc5">else</span><span class="sc0">
+            </span><span class="sc11">cirrus_y</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0">
+        </span><span class="sc5">end</span><span class="sc0">
+        
+        </span><span class="sc11">silverLining.hasCirrusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc0">
+        </span><span class="sc11">silverLining.cirrusPosition</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
+            </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">],</span><span class="sc0">
+            </span><span class="sc11">cirrus_y</span><span class="sc10">,</span><span class="sc0">
+            </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]</span><span class="sc0">
+        </span><span class="sc10">}</span><span class="sc0">
+    </span><span class="sc5">end</span><span class="sc0">
+    </span><span class="sc2">...</span><span class="sc0">
+</span><span class="sc5">end</span></pre>
+<h2 id="UpdateProceduralSky">UpdateProceduralSky{}</h2>
+<pre><code><a href="#type-float">float</a> <strong>latitude</strong> ?= 42
+<a href="#type-float">float</a> <strong>longitude</strong> ?= 185.6</code></pre>
+<h2 id="SetRings">SetRings{}</h2>
+<pre><code><a href="#type-string">string</a> <strong>texture</strong> = nil <em>-- bug: only supports built-in shaders</em>
+<a href="#type-string">string</a> <strong>shader</strong> = nil
+<a href="#type-bool">bool</a> <strong>shadowcaster</strong> = false
+<a href="#type-bool">bool</a> <strong>shadowreceiver</strong> = false
+<a href="#type-int">int</a> <strong>layer</strong> = 11
+vector3 offset = {0,0,0}
+<a href="#type-float">float</a> <strong>size</strong> = 0
+<a href="#type-float">float</a> <strong>percentringed</strong> = 0
+<a href="#type-bool">bool</a> <strong>useairrings</strong> = true
+<a href="#type-string">string</a> <strong>airtexture</strong> = nil
+<a href="#type-string">string</a> <strong>airshader</strong> = nil
+<a href="#type-float">float</a> <strong>airsize</strong> = 0</code></pre>
+<h2 id="SetWake">SetWake{}</h2>
+<pre><code><a href="#type-material">material</a> <strong>*</strong> <em>-- all of the variables from <a href="#type-material">material</a> are included directly inside SetWake{}</em>
+<a href="#type-float">float</a> <strong>height</strong> = 0.0
+<a href="#type-float">float</a> <strong>fallrate</strong> = 0.0
+<a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>bottomcolor</strong> = "highway" or "highwayinverted" or {1,1,1,1} etc
+<a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>topcolor</strong> = "highway" or "highwayinverted" or {1,1,1,1} etc
+<a href="#type-int">int</a> <strong>layer</strong> = 11
+vector3[] offsets ?= {{7.5, 0, 0}, {-7.5, 0, 0}}
+<a href="#type-bool">bool</a> <strong>extraspray</strong> = false</code></pre>
+<p>Renderqueue is forced to be <a href="magic-literals.html#render-queue">3998</a> and _Color is forced to be white.</p>
+<h2 id="SetPuzzleGraphics">SetPuzzleGraphics{}</h2>
+<pre><code><a href="#type-material">material</a> <strong>puzzlematerial</strong> = nil
+<a href="#type-material">material</a> <strong>puzzlematchmaterial</strong> = nil
+<a href="#type-material">material</a> <strong>puzzleflyupmaterial</strong> = nil
+<a href="#type-bool">bool</a> <strong>usesublayerclone</strong> ?= true</code></pre>
+<h2 id="SetBlockFlashes">SetBlockFlashes{}</h2>
+<pre><code>address texture ?= ? <em>-- clamped and mipmaps off</em>
+float sizescaler ?= 1</code></pre>
+<h2 id="SetBlocks">SetBlocks{}</h2>
+<pre><code>int maxvisiblecount ?= 30
+<a href="#type-table">table</a> <strong>chainspans</strong> ?= ? or {
+	bool hide ?= false
+	materialid material ?= ?
+	<em>-- if <strong>material</strong> is omitted</em>
+		<a href="#type-string">string</a> <strong>shader</strong> ?= ?
+		<em>-- if <strong>shader</strong> is not omitted</em>
+			<em>-- create a new material</em>
+			material *
+		<em>-- else</em>
+			<em>-- modify the existing material (if a <a href="#type-materialid">materialid</a> was used, this modifies anything else that uses the same id)</em>
+			<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a> <strong>shadercolors</strong> ?= ?
+			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
+		<em>-- end</em>
+	<em>-- end</em>
+}
+<a href="#type-table">table</a> <strong>colorblocks</strong> ?= ? or {
+	materialid material ?= ?
+	<em>-- if <strong>material</strong> is omitted</em>
+		<a href="#type-string">string</a> <strong>shader</strong> ?= ?
+		<em>-- if <strong>shader</strong> is not omitted</em>
+			<em>-- create a new material</em>
+			material *
+		<em>-- else</em>
+			<em>-- modify the existing material (if a <a href="#type-materialid">materialid</a> was used, this modifies anything else that uses the same id)</em>
+			<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a> <strong>shadercolors</strong> ?= ?
+			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
+		<em>-- end</em>
+	<em>-- end</em>
+	bool reflect = false
+	<a href="#type-address">address</a>/<a href="#type-mesh">mesh</a> <strong>mesh</strong> ?= ?
+	<a href="#type-address">address</a> <strong>meshmorph</strong> ?= nil <em>-- only used if <strong>mesh</strong> is an address. if <strong>meshmorph</strong> is set then <strong>mesh</strong> is mandatory</em>
+	<a href="#type-float">float</a> <strong>meshmorphsmoothspeed</strong> = 5
+	<a href="#type-string">string</a> <strong>meshmorphtype</strong> = &quot;intensity&quot; or &quot;intensitysmooth&quot; or &quot;intensitysmoothfall&quot; or &quot;intensitysmoothrise&quot;
+	<a href="#type-vector3">vector3</a> <strong>scale</strong> ?= ? <em>-- this and the next two values might affect all blocks not just <strong>colorblocks</strong></em>
+	<a href="#type-float">float</a> <strong>height</strong> ?= 0
+	<a href="#type-bool">bool</a> <strong>float_on_water</strong> = true
+}
+<a href="#type-table">table</a> <strong>greyblocks</strong> ?= ? or {
+	materialid material ?= ?
+	<em>-- if <strong>material</strong> is omitted</em>
+		<a href="#type-string">string</a> <strong>shader</strong> ?= ?
+		<em>-- if <strong>shader</strong> is not omitted</em>
+			<em>-- create a new material</em>
+			material *
+		<em>-- else</em>
+			<em>-- modify the existing material</em>
+			<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a> <strong>shadercolors</strong> ?= ?
+			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
+		<em>-- end</em>
+	<em>-- end</em>
+	bool reflect = false
+	<a href="#type-address">address</a>/<a href="#type-mesh">mesh</a> <strong>mesh</strong> ?= ?
+	<a href="#type-address">address</a> <strong>meshmorph</strong> ?= nil <em>-- only used if <strong>mesh</strong> is an address. if <strong>meshmorph</strong> is set then <strong>mesh</strong> is mandatory</em>
+	<a href="#type-float">float</a> <strong>meshmorphsmoothspeed</strong> = 5
+	<a href="#type-string">string</a> <strong>meshmorphtype</strong> = &quot;intensity&quot; or &quot;intensitysmooth&quot; or &quot;intensitysmoothfall&quot; or &quot;intensitysmoothrise&quot;<em></em>
+}
+<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-table">table</a><a href="#type-dict">}</a> <strong>powerups</strong> ?= ? or {example = { <em>-- this dictionary is merged into the default dictionary, overwriting any conflicting keys</em>
+	materialid material ?= ?
+	<em>-- if <strong>material</strong> is omitted</em>
+		<a href="#type-string">string</a> <strong>shader</strong> ?= ?
+		<em>-- if <strong>shader</strong> is not omitted</em>
+			<em>-- create a new material</em>
+			material *
+		<em>-- else</em>
+			<em>-- modify the existing material</em>
+			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
+		<em>-- end</em>
+	<em>-- end</em>
+	bool reflect = false
+	<a href="#type-address">address</a>/<a href="#type-mesh">mesh</a> <strong>mesh</strong> = nil
+	<a href="#type-vector3">vector3</a> <strong>scale</strong> ?= {1,1,1}
+}, ...}</code></pre>
+<h2 id="CreateRail">CreateRail{}</h2>
+<pre><code><a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;rail&quot;</em>
+<a href="#type-vector2">vector2</a> <strong>positionOffset</strong> = {0,0} <em>-- added to every coordinate in crossSectionShape</em>
+<a href="#type-vector2">vector2</a><a href="#type-array">[]</a> <strong>crossSectionShape</strong> = nil
+<a href="#type-string">string</a> <strong>textureMode</strong> = "repeataround" or "wraparound" or "wraparoundcontinuous" or "none" or "repeataroundreverse" or "wraparoundreverse"
+<a href="#type-string">string</a> <strong>colorMode</strong> = "highway" or "highwayinverted" or "static" or "aurora" or "highwayflat" or "trackposition" or &quot;highwayscaledfollowmaxjumpheights&quot; <em>-- the jumpheights option only works inside <a href="mods.html#OnSkinLoaded">OnSkinLoaded</a>/<a href="mods.html#OnRequestLoadObjects">OnRequestLoadObjects</a></em>
+<a href="#type-int">int</a> <strong>stretch</strong> = 1 <em>-- referred to internally as "ring spacing"</em>
+<a href="#type-color">color</a> <strong>color</strong> = ?/white
+<a href="#type-bool">bool</a> <strong>flatten</strong> = false <em>-- "use guard rail heights"</em>
+<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>perShapeNodeColorScalers</strong> = nil
+<a href="#type-string">string</a> <strong>shader</strong> = nil
+<a href="#type-int">int</a> <strong>renderqueue</strong> = 2000 <em>-- see <a href="glossary.html#render-queue">here</a></em>
+<a href="#type-int">int</a> <strong>layer</strong> = 11
+bool allowfullmaterialoptions = false
+material * <em>-- if <strong>allowfullmaterialoptions</strong> is true</em>
+vector3 skyScreen_TrackOffset = nil <em>-- see <a href="#skyscreen">here</a></em>
+vector3 skyScreen_FixedTrackOffset = nil
+bool ignoretrackscale = true
+<a href="#type-int">int</a> <strong>nodeskip</strong> = 1 <em>-- referred to internally as "ring skip"</em>
+bool alphafromintensity = false<em> -- only works on &quot;highway&quot; <strong>colorMode</strong></em>
+bool texturemirroreddowntrack = true
+float textureTrackLength = 1.0
+<a href="#type-bool">bool</a> <strong>fullfuture</strong> = false <em>-- "render full track"</em>
+<a href="#type-bool">bool</a> <strong>futureonly</strong> = false <em>-- "stretch to finish"</em>
+<a href="#type-bool">bool</a> <strong>calculatenormals</strong> = false
+<a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>perShapeNodeNormals</strong> = nil <em>-- only works with <strong>colorMode</strong>=&quot;static&quot;</em>
+<a href="#type-bool">bool</a> <strong>perShapeNodeColorScalersScaleAlpha</strong> = true
+<a href="#type-color">color</a><a href="#type-array">[]</a> <strong>perShapeNodeColors</strong> = nil <em>-- static mode only</em>
+<a href="#type-int">int</a><a href="#type-array">[]</a> <strong>perShapeNodeFFTInfluenceIndices</strong> = nil <em>-- unused</em>
+<a href="#type-bool">bool</a> <strong>collider</strong> = false
+vector3[][] crossSectionShapeList = nil
+<a href="#type-bool">bool</a> <strong>wrapnodeshape</strong> = true <em>-- "should close extrusion loop"</em>
+<a href="#type-bool">bool</a> <strong>shadowcaster</strong> = ?
+<a href="#type-bool">bool</a> <strong>shadowreceiver</strong> = ?
+<em>-- if not <strong>allowfullmaterialoptions</strong> then</em>
+<em>-- <strong>color</strong> or White is applied to _Color</em>
+<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-float">float</a><a href="#type-dict">}</a> <strong>shadersettings</strong> = nil
+<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a> <strong>shadercolors</strong> = nil <em>-- setting _Color here will work</em>
+<a href="#type-address">address</a> <strong>texture</strong> = nil
+<em>-- end</em></code></pre>
+<h3 id="colorMode">colorMode</h3>
+<p>Controls the vertex colors of the rail.</p>
+<dl>
+	<dt>highway</dt>
+	<dd>The node's highway color. When <code>alphafromintensity</code> is turned on the alpha channel is overwritten with the node's normalized intensity.</dd>
+	<dt>highwayinverted</dt>
+	<dd>TODO</dd>
+	<dt>static</dt>
+	<dd>Uses <code><strong>perShapeNodeColors</strong></code>, <code><strong>color</strong></code>, or black.</dd>
+	<dt>aurora</dt>
+	<dd>Uses highway color multiplied by the intensity squared. The intensity it uses is not &quot;normalized&quot; like <code><a href="#GetTrack">GetTrack</a>()[i].intensity</code> is. (whatever that means.) The alpha is multiplied as well. If all the highway colors have an alpha of 1 (the default) then this allows a shader to determine the exact intensity.</dd>
+	<dt>highwayflat</dt>
+	<dd>TODO</dd>
+	<dt>trackposition</dt>
+	<dd>Instead of storing a color, stores the zero-based node index divided by the number of nodes. It is stored via a C# implementation of EncodeFloatRGBA. <a href="https://docs.unity3d.com/Documentation/Components/SL-BuiltinIncludes.html">DecodeFloatRGBA</a> can probably decode it. This is useful in rail <a href="#skyscreen">skyscreen</a> shaders. (I don't understand why he won't just pass this information through UV or <a href="http://docs.unity3d.com/Documentation/ScriptReference/Mesh-uv2.html">UV2</a>.)</dd>
+</dl>
+<h2 id="CreateRepeatedMeshRail">CreateRepeatedMeshRail{}</h2>
+<pre><code><em>-- calls to this function after the <a href="#script-execution">first run</a> are ignored</em>
+<a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;RepeatedMeshRail&quot;</em>
+<a href="#type-gameobject">gameobject</a> <strong>gameobject</strong> = nil
+<a href="#type-float">float</a> <strong>ahead_renderdist</strong> = 500
+<a href="#type-float">float</a> <strong>behind_renderdist</strong> = 25
+<a href="#type-int">int</a> <strong>maxverticesperbatch</strong> = 50000
+<a href="#type-float">float</a> <strong>spacing</strong> = 0
+<a href="#type-string">string</a> <strong>colorMode</strong> = "none" or "highway" or "highwayinverted"
+<a href="#type-bool">bool</a> <strong>buildlive</strong> = false
+<a href="#type-int">int</a> <strong>maxmeshesperbatch</strong> = 999999
+<a href="#type-bool">bool</a> <strong>calculatenormals</strong> = false</code></pre>
+<h2 id="CreateObject">CreateObject{}</h2>
+<pre><code><a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;ro&quot;</em>
+<a href="#type-string">string</a> <strong>name</strong> = nil <em>-- the <a href="glossary.html#prototype">prototype</a> name</em>
+<a href="#type-gameobject">gameobject</a> <strong>gameobject</strong> = nil
+<a href="#type-float">float</a> <strong>railoffset</strong> = nil <em>-- causes it to be "attached to the highway" if set to a number</em>
+<em>-- if <strong>railoffset</strong> is a number</em>
+<a href="#type-bool">bool</a> <strong>floatonwaterwaves</strong> = false
+<a href="#type-float">float</a> <strong>tiltsmoother</strong> = 0 <em>-- "smooth tilt speed". if nonzero, turns on "smooth tilting"</em>
+<em>-- else</em>
+<a href="#type-int">int</a>/<a href="#type-string">string</a> <strong>tracknode</strong> = -1 or ("end" / "End" / "END") or ("start" / "Start" / "START") <em>-- if it is an <a href="#type-int">int</a> 0 or greater or "start" or "end", it attaches to that "node" on the highway</em>
+<em>-- end</em>
+<a href="#type-bool">bool</a> <strong>active</strong> = ?
+<a href="#type-bool">bool</a> <strong>visible</strong> = true</code></pre>
+<ul class="seealso">
+	<li><a href="glossary.html#game-object">game object</a></li>
+	<li><a href="glossary.html#prefab">prefab</a></li>
+	<li><a href="glossary.html#layer">layer</a></li>
+	<li><a href="glossary.html#extrude">extrude</a></li>
+</ul>
+<h2 id="CreateRailedObject">CreateRailedObject{}</h2>
+Exactly identical to <a href="#CreateObject">CreateObject{}</a>.
+<h2 id="CreatePrototype">CreatePrototype{}</h2>
+Exactly identical to <a href="#CreateObject">CreateObject{}</a>.
+<h2 id="BatchRenderEveryFrame">BatchRenderEveryFrame{}</h2>
+<pre><code><a href="#type-string">string</a> <strong>prefabName</strong> <em>-- mandatory</em>
+<a href="#type-int">int</a><a href="#type-array">[]</a> <strong>locations</strong> <em>-- mandatory. ints lower than 1 will be treated as 1</em>
+<a href="#type-vector3">vector3</a><a href="#type-array">[]</a>/<a href="#type-vector3">vector3</a> <strong>offsets</strong> = nil <em>-- <a href="#type-vector3">vector3</a><a href="#type-array">[]</a> version must be as long as <strong>locations</strong></em>
+<a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>scales</strong> = nil <em>-- only works if override_impactpositions, waterfloat, or songspeedratio are used. overrides the scale of the prefab rather than combining with it</em>
+vector3[] rotations = nil
+<a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>override_impactpositions</strong> = nil <em>-- &quot;override node position&quot;</em>
+<a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>override_velocities</strong> = nil <em>-- &quot;override direction&quot;</em>
+<a href="#type-int">int</a> <strong>afternodereached_numbernodesrendered</strong> = 50
+<a href="#type-bool">bool</a> <strong>override_velocities_scaledbytrackspeed</strong> = true
+<a href="#type-bool">bool</a> <strong>rotateWithTrack</strong> = true
+<a href="#type-int">int</a> <strong>maxShown</strong> = 100 <em>-- earlier numbers in the <strong>locations</strong> array have priority over later ones when this limit is reached</em>
+<a href="#type-int">int</a> <strong>maxDistanceShown</strong> = 600 <em>-- locations more than this many nodes away from the player will not be visible</em>
+<a href="#type-bool">bool</a> <strong>testAndHideIfCollideWithTrack</strong> = false
+<a href="#type-int">int</a> <strong>collisionLayer</strong> = -1
+<a href="#type-bool">bool</a> <strong>waterfloat</strong> = false
+<a href="#type-float">float</a> <strong>songspeedratio</strong> = nil <em>-- internal name "compression", is disabled unless you set this. cannot be switched off once enabled</em>
+vector3[] worldspaceoffsets = nil
+<a href="#type-color">color</a><a href="#type-array">[]</a>/<a href="#type-string">string</a> <strong>colors</strong> = nil or {...} or &quot;highway&quot; or &quot;highwayinverted&quot; or &quot;nodecolor&quot; <em>-- nodecolor sets the individual objects' colors to the node they are attached to. highway and highwayinverted act like <a href="#type-material">materialcolor</a>. highwayinverted is bugged and is identical to highway</em></code></pre>
+<p>Each number in <code><strong>locations</strong></code> is the index of a track node to place an instance at. (<code><a href="#GetTrack" class="func">GetTrack</a></code> gets a list of all nodes) The other optional array settings are used to modify specific instances specified in <code><strong>locations</strong></code>. If set, they should be the same array length as <code><strong>locations</strong></code> and the order of the entries determines which location they will influence.</p>
+<p>By default, an instance is placed at the center of a node. <code><strong>offsets</strong></code> can be used to move them away from the center. Offset is relative to the node's position and rotation, so a positive X offset will always move it to the right of the track. Positive Y moves up and positive Z moves forward.</p>
+<p>Here are some terms I will use in the following explanations:</p>
+<dl>
+  <dt>CurrentNode</dt>
+  <dd>The fractional index of the track node that the player is currently &quot;on&quot;. (When the player is halfway between nodes 3 and 4, CurrentNode is 3.5)</dd>
+  <dt>CurrentPos</dt>
+  <dd>The world-space position of CurrentNode.</dd>
+  <dt>CurrentTime</dt>
+  <dd>The number of seconds into the song that CurrentNode represents.</dd>
+  <dt>Track</dt>
+  <dd>The array returned by <code><a href="#GetTrack" class="func">GetTrack</a>()</code>.</dd>
+</dl>
+<p>If you use <code><strong>songspeedratio</strong></code>, the numbers in <code><strong>locations</strong></code> are relative to CurrentNode rather than the beginning of the track. (the objects will move along with you) The number specified by <code><strong>songspeedratio</strong></code> scales the locations, allowing you to indirectly specify non-integers.</p>
+<p><code><strong>maxDistanceShown</strong></code> is based on the difference between CurrentNode and the number in <code><strong>locations</strong></code>. The actual per-frame condition for hiding is <code><strong>locations</strong>[i] - CurrentNode &gt; <strong>maxDistanceShown</strong></code> so it won't re-hide objects later. Strangely, this behavior is not affected by <code><strong>songspeedratio</strong></code> in any way. Locations are still relative to the beginning of the track when considering distance. This means you probably want to set <code><strong>maxDistanceShown</strong></code> larger than the highest number in <code><strong>locations</strong></code> when using <code><strong>songspeedratio</strong></code> in order to disable it. Combining the two might be useful for some strange special effects.</p>
+<p><code><strong>afternodereached_numbernodesrendered</strong></code> is  subtracted from CurrentNode and any location less than that value will be hidden. Like <code><strong>maxDistanceShown</strong></code>, this comparison is not affected by <code><strong>songspeedratio</strong></code>. For that frame, an instance hidden in this manner still counts toward the <code><strong>maxShown</strong></code> limit. Future frames will ignore that location and all earlier entries in the array. This can cause strange behavior if the values in <code><strong>locations</strong></code> aren't  sorted from lowest to highest.</p>
+<p>If <code><strong>override_impactpositions</strong></code> and <code><strong>override_velocities</strong></code> are set, the actual per-frame position of the instances in world space will be <code>impactpositions + (x * velocities)</code> where x is the time until reaching the node specified in <code><strong>locations</strong></code>. (<code>CurrentTime - Track[<strong>locations</strong>[i]].seconds</code>) If <code><strong>override_velocities_scaledbytrackspeed</strong></code> is true, x will instead be the current playback node index minus the node index specified in <code><strong>locations</strong></code>, multiplied by 3. (<code>3 * (CurrentNode - <strong>locations</strong>[i])</code>) Overrides nullify the effects of <code><strong>offsets</strong></code>, <code><strong>rotateWithTrack</strong></code>, <code><strong>waterfloat</strong></code>, and <code><strong>songspeedratio</strong></code>. Ensure that those options are switched off for best performance. Overrides were added so the <a href="http://steamcommunity.com/sharedfiles/filedetails/?id=188854551">Audiosphere</a> mod could render its falling meteors.</p>
+<p><code><strong>override_velocities</strong></code> also overrides the angle of each instance by specifying a direction for the object to &quot;look&quot; toward. (<code>Quaternion.<a href="https://docs.unity3d.com/Documentation/ScriptReference/Quaternion.LookRotation.html">LookRotation</a>(override_velocities[i], Vector3(0, 1, 0))</code>) This can probably be abused to get rotated objects which don't appear to move by using a very small velocity. (since there isn't a &quot;rotations&quot; setting) Just be careful not to go smaller than <code><a href="#type-float">float</a></code> can support. Don't use completely zero velocities; it will probably spam errors to output_log.txt every frame.</p>
+<p>Overrides, combined with <code><strong>maxDistanceShown</strong></code> and  <code><strong>afternodereached_numbernodesrendered</strong></code>, allow us to place an object at an arbitrary position in the world which appears at a certain time, moves from point A to point B, then disappears.</p>
+<p>Instances hidden by <code><strong>testAndHideIfCollideWithTrack</strong></code> will still count toward the <code><strong>maxShown</strong></code> limit. I was unable to find how <code><strong>collisionLayer</strong></code> is honored but it may behave the same way.</p>
+<h2 id="CreateSpriteBatch">CreateSpriteBatch{}</h2>
+<pre><code><a href="#type-string">string</a> <strong>prefabName</strong> <em>-- mandatory</em>
+<a href="#type-int">int</a><a href="#type-array">[]</a> <strong>locations</strong> <em>-- mandatory. ints lower than 1 will be treated as 1</em>
+<a href="#type-vector3">vector3</a><a href="#type-array">[]</a>/<a href="#type-vector3">vector3</a> <strong>offsets</strong> = nil <em>-- <a href="#type-vector3">vector3</a><a href="#type-array">[]</a> version must be as long as <strong>locations</strong></em>
+<a href="#type-vector3">vector3</a><a href="#type-array">[]</a>/<a href="#type-vector3">vector3</a> <strong>scales</strong> = nil <em>-- <a href="#type-vector3">vector3</a><a href="#type-array">[]</a> version must be as long as <strong>locations</strong></em>
+<a href="#type-color">color</a><a href="#type-array">[]</a> <strong>colors</strong> = nil
+<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>repeaterSpacings</strong> = nil</code></pre>
+<h2 id="AddForest">AddForest{}</h2>
+<pre><code><a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;forest&quot;</em>
+<a href="#type-gameobject">gameobject</a><a href="#type-array">[]</a> <strong>trees</strong> = nil
+<a href="#type-string">string</a> <strong>objectorder</strong> = "random" or "sequential"
+<a href="#type-int">int</a> <strong>minspacing</strong> = 1000
+<a href="#type-int">int</a> <strong>maxspacing</strong> = 3000
+<a href="#type-vector3">vector3</a><a href="#type-array">[]</a>/<a href="#type-table">table</a><a href="#type-array">[]</a> <strong>offsets</strong> = nil or {{0,0,0}, ...} or {{
+	<a href="#type-vector3">vector3</a> <strong>min</strong> = {0,0,0}
+	<a href="#type-vector3">vector3</a> <strong>max</strong> = <strong>min</strong>
+}, ...}
+<a href="#type-string">string</a> <strong>offsetorder</strong> = "random" or "sequential"
+<a href="#type-bool">bool</a> <strong>collisiontest</strong> = true
+<a href="#type-string">string</a> <strong>trackpositioncolorproperty</strong> = nil <em>-- this is the name of a shader color (same as the key names in <a href="#type-material">material</a>.shadercolors) which will be set to the track color of whatever location each object is at</em>
+<a href="#type-int">int</a> <strong>numrendered</strong> = 50</code></pre>
+<h2 id="CreateLight"><a href="#type-int">int</a> CreateLight{}</h2>
+<p>Creates a <a href="http://docs.unity3d.com/Documentation/ScriptReference/Light.html">Unity Light</a>.</p>
+<pre><code><a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;light&quot;</em>
+<a href="#type-float">float</a> <strong>railoffset</strong> = nil <em>-- causes it to be "attached to the highway" if set to a number</em>
+<em>-- if <strong>railoffset</strong> != nil then</em>
+<a href="#type-bool">bool</a> <strong>floatonwaterwaves</strong> = false
+<a href="#type-float">float</a> <strong>tiltsmoother</strong> = 0 <em>-- "smooth tilt speed". if nonzero, turns on "smooth tilting"</em>
+<em>-- end</em>
+<a href="#type-transform">transform</a> <strong>transform</strong> = nil
+<a href="#type-string">string</a> <strong>type</strong> = "point" or "directional"
+<a href="#type-materialcolor">materialcolor</a> <strong>color</strong> = ?
+<a href="#type-float">float</a> <strong>intensity</strong> = 0.5
+<a href="#type-float">float</a> <strong>range</strong> = ?
+<a href="#type-table">table</a> <strong>shadows</strong> = {
+	<a href="#type-string">string</a> <strong>type</strong> = ("none" / "None") or ("soft" / "Soft") or ("hard" / "Hard")
+	<a href="#type-float">float</a> <strong>strength</strong> = ?
+	<a href="#type-float">float</a> <strong>bias</strong> = ?
+	<a href="#type-float">float</a> <strong>softness</strong> = ?
+	<a href="#type-float">float</a> <strong>softnessfade</strong> = ?
+}</code></pre>
+<h2 id="UpdateLight">UpdateLight{}</h2>
+<pre><code>int light
+transform transform ?= ?
+materialcolor color ?= ?
+float intensity = 0.5
+float range ?= ?
+table shadows = nil <em>-- this is the same as <a href="#CreateLight">CreateLight</a>{<strong>shadows</strong>}. omitting it disables shadows.</em></code></pre>
+<h2 id="BuildMaterial"><a href="#type-materialid">materialid</a> BuildMaterial(<a href="#type-material">material</a>)</h2>
+<h2 id="UpdateShaderSettings">UpdateShaderSettings(<a href="#type-table">table</a>)</h2>
+<pre><code>materialid material
+{string=float} shadersettings ?= ? <em>-- omitted settings are left at their previous values</em></code></pre>
+<h2 id="BuildMesh"><a href="#type-mesh">mesh</a> BuildMesh{}</h2>
+<p>Can be one of the following tables:</p>
+<pre><code><a href="#type-mesh">mesh</a> <strong>mesh</strong> = nil <em>-- if not nil, modifies a previously created mesh (this will cause existing objects made with the mesh to update)</em>
+<a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>vertextable</strong> ?= nil
+<a href="#type-vector2">vector2</a><a href="#type-array">[]</a> <strong>uvtable</strong> ?= nil
+<a href="#type-color">color</a><a href="#type-array">[]</a> <strong>colortable</strong> ?= nil
+<a href="#type-int">int</a><a href="#type-array">[]</a> <strong>indextable</strong> ?= nil <em>-- if it doesn't contain a zero all of the numbers will be reduced by one (its indexing starts with 0)</em>
+<a href="#type-bool">bool</a> <strong>calculatenormals</strong> ?= false</code>
+</pre>
+<pre><code><a href="#type-mesh"></a><a href="#type-address">address</a> <strong>mesh</strong> <em>-- create a new mesh out of the specified model</em>
+<a href="#type-bool">bool</a> <strong>calculateNormals</strong> = true <em>-- note the capital N in this version</em>
+<a href="#type-bool">bool</a> <strong>calculateTangents</strong> = false
+<a href="#type-bool">bool</a> <strong>submeshesWhenCombining</strong> = false
+bool barycentricTangents = false
+bool splitVertices = false</code></pre>
+<pre><code>address[] meshes <em>-- multi-mesh morphing</em>
+color[] meshcolors = nil
+bool barycentricTangents = false
+bool splitVertices = false
+bool recalculateNormalsEveryFrame = false</code></pre>
+<p>The <code><a href="#type-mesh">mesh</a></code> object returned by BuildMesh can be used instead of a filename in most functions that take an .obj file:</p>
+<pre class="NppLua"><span class="sc11">exampleMesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">BuildMesh</span><span class="sc10">{</span><span class="sc0">
+	</span><span class="sc11">mesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"example.obj"</span><span class="sc10">,</span><span class="sc0">
+</span><span class="sc10">}</span><span class="sc0">
+</span><span class="sc11">CreateObject</span><span class="sc10">{</span><span class="sc0">
+	</span><span class="sc11">railoffset</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc10">,</span><span class="sc0">
+	</span><span class="sc11">floatonwaterwaves</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">false</span><span class="sc10">,</span><span class="sc0">
+	</span><span class="sc11">gameobject</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
+		</span><span class="sc11">mesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">exampleMesh</span><span class="sc10">,</span><span class="sc0">
+		</span><span class="sc11">shader</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"VertexColorUnlitTinted"</span><span class="sc10">,</span><span class="sc0">
+		</span><span class="sc11">shadercolors</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0"> </span><span class="sc11">_Color</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">}</span><span class="sc0"> </span><span class="sc10">},</span><span class="sc0">
+	</span><span class="sc10">}</span><span class="sc0">
+</span><span class="sc10">}</span></pre>
+<p>See the documentation of the other functions for confirmation. One important exception is that mesh objects cannot be used for mesh morphing. It is possible to imitate mesh morphing via <strong>procedural animations</strong>. (see below)</p>
+<p>BuildMesh has 3 uses:</p>
+<h3 id="BuildMesh-loading">Loading a model with custom settings</h3>
+<p>When using the version of BuildMesh that takes an address, </p>
+<h3 id="BuildMesh-procedural-generation">Procedural model generation</h3>
+<p>&nbsp;</p>
+<h3 id="BuildMesh-procedural-animation">Procedural animation</h3>
+<p>&nbsp;</p>
+<h2 id="UpdateMeshMorphWeights">UpdateMeshMorphWeights{}</h2>
+<pre><code>mesh mesh
+float[] weights</code></pre>
+<!-- InstanceEndEditable -->
+</body>
+<!-- InstanceEnd --></html>
