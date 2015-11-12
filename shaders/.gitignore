@@ -1,2 +1,4 @@
 *.shader
 ~shaderlist.html
+~shaderlist.txt
+~renamed

@@ -11,6 +11,8 @@ Loop, *.shader
 		break
 	}
 }
+FileRemoveDir, ~renamed, 1
+FileCreateDir, ~renamed
 StringTrimRight, list, list, 1 ; remove final newline
 Sort, list
 output = <dl class="shadersList">`n
@@ -19,6 +21,7 @@ Loop, Parse, list, `n
 	StringSplit, split, A_LoopField, `r
 	name := split1
 	file := split2
+	output2 .= file "`t" name "`n"
 	FileRead, text, *m2000 %file% ; first 2000 bytes only
 	text := RegExReplace(text, "s)^.*?`nProperties {`n(.*?)`n}.*$", "$1", change_count) ; get the Properties { ... } section
 	if (change_count > 0)
@@ -32,14 +35,30 @@ Loop, Parse, list, `n
 		text = No properties.
 	text =
 	(
-  <dt><dfn id="shader-%name%">"%name%"</dfn> <a href="#shader-%name%">#</a></dt>
+  <dt><dfn id="shader-%name%">%name%</dfn> <a href="#shader-%name%">#</a></dt>
   <dd>%text%</dd>
 
 	)
 	output .= text
+
+	StringReplace, name, name, /, \, 1
+	name = ~renamed\%name%
+	name_ren := name ".shader"
+	while FileExist(name_ren)
+		name_ren := name " (" (A_Index+1) ").shader"
+	SplitPath, name,, dir
+	if dir !=
+	{
+		FileCreateDir %dir%
+		if ErrorLevel
+			throw LastErrorException("'" dir "'`n", -1)
+	}
+	MakeHardlink(file, name_ren)
 }
 FileDelete ~shaderlist.html
 FileAppend, %output%</dl>, ~shaderlist.html
+FileDelete ~shaderlist.txt
+FileAppend, %output2%, ~shaderlist.txt
 SoundPlay *64
 Sleep 250
 ExitApp
@@ -90,10 +109,53 @@ fixTabs(string)
 	}
 	return out
 }
-repeatStr(string, times)
+
+
+RepeatStr(string, times)
 {
+	if (times < 1)
+		return ""
 	VarSetCapacity(out, times * StrLen(string))
 	Loop %times%
 		out .= string
 	return out
+}
+
+LastErrorException(prefix = "", what = -2, extra = "") {
+	return Exception(prefix LastErrorString(), what, extra)
+}
+LastErrorString(number = "")
+{
+	; probably x64 and unicode compatible
+	if number =
+		number := A_LastError
+
+	; The importance of the IGNORE_INSERTS flag: http://blogs.msdn.com/b/oldnewthing/archive/2007/11/28/6564257.aspx
+	if VarSetCapacity(string, 1024) >= 1024
+	ret := DllCall("FormatMessage"
+		, "UInt", 0x00001200 ; DWORD    dwFlags: FORMAT_MESSAGE_FROM_SYSTEM 0x00001000 | FORMAT_MESSAGE_IGNORE_INSERTS 0x00000200
+		, "Ptr",  0          ; void*    lpSource
+		, "UInt", number     ; DWORD    dwMessageId
+		, "UInt", 0          ; DWORD    dwLanguageId: auto
+		, "Str",  string     ; TSTR*    lpBuffer
+		, "UInt", 1024       ; DWORD    nSize
+		, "Ptr",  0)         ; va_list* Arguments
+	
+	StringReplace, string, string, `r`n, %A_Space%, All
+	
+	return string " (#" number ")"
+}
+
+MakeHardlink(source, dest)
+{
+	if !TryMakeHardlink(source, dest)
+		throw LastErrorException(source " => " dest "`n", -3)
+}
+; If the function succeeds, the return value is nonzero.
+TryMakeHardlink(source, dest)
+{
+	return DllCall("CreateHardLink" ; http://msdn.microsoft.com/en-us/library/aa363860(VS.85).aspx
+		, "Str", dest   ; LPCTSTR lpFileName,
+		, "Str", source ; LPCTSTR lpExistingFileName,
+		, "Ptr", 0  )   ; LPSECURITY_ATTRIBUTES lpSecurityAttributes (Reserved; must be NULL.)
 }
