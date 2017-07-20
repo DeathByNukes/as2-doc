@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>DBN's Audiosurf 2 Scripting Doc</title>
+<link href="as2-doc.css" rel="stylesheet" type="text/css">
+<!--<style type="text/css">
+#template {
+	visibility: hidden;
+}
+</style>-->
+</head>
+<body>
+<div id="template">
+<h2 id="print">error(<a href="#type-string">string</a>, <a href="#type-int">int</a>)</h2>
+<p>This function is just a part of the <a href="http://www.lua.org/manual/5.1/">Lua standard library</a>, but it is useful enough that I want to mention it here. It outputs the specified string to the screen and stops the script. The <code><a href="#type-int">int</a></code> argument is <a href="http://www.lua.org/manual/5.1/manual.html#pdf-error">optional</a>. For rapid testing/debugging this is often easier than <code><a href="#print" class="func">print</a>()</code> because you don't need to hunt through the huge log file to find it.</p>
+<pre class="NppLua"><code><span class="sc13">error</span><span class="sc10">(</span><span class="sc6">"Track width: "</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc11">trackWidth</span><span class="sc10">)</span></code></pre>
+<ul class="seealso">
+	<li><a href="http://www.lua.org/manual/5.1/manual.html#pdf-error">error (message [, level])</a></li>
+	<li><a href="http://www.lua.org/manual/5.1/manual.html#pdf-pcall">pcall (f, arg1, ···)</a></li>
+	<li><a href="http://www.lua.org/manual/5.1/">Lua 5.1 Reference Manual</a></li>
+</ul>
+<h2 id="fif">* fif(*, *, *)</h2>
+<p>Runs the 1st argument through an IF statement, returning the 2nd argument if it is true and the 3rd argument if it is false.</p>
+<pre class="NppLua"><code><span class="sc11">foo</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">fif</span><span class="sc10">(</span><span class="sc11">bar</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc4">1</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc6">"yes"</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc6">"no"</span><span class="sc10">)</span><span class="sc0">
+</span><span class="sc2">-- equivalent code:
+</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">bar</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc4">1</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
+    </span><span class="sc11">foo</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"yes"</span><span class="sc0">
+</span><span class="sc5">else</span><span class="sc0">
+    </span><span class="sc11">foo</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"no"</span><span class="sc0">
+</span><span class="sc5">end</span></code></pre>
+<ul class="seealso">
+	<li><a href="header.html">Header</a></li>
+	<li><a href="http://lua-users.org/wiki/TernaryOperator">Ternary Operator</a></li>
+	<li><a href="http://www.lua.org/manual/5.1/manual.html#2.4.4">Control Structures</a></li>
+</ul>
+<h2 id="deepcopy"><a href="#type-table">table</a> deepcopy(<a href="#type-table">table</a>)</h2>
+<p>Duplicates a table and all tables inside it.</p>
+<ul class="seealso">
+	<li><a href="header.html">Header</a></li>
+	<li><a href="http://lua-users.org/wiki/CopyTable">Copy Table</a></li>
+</ul>
+<h2 id="AutomagicTable"><a href="#type-table">table</a> AutomagicTable()</h2>
+<p>Creates an &quot;automagic table&quot;. Attempting to access a sub-table inside the table automatically generates that table.</p>
+<pre class="NppLua"><code><span class="sc11">a</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">AutomagicTable</span><span class="sc10">()</span><span class="sc0">
+</span><span class="sc11">a.b.c.d</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"a.b and a.b.c are automatically created"</span></code></pre>
+<ul class="seealso">
+	<li><a href="header.html">Header</a></li>
+	<li><a href="http://lua-users.org/wiki/AutomagicTables">Automagic Tables</a></li>
+</ul>
+</div>
+</body>
+</html>
