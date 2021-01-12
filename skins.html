@@ -128,7 +128,7 @@ float antitrafficstrength</code></pre>
 }
 <em>-- end</em>
 <a href="#type-bool">bool</a> <strong>water</strong> = true
-<a href="#type-int">int</a> <strong>numvisiblewaterchunks</strong> = -1
+<a href="#type-int">int</a> <strong>numvisiblewaterchunks</strong> = -1 <em>-- Any value 1 or less is replaced with 4 or 8, depending on how much graphics memory is available. (Formula: fif(<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/SystemInfo-graphicsMemorySize.html">gpu_megabytes</a> > 3 * (#<a href="#GetTrack">GetTrack</a>() / 84), 4, 8)) The debug console will have "Prebuilding 84-ring-size wave chunks" for 4 and "Live building 21-ring-size wave chunks" for 8.</em>
 <a href="#type-bool">bool</a> <strong>towropes</strong> ?= false
 <em>-- End of first run only</em>
 <a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>waterclones</strong> = nil
