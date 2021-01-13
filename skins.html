@@ -127,9 +127,9 @@ float antitrafficstrength</code></pre>
 	<a href="#type-float">float</a> <strong>steepscaler</strong> = 1
 }
 <em>-- end</em>
-<a href="#type-bool">bool</a> <strong>water</strong> = true
-<a href="#type-int">int</a> <strong>numvisiblewaterchunks</strong> = -1 <em>-- Any value 1 or less is replaced with 4 or 8, depending on how much graphics memory is available. (Formula: fif(<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/SystemInfo-graphicsMemorySize.html">gpu_megabytes</a> > 3 * (#<a href="#GetTrack">GetTrack</a>() / 84), 4, 8)) The debug console will have "Prebuilding 84-ring-size wave chunks" for 4 and "Live building 21-ring-size wave chunks" for 8.</em>
-<a href="#type-bool">bool</a> <strong>towropes</strong> ?= false
+<a href="#type-bool">bool</a> <strong>water</strong> = true <em>-- When setting this to false, water is permanently <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/GameObject.SetActive.html">deactivated</a>. Setting it to true again will set a flag that water is in use without actually re-activating the water surface object.</em>
+<a href="#type-int">int</a> <strong>numvisiblewaterchunks</strong> = -1 <em>-- Any value 1 or less is replaced with 4 or 8, depending on how much graphics memory is available.</em>
+<a href="#type-bool">bool</a> <strong>towropes</strong> ?= false <em>-- Wakeboard mode effect that connects <strong>pullermodel</strong> to <a href="#SetPlayer">SetPlayer</a>{surfer={arms}}.</em>
 <em>-- End of first run only</em>
 <a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>waterclones</strong> = nil
 <a href="#type-color">color</a> <strong>skywirecolor</strong> ?= nil
@@ -147,12 +147,12 @@ float <strong>airdebris_particlesize</strong> = 1 <em>-- &quot;particle scaler&q
 float <strong>airdebris_fieldsize</strong> <em>-- &quot;cell size&quot;</em>
 int <strong>airdebris_layer</strong> = 11
 <a href="#type-color">color</a> <strong>watertint</strong> ?= ?
-bool widewater ?= false <em>-- turning this on then off again puts the internal settings in an inconsistent state. haven't tested to see what happens</em>
+bool widewater ?= false <em>-- Water width is 11.25 normally or 16.25 wide. When turned off, width is not changed back to 11.25 but water simulation behavior does change back.</em>
 <a href="#type-float">float</a> <strong>minwaterrandomdarkness</strong> ?= 0.5 <em>-- individual water cubes will be tinted to a random greyscale color between this and 1</em>
 <a href="#type-int">int</a> <strong>watertype</strong> = 0 <em>-- the only usage of it I could find is that type 2 has shader GpuOffsetCubesNoLines and all others have GpuOffsetCubes</em>
 <a href="#type-bool">bool</a> <strong>watertint_highway</strong> = false <em>-- water color changes to the current highway color automatically. if enabled, only the alpha of <strong>watertint</strong> will be used</em>
 <a href="#type-address">address</a> <strong>watertexture</strong> ?= ? <em>-- uses "clamp" wrapping and no mipmaps.</em>
-<a href="#type-bool">bool</a> <strong>usecubewater</strong> ?= true
+<a href="#type-bool">bool</a> <strong>usecubewater</strong> ?= true <em>-- When false, water will be <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Behaviour-enabled.html">disabled</a> after the skin loads.</em>
 <a href="#type-bool">bool</a> <strong>usedefaultrails</strong> ?= false
 <a href="#type-bool">bool</a> <strong>fogenabled</strong> = false <em>-- sets UnityEngine.FogMode.Linear</em>
 <a href="#type-color">color</a> <strong>fogcolor</strong> ?= ?
@@ -161,7 +161,43 @@ bool widewater ?= false <em>-- turning this on then off again puts the internal 
 <a href="#type-float">float</a> <strong>fogend</strong> ?= ?
 <a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>ambientlight</strong> = {51,51,51,255} or "highway" or "highwayinverted" -<em>- accessible in shaders via <a href="https://docs.unity3d.com/Manual/SL-BuiltinStateInPrograms.html">UNITY_LIGHTMODEL_AMBIENT</a></em>
 <a href="#type-bool">bool</a> <strong>useblackgrid</strong> ?= true
-<a href="#type-string">string</a> <strong>pullermodel</strong> ?= ? <em>-- the "boats"</em></code></pre>
+<a href="#type-string">string</a> <strong>pullermodel</strong> ?= ? <em>-- The wakeboard mode "boats" that connect to <strong>towropes</strong> and <a href="#SetWake">SetWake</a>.</em></code></pre>
+<h3 id="SetScene-water">Water</h3>
+<p>Skins have only limited control over the water effect:</p>
+<ul>
+<li>Shader: <a href="shaders.html#shader-GpuOffsetCubes">GpuOffsetCubes</a> (<code>watertype = 1</code>), <a href="shaders.html#shader-GpuOffsetCubesNoLines">GpuOffsetCubesNoLines</a> (<code>watertype = 2</code>)
+	<br>Both shaders use the standard "transparent" <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-Blend.html">blending mode</a>: <code>Blend SrcAlpha OneMinusSrcAlpha</code>
+	<br>Here is a reverse-engineered snippet from the end of the <a href="shaders.html#shader-GpuOffsetCubes">GpuOffsetCubes</a> pixel shader to show how its color and alpha is determined:
+	<pre class="NppCg">half4 color = tex2d(_MainTex, vertex.texcoord.xy) * _Color * vertex.color;
+half4 body = color * vertex.texcoord.z * 10;
+return register0.x == 0 ? body : half4(color.xyz, 0.01);</pre>
+</li>
+<li>Texture: <code>watertexture</code> is loaded with "clamp" wrapping and no mipmaps. I have not found any official documentation on the significance of different areas of the texture and haven't studied it.
+	<br>If a mod enables jump markers, a 3 pixel thick opaque white stripe will be drawn horizontally through the texture before it's sent to the GPU. The center of the line is calculated to be offset <code>(height * 0.37)</code> from the bottom of the image. Therefore, by varying the resolution of the image, you could change how thick the line is from the shader's perspective.</li>
+<li>Color: <code>watertint</code> and <code>watertint_highway</code> directly control the <code>_Color</code> of the material.</li>
+<li>Vertex Color: <code>minwaterrandomdarkness</code> produces random shades of grey in the vertex color. All 8 vertices of each cube are the same color.</li>
+<li>Renderqueue of the front-most water chunk is 2997 and all additional chunks are lower numbers, in order. <a href="magic-literals.html#render-queue">Normal transparent objects are at 3000</a>. So if you are using the default <code>numvisiblewaterchunks</code> setting the range to expect water in is 2990-2997.</li>
+<li>The formula for the default setting of <code>numvisiblewaterchunks</code> is <code>fif(<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/SystemInfo-graphicsMemorySize.html">gpu_megabytes</a> > 3 * (#<a href="#GetTrack">GetTrack</a>() / 84), 4, 8)</code>. The debug console will have "Prebuilding 84-ring-size wave chunks" if the default is 4 and "Live building 21-ring-size wave chunks" if it is 8. (There is no way for Lua to change the rendering mode mentioned in those console lines.) Since this setting appears to have significant performance implications, it is probably best to leave it alone in most graphics quality modes unless it is causing your skin problems.</li>
+<li><code>waterclones</code> lists relative world-space coordinates to render the water surface extra times in different locations. There is no provision for giving them a different rotation, shape, or material. This can't be used to reliably do much unless used with mods that have some limitation on track shape.</li>
+<li><code>widewater</code> widens water from 11.25 to 16.25 and alters water behavior.</li>
+<li>I don't know what the difference between <code>water</code> and <code>usecubewater</code> is aside from that one "<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/GameObject.SetActive.html">deactivates</a>" water and the other "<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Behaviour-enabled.html">disables</a>" it. If you aren't using water, setting both to false might be best for performance. (Untested.)</li>
+<li>Other water-related settings:
+	<ul>
+	<li><code><a href="#SetWake">SetWake</a></code></li>
+	<li><pre><a href="#SetPlayer">SetPlayer</a>{
+	vehicle = { use_water_rooster, roostercolor, water_rooster_z_offset },
+	airvehicle,
+	watervehicle,
+	surfer = { use_water_rooster, roostercolor, water_rooster_z_offset },
+}</pre></li>
+	<li><code><a href="#CreateLight">CreateLight</a>{floatonwaterwaves}</code></li>
+	<li><code><a href="#CreateObject">CreateObject</a>{floatonwaterwaves}</code></li>
+	<li><code><a href="#SetBlocks">SetBlocks</a>{colorblocks = {float_on_water}}</code></li>
+	<li><code><a href="#BatchRenderEveryFrame">BatchRenderEveryFrame</a>{waterfloat}</code></li>
+	</ul>
+</li>
+</ul>
+
 <h2 id="SetTrackColors">SetTrackColors(<a href="#type-color">color</a><a href="#type-array">[]</a>)</h2>
 <h2 id="SetBlockColors">SetBlockColors(<a href="#type-color">color</a><a href="#type-array">[]</a>)</h2>
 <h2 id="LoadSounds">LoadSounds(<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a>)</h2>
