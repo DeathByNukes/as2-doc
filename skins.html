@@ -159,7 +159,7 @@ bool widewater ?= false <em>-- Water width is 11.25 normally or 16.25 wide. When
 <a href="#type-float">float</a> <strong>fogdensity</strong> ?= ? <em>-- <a href="http://docs.unity3d.com/Documentation/ScriptReference/RenderSettings-fogDensity.html">unused</a> in this fog mode</em>
 <a href="#type-float">float</a> <strong>fogstart</strong> ?= ?
 <a href="#type-float">float</a> <strong>fogend</strong> ?= ?
-<a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>ambientlight</strong> = {51,51,51,255} or "highway" or "highwayinverted" -<em>- accessible in shaders via <a href="https://docs.unity3d.com/Manual/SL-BuiltinStateInPrograms.html">UNITY_LIGHTMODEL_AMBIENT</a></em>
+<a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>ambientlight</strong> = {51,51,51,255} or "highway" or "highwayinverted" <em>-- accessible in shaders via <a href="https://docs.unity3d.com/Manual/SL-BuiltinStateInPrograms.html">UNITY_LIGHTMODEL_AMBIENT</a></em>
 <a href="#type-bool">bool</a> <strong>useblackgrid</strong> ?= true
 <a href="#type-string">string</a> <strong>pullermodel</strong> ?= ? <em>-- The wakeboard mode "boats" that connect to <strong>towropes</strong> and <a href="#SetWake">SetWake</a>.</em></code></pre>
 <h3 id="SetScene-water">Water</h3>
