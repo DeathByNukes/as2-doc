@@ -204,10 +204,18 @@
 		</ul>
 	</dd>
 	<dt id="layer"><dfn>layer</dfn></dt>
-	<dd>Objects in the game are marked as being on specific layers, which influences how they are rendered into the scene. Layers DO NOT work like Photoshop layers. Though specific layers might cause some objects to appear on top of others, that is not how all of them work. They are more like categories or labels.
+	<dd>
+		Objects in the game are marked as being on specific layers, which influences how they are rendered into the scene. Layers DO NOT work like Photoshop layers. Though specific layers might cause some objects to appear on top of others, that is not how all of them work. They are more like categories or labels.
 		<ul class="seealso">
-			<li><a href="magic-literals.html#layers">List of layers</a></a></li>
-			<li><a href="https://docs.unity3d.com/Documentation/Components/Layers.html">Layers</a></a></li>
+			<li><a href="magic-literals.html#layers">layers (full documentation)</a></a></li>
+			<li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/Layers.html">Layers</a></a></li>
+		</ul>
+	</dd>
+	<dt id="framebuffer"><dfn>framebuffer</dfn></dt>
+	<dd>
+		A 2D buffer on the GPU that holds a single frame image, usually sized according to the current screen resolution. When things are "rendered", they are drawn into the framebuffer sort of like painting on a canvas. A fragment shader function is responsible for drawing individual pixels into the framebuffer. In shaders you can make readable copies of the framebuffer via <a href="https://docs.unity3d.com/Manual/SL-GrabPass.html">GrabPass</a>.
+		<ul class="seealso">
+			<li><a href="https://en.wikipedia.org/wiki/Framebuffer">Framebuffer</a></a></li>
 		</ul>
 	</dd>
 	<dt id="render-queue"><dfn>render queue</dfn></dt>

@@ -62,9 +62,11 @@ pre {
 pre code {
 	display: inline-block;
 }
+code, pre, .codeDefs dfn, table {
+	background-color: #eeeeee;
+}
 code, pre, .codeDefs dfn {
 	font-family: Consolas, Courier, monospace;
-	background-color: #eeeeee;
 }
 code, .codeDefs dfn {
 	padding: 1px 5px 1px 5px;
@@ -77,8 +79,11 @@ code, .codeDefs dfn {
 dd.typesList {
 	vertical-align: top;
 }
-dt {
+dt, dfn {
 	font-weight: bold;
+}
+dt > dfn + * {
+	font-weight: normal;
 }
 
 code em {
@@ -164,6 +169,16 @@ span[title] {
 }
 dt dfn{
 	font-style: normal;
+}
+
+table { border-collapse: collapse; }
+td, th {
+	border: 2px solid white;
+	border-top: none;
+	border-bottom: none;
+}
+tr:hover {
+	background-color: white;
 }
 
 
