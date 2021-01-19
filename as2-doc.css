@@ -62,8 +62,19 @@ pre {
 pre code {
 	display: inline-block;
 }
-code, pre, .codeDefs dfn, table {
+code, pre, .codeDefs dfn, th, td {
 	background-color: #eeeeee;
+}
+tr:hover td {
+	background-color: transparent;
+}
+table {
+	border-collapse: separate;
+	border-spacing: 2px 0;
+	border: none;
+}
+tr, th, td {
+	border: none;
 }
 code, pre, .codeDefs dfn {
 	font-family: Consolas, Courier, monospace;
@@ -169,16 +180,6 @@ span[title] {
 }
 dt dfn{
 	font-style: normal;
-}
-
-table { border-collapse: collapse; }
-td, th {
-	border: 2px solid white;
-	border-top: none;
-	border-bottom: none;
-}
-tr:hover {
-	background-color: white;
 }
 
 
