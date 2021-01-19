@@ -41,7 +41,7 @@ function writeNavigation(max_header_level, show_all_headers)
 			o = $(this);
 			if (this.tagName.toUpperCase() === 'DL')
 			{
-				o.find("dfn[id]").each(addElement);
+				o.find("dt[id]").each(addElement);
 				return;
 			}
 			// :header
