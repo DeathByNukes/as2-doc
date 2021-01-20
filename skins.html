@@ -677,33 +677,33 @@ bool recalculateNormalsEveryFrame = false</code></pre>
 float[] weights</code></pre>
 
 <h2 id="AddPostEffect">AddPostEffect{}</h2>
-<pre><code>string depth = "background" or "foreground" or "topmost_exclusive" or ("middle" / "foreground_exceptclose") <em>-- chooses what camera the post effect will be attached to</em>
+<pre><code>string depth = "background" or "foreground" or "topmost_exclusive" or ("middle" / "foreground_exceptclose") <em>-- Selects camera.</em>
 materialid material = nil <em>-- Only accepts <a href="#BuildMaterial">pre-built</a> materials. Specifying this does not prevent "builtin" from being read, and both will be added to the specified camera.</em>
 table builtin = nil or {
 	string name = nil or (<a href="#AddPostEffect-builtin">see below</a>) <em>-- A valid name is required or builtin will be ignored.</em>
-	-- Other values, depending on the name. <a href="#AddPostEffect-builtin">See below</a> for all the variations.
+	<em>-- Other values, depending on the name. <a href="#AddPostEffect-builtin">See below</a> for all the variations.</em>
 }</code></pre>
 <p>Attaches a post-processing effect to the selected camera:</p>
 <ul>
 	<li><code>background</code>: The background camera. Covers objects on layers 18 and 19.</li>
 	<li><code>middle</code> / <code>foreground_exceptclose</code>: The foreground camera. Covers objects on layers 11, 12, 13, 18, and 19.</li>
 	<li><code>foreground</code>: The close camera. Covers objects on layers 11, 12, 13, 14, 15, 18, and 19.</li>
-	<li><code>topmost_exclusive</code>: The close camera, before it is layered on top of the background and foreground cameras. Covers objects on layers 14 and 15.</li>
+	<li><code>topmost_exclusive</code>: The close camera, before it is pasted on top of the background and foreground cameras. Covers objects on layers 14 and 15.</li>
 </ul>
 <ul class="seealso">
 	<li><a href="magic-literals.html#layers">Layers</a></li>
 	<li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/PostProcessingWritingEffects.html">Unity post-processing effects</a></li>
 </ul>
-<h3 id="AddPostEffect-material"><code>material</code> Effects</h3>
+<h3 id="AddPostEffect-material"><code>material</code> Post Effects</h3>
 <p>This adds a material to a multi-material effect named <code>PostEffects</code>. The material's shader receives the camera view through the main texture (<code>_MainTex</code>) and it is drawn as a <a href="glossary.html#quad">quad</a> covering the camera.</p>
-<p>If the effect has 1 material, it does <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Graphics.Blit.html" class=func>Graphics.Blit</a>(<span title=source>src</span>, <span title=destination>dest</span>, material)</code>. If you want this code path but want to do multiple <code>material</code> effects, you could use a single <code>material</code> with a multi-pass shader.</p>
-<p>If there are multiple materials, they are chained together by <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Graphics.Blit.html">blitting</a> to <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderTexture.GetTemporary.html">pooled</a> <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderTexture.html" class=type>RenderTexture</a></code> objects. The first material receives directly from <code>src</code> and the last one outputs directly to <code>dest</code>. RenderTexture settings:</p>
+<p>If the effect has 1 material, it does <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Graphics.Blit.html" class=func>Graphics.Blit</a>(<span title=source>src</span>, <span title=destination>dest</span>, material)</code>. If someone wants this code path but wants to do multiple <code>material</code> effects, they might be able to use a single material with a custom multi-pass shader, using <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-UsePass.html">UsePass</a> and <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-GrabPass.html">GrabPass</a> as needed.</p>
+<p>If there are multiple materials, they are chained together in the order they were added by <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Graphics.Blit.html">blitting</a> to <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderTexture.GetTemporary.html">pooled</a> <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderTexture.html" class=type>RenderTexture</a></code> objects. The first material receives directly from <code>src</code> and the last one outputs directly to <code>dest</code>. RenderTexture settings:</p>
 <ul>
 	<li>Depth buffer: 24 bit</li>
 	<li>Format: ARGB32</li>
 	<li>Colors: <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderTextureReadWrite.html">Default</a></li>
 </ul>
-<p>If the effect has 0 materials but is somehow enabled, it does <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Graphics.Blit.html" class=func>Graphics.Blit</a>(src, dest)</code>, making it effectively an <a href="https://en.wikipedia.org/wiki/Identity_function">identity function</a>. You can get this state by specifying a valid <code>depth</code> and no <code>material</code> along with an invalid <code>builtin</code> that causes an exception to be thrown, then <a href="https://www.lua.org/manual/5.1/manual.html#pdf-pcall">catching</a> the exception after it leaves <code>AddPostEffect</code>. Setting an <code>address</code> to something other than a <code>string</code> or <code>nil</code> should cause an <code>InvalidCastException</code>.</p>
+<p>If the effect has 0 materials but is somehow enabled, it does <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Graphics.Blit.html" class=func>Graphics.Blit</a>(src, dest)</code>, making it effectively an <a href="https://en.wikipedia.org/wiki/Identity_function">identity function</a>. We can get this state by specifying no <code>material</code> along with an invalid <code>builtin</code> that causes an exception to be thrown, then <a href="https://www.lua.org/manual/5.1/manual.html#pdf-pcall">catching</a> the exception after it leaves <code>AddPostEffect</code>. Setting an <code>address</code> to something other than a <code>string</code> or <code>nil</code> should cause an <code>InvalidCastException</code>.</p>
 <p>It has special behavior for one type of camera, most likely <code>topmost_exclusive</code>. It will assign the camera a <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderTexture.html" class=type>RenderTexture</a></code> and the blit output will be <code>null</code> (the screen) rather than <code>dest</code>. Settings:</p>
 <ul>
 	<li>RenderTexture depth buffer: 24 bit</li>
@@ -712,7 +712,7 @@ table builtin = nil or {
 	<li>Camera background color: <code>{0,0,0,0}</code></li>
 </ul>
 <h3 id="AddPostEffect-builtin"><code>builtin</code> Post Effects</h3>
-<p>This allows scripts to utilize some full-fledged Unity post effects that have been integrated into Audiosurf 2. If you mix <code>material</code> and <code>builtin</code> effects on the same camera, <code>PostEffects</code> is the first component to be added.</p>
+<p>This allows scripts to utilize some Unity post effects that have been integrated into Audiosurf 2. If <code>material</code> and <code>builtin</code> effects are mixed on the same camera, <code>PostEffects</code> is always the first component to be added. Post effects <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/PostProcessingWritingEffects.html">should</a> render in the order they are added to the camera.</p>
 <h4 id="AddPostEffect-builtin-AmplifyColor">Amplify Color</h4>
 <p>An older version of <a href="https://github.com/AmplifyCreations/AmplifyColor">Amplify Color</a>. Adds <a href="https://github.com/AmplifyCreations/AmplifyColor/blob/master/Assets/AmplifyColor/Plugins/AmplifyColorEffect.cs">AmplifyColorEffect</a> with the old version's default settings.</p>
 <pre><code>string name = "amplifycolor" / "AmplifyColor"
@@ -720,21 +720,21 @@ float blendamount = 0 <em>-- BlendAmount</em>
 address lut = nil <em>-- LutTexture, clamp, no mipmaps</em>
 address blendlut = nil <em>-- LutBlendTexture, clamp, no mipmaps</em>
 address mask = nil <em>-- MaskTexture, clamp, no mipmaps</code></pre></em>
-<h4 id="AddPostEffect-builtin-CandelaSSRR">Candela SSRR</h4>
-<p>Enables the <a href="https://forum.unity.com/threads/released-candela-ssrr-v2-advanced-screen-space-pbs-reflections-for-unity-5.342803/">Candela SSRR</a> effect. All it does is check if the object exists and, if found, sets it active. I can't find the class in the version of Audiosurf 2 I am looking at, so this might be a removed or Audioshield-only feature. Because this component was added in the editor, like <code>PostEffects</code>, I am not sure which one renders first.</p>
+<h4 id="AddPostEffect-builtin-CandelaSSRR">Candela SSRR (?)</h4>
+<p>Enables the <a href="https://forum.unity.com/threads/released-candela-ssrr-v2-advanced-screen-space-pbs-reflections-for-unity-5.342803/">Candela SSRR</a> effect. (Screen Space Ray-traced Reflections) All it does is check if the object exists and, if found, activates it. I can't find the class in the version of Audiosurf 2 I am looking at, and it was made for an older version of Unity, so <strong>this might be a removed feature</strong>. Because this component is added in the editor, like <code>PostEffects</code>, I am not sure which one renders first.</p>
 <pre><code>string name = "CandelaSSR" / "CandelaSSRR" / "SSR" / "ssr"
--- no options</code></pre>
+<em>-- no options</em></code></pre>
 <h4 id="AddPostEffect-builtin-HeathenSelectiveGlow">Heathen's Selective Glow</h4>
 <p>The <a href="https://forum.unity.com/threads/heathens-selective-glow.228352/">Heathen's Selective Glow</a> effect. Adds <code>SelectiveGlow</code> with the following settings:</p>
 <ul>
-	<li>compositeShader: "Hidden/Composite Selective Glow ", if it exists, or "Hidden/Composite Selective Glow"</li>
-	<li>renderGlowShader: "Hidden/Render Selective Glow"</li>
-	<li>blurShader: "Hidden/HeathenBlurConeTap"</li>
-	<li>fastBlurShader: "Hidden/_HeathenFastBlur"</li>
+	<li>compositeShader: <code>"Hidden/Composite Selective Glow "</code>, if it exists, or <code>"Hidden/Composite Selective Glow"</code></li>
+	<li>renderGlowShader: <code>"Hidden/Render Selective Glow"</code></li>
+	<li>blurShader: <code>"Hidden/HeathenBlurConeTap"</code></li>
+	<li>fastBlurShader: <code>"Hidden/_HeathenFastBlur"</code></li>
 	<li>UseFastBlur: if <code><a href="#GetQualityLevel4" class=func>GetQualityLevel4</a>() <= 1</code></li>
 </ul>
 <pre><code>string name = "SelectiveGlow" / "selectiveglow" / "HeathenSelectiveGlow"
--- no options</code></pre>
+<em>-- no options</em></code></pre>
 <h4 id="AddPostEffect-builtin-">SE Natural Bloom Dirty Lens</h4>
 <p><a href="https://forum.unity.com/threads/se-natural-bloom-dirty-lens.243430/">Sonic Ether's Natural Bloom Dirty Lens</a> effect. Adds <a href="https://github.com/sonicether/SE-Natural-Bloom-Dirty-Lens/blob/bc15de63773354ca99d2a24abe065814e8ba60cf/Assets/SE%20Natural%20Bloom/Scripts/SENaturalBloomAndDirtyLens.cs">SENaturalBloomAndDirtyLens</a> with default settings.</p>
 <pre><code>string name = "SENaturalBloomAndDirtyLens" / "NaturalBloom" / "SENaturalBloom" / "senaturalbloom" / "naturalbloom"
@@ -747,9 +747,9 @@ address dirt = nil <em>-- <a href="https://github.com/sonicether/SE-Natural-Bloo
 	<li><a href="https://en.wikipedia.org/wiki/Screen_space_ambient_occlusion">Screen-Space Ambient Occlusion</a></li>
 </ul>
 <pre><code>string name = "SSAOPro" / "ssaopro" / "ssao" / "SSAO"
--- no options</code></pre>
+<em>-- no options</em></code></pre>
 <h4 id="AddPostEffect-builtin-GlobalFog">Global Fog</h4>
-<p>This seems to be the <a href="https://docs.unity3d.com/550/Documentation/Manual/script-GlobalFog.html">Global Fog</a> effect from the Unity 5 "Pro only" standard effects package. Adds a <code>GlobalFogU5</code> effect:</p>
+<p>This is implied to be the <a href="https://docs.unity3d.com/550/Documentation/Manual/script-GlobalFog.html">Global Fog</a> effect from the Unity 5 "Pro only" standard effects package. Adds a <code>GlobalFogU5</code> effect:</p>
 <ul>
 	<li>fogShader: "Hidden/GlobalFogU5"</li>
 	<li>heightDensity: 0.0075f (suggested range: 0.001 to 10)</li>
