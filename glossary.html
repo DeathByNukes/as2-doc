@@ -30,12 +30,14 @@
 		</ol>
 	</dd>
 	<dt id="lerp"><dfn>lerp</dfn></dt>
-	<dd><a href="https://encrypted.google.com/search?complete=0&q=lerp+OR+"linear+interpolation"">Linear interpolation</a>. A transition or fade between two values. For a pair of coordinates, this is finding a point on the line between them. For colors, this is a gradient from the first to the second color.</dd>
+	<dd><a href="https://www.google.com/search?q=lerp+OR+%22linear+interpolation%22">Linear interpolation</a>. A transition or fade between two values. For a pair of coordinates, this is finding a point on the line between them. For colors, this is a gradient from the first to the second color.</dd>
 	<dt id="extrude"><dfn>extrude</dfn></dt>
 	<dt id="intensity"><dfn>intensity</dfn></dt>
 	<dd>Audiosurf 2's estimation of how intense a portion of the song is.  This is different from the track slope.</dd>
 	<dt id="normalized-intensity"><dfn>normalized intensity</dfn></dt>
-	<dd>The intensity divided by the most intense part of the song.</dd>
+	<dd>The <a href="#intensity">intensity</a> divided by the most intense part of the song.</dd>
+	<dt id="smooth-intensity"><dfn>smooth intensity</dfn></dt>
+	<dd>The <a href="#intensity">intensity</a> but it is prevented from changing quickly.</dd>
 	<dt id="rail"><dfn>rail</dfn></dt>
 	<dd>A <a href="#model">model</a> that is <a href="#extrude">extruded</a> (<a href="skins.html#CreateRail">CreateRail</a>) or bent (<a href="skins.html#CreateRepeatedMeshRail">CreateRepeatedMeshRail</a>) along the <a href="#track">track</a>. Together, all of the rails serve to represent the <a href="#track">track</a> to the player. Individual rails typically represent things like lane dividers and the track &quot;floor&quot;.</dd>
 	<dt id="ring"><dfn>ring</dfn></dt>
