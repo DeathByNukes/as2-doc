@@ -184,12 +184,12 @@ dt dfn{
 
 
 /* "Lua" tab across the top of Lua scripts to differentiate them from standard documentation. */
-.NppLua, .NppCg {
+.NppLua, .LuaCode, .NppCg, .GenericCode, .ShaderLabCode {
 	position: relative;
 	margin-top: 1.5625em;
 	border-top: 0.15em solid #00257A;
 }
-.NppLua:before, .NppCg:before {
+.NppLua:before, .LuaCode:before, .NppCg:before, .GenericCode:before, .ShaderLabCode:before {
 	content: "Lua";
 	display: block;
 	position: absolute;
@@ -202,11 +202,29 @@ dt dfn{
 }
 
 .NppCg {
-	border-top: 0.15em solid #81C60B;
+	border-top-color: #81C60B;
 }
 .NppCg:before {
 	content: "Cg";
 	background-color: #81C60B;
+	color: #000;
+}
+
+.GenericCode {
+	border-top-color: #000;
+}
+.GenericCode:before {
+	content: "Code";
+	background-color: #C4C4C4;
+	color: #000;
+}
+
+.ShaderLabCode {
+	border-top-color: #616161;
+}
+.ShaderLabCode:before {
+	content: "Unity ShaderLab";
+	background-color: #E2E2E2;
 	color: #000;
 }
 

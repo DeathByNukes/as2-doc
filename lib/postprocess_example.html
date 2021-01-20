@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Manual Post-Processing Example</title>
+<link href="../as2-doc.css" rel="stylesheet" type="text/css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="../as2-doc.js" type="text/javascript"></script>
+</head>
+<body>
+<h1 id="about">About</h1>
+<address>Author: <a href="index.html#contact">DeathByNukes</a></address>
+<p>This is a part of my <a href="index.html">Audiosurf 2 scripting library</a>.</p>
+<h1 id="contents">Contents</h1>
+<script type="text/javascript">writeNavigation();</script>
+<h1 id="ManualPostEffect">Manual Post-Processing Example</h1>
+<p>With custom shaders it has always been possible to use special vertex shaders to position geometry directly in screen space without using <code><a href="../skins.html#AddPostEffect" class=func>AddPostEffect</a></code>. This can be used to draw a full-screen quad and we can sample the screen using <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-GrabPass.html">GrabPass</a>. It can also be used with <code><a href="../skins.html#BuildMesh" class=func>BuildMesh</a></code> for custom HUD elements, which <a href="https://twitter.com/DeathByNukes/status/472845861987176448/photo/1">I have used for debugging my skins</a>. Here is the essence of what I have been doing for post-processing:</p>
+<h2 id=shader>RevealAlpha.shader</h2>
+<pre class=ShaderLabCode><code>﻿Shader "RevealAlpha" {
+Properties {
+}
+
+SubShader {
+	Tags { "Queue"="Overlay" "IgnoreProjector"="True" "ForceNoShadowCasting"="True" }
+	
+	GrabPass { Tags { "LightMode" = "Always" } }
+	
+	Pass {
+		Cull Off ZWrite Off ZTest Always Fog { Mode Off } Tags { "LightMode" = "Always" }
+		CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+			
+			#include "UnityCG.cginc"
+			
+			sampler2D _GrabTexture;
+
+			struct appdata_t {
+				float4 vertex : POSITION;
+				float2 texcoord : TEXCOORD0;
+			};
+			struct v2f {
+				float4 vertex : SV_POSITION;
+				float2 texcoord : TEXCOORD0;
+			};
+			v2f vert (appdata_t v)
+			{
+				v2f o;
+				// place each vertex on the screen according to its UV position
+				o.vertex.xy = v.texcoord * 2.0 - 1.0; // screen is -1 to 1 and UVs are 0 to 1
+				o.vertex.z = UNITY_NEAR_CLIP_VALUE;
+				o.vertex.w = 1.0; // coordinates will be divided by w
+				o.texcoord = v.texcoord;
+				#if UNITY_UV_STARTS_AT_TOP
+				o.texcoord.y = 1.0 - o.texcoord.y;
+				#endif
+				#ifdef UNITY_HALF_TEXEL_OFFSET
+				o.vertex.xy -= 0.5 / _ScreenParams.xy;
+				#endif
+				return o;
+			}
+			
+			fixed4 frag (v2f i) : COLOR
+			{
+				fixed a = tex2D(_GrabTexture, i.texcoord).a;
+				return fixed4(a,a,a,a);
+			}
+		ENDCG
+	}
+}
+}
+</code></pre>
+<h2 id=lua>postprocess.lua</h2>
+<pre class=LuaCode><code>CreateObject{
+	railoffset = 0, -- follow the player so it is never culled for being out of the camera's view
+	floatonwaterwaves = false,
+	gameobject = {
+		mesh = "quad.obj",
+		--mesh = "quad_right_half.obj",
+		shader = "RevealAlpha.shader",
+		renderqueue = 4000, -- RenderQueue.Overlay
+		layer = 13, -- foreground camera
+	}
+}</code></pre>
+<h2 id=obj>quad.obj</h2>
+<style type="text/css">.ObjFileCode:before { content: "Wavefront OBJ"; }</style>
+<pre class="GenericCode ObjFileCode"><code># Blender v2.64 (sub 0) OBJ File: 'quad.blend'
+# www.blender.org
+mtllib quad.mtl
+v 0.500000 -0.500000 -0.000000
+v -0.500000 -0.500000 -0.000000
+v 0.500000 0.500000 0.000000
+v -0.500000 0.500000 0.000000
+vt -0.010000 -0.010000
+vt 1.010000 -0.010000
+vt 1.010000 1.010000
+vt -0.010000 1.010000
+usemtl 
+s off
+f 2/1 1/2 3/3 4/4
+</code></pre>
+<h2 id=obj_right>quad_right_half.obj</h2>
+<style type="text/css">.ObjFileCode:before { content: "Wavefront OBJ"; }</style>
+<pre class="GenericCode ObjFileCode"><code># Blender v2.64 (sub 0) OBJ File: 'quad.blend'
+# www.blender.org
+mtllib quad.mtl
+v 0.500000 -0.500000 -0.000000
+v -0.500000 -0.500000 -0.000000
+v 0.500000 0.500000 0.000000
+v -0.500000 0.500000 0.000000
+vt 0.500000 -0.010000
+vt 1.010000 -0.010000
+vt 1.010000 1.010000
+vt 0.500000 1.010000
+usemtl 
+s off
+f 2/1 1/2 3/3 4/4
+</code></pre>
+</body>
+</html>
