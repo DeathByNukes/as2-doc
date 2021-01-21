@@ -90,6 +90,10 @@ float antitrafficstrength</code></pre>
 <a href="#type-float">float</a><a href="#type-array">[]</a> <strong>shoulderlines</strong>
 <a href="#type-int">int</a> <strong>colorcount</strong>
 <em>-- arbitrary string and double values from the mod are also included here</em></code></pre>
+<h2 id="GetModeName"><a href="#type-string">string</a> GetModeName()</h2>
+<p>Gets the folder name of the current mod, converted to lowercase.</p>
+<h2 id="GetTrafficSpeedRatio"><a href="#type-float">float</a> GetTrafficSpeedRatio()</h2>
+<p>Gets the value set by <code><a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{trafficcompression}</code>. The default is <code>0.65</code>.</p>
 <h2 id="GetQualityLevel"><a href="#type-int">int</a> GetQualityLevel()</h2>
 <p>Returns <code><a href="http://www.lua.org/manual/5.1/manual.html#pdf-math.min" class="func">math.min</a>(3, <a href="#GetQualityLevel4" class="func">GetQualityLevel4</a>())</code></p>
 <h2 id="GetQualityLevel4"><a href="#type-int">int</a> GetQualityLevel4()</h2>
@@ -113,6 +117,11 @@ float antitrafficstrength</code></pre>
 	...
 }</code></pre>
 <p>The returned colors are in <code>{r=0-1, g=0-1, b=0-1, a=1}</code> format.</p>
+<h2 id="IsVideoscreenUsed"><a href="#type-bool">bool</a> IsVideoscreenUsed()</h2>
+<p>True if the current song is a video.</p>
+<ul class="seealso">
+	<li><a href="#SetVideoScreenTransform">SetVideoScreenTransform</a></li>
+</ul>
 <h1 id="customization-functions">Customization Functions</h1>
 <p><a href="http://stackoverflow.com/questions/686931/are-curly-brackets-used-in-lua">In case you aren't familiar with Lua syntax</a>, a function name followed by braces is shorthand for calling the function with a single argument which is a table. So, <code>Foo{bar=1}</code> and <code>Foo({bar=1})</code> are equivalent.</p>
 <h2 id="SetScene">SetScene{}</h2>
@@ -202,6 +211,20 @@ return register0.x == 0 ? body : half4(color.xyz, 0.01);</pre>
 <p>Set the sequence of colors that get turned into the "highway colors" gradient. The first color is the low intensity color.</p>
 <h2 id="SetBlockColors">SetBlockColors(<a href="#type-color">color</a><a href="#type-array">[]</a>)</h2>
 <p>Block colors used by puzzle gamemodes.</p>
+<h2 id="SetShieldColors">SetShieldColors(<a href="#type-color">color</a><a href="#type-array">[3]</a>)</h2>
+<p>One of the Audioshield things present in Audiosurf 2. I haven't checked if these colors get used by anything.</p>
+<p>Only the first 3 colors in the array will be used. If you supply less than 3 values, the missing values will be 50% grey. Pass a <code>nil</code> array to set default colors: </p>
+<pre class=LuaCode><code>SetShieldColors(nil)
+<em>-- same as</em>
+SetShieldColors{
+	{53, 141, 255},
+	{255, 52, 0},
+	{103, 53, 176},
+}</code></pre>
+<h2 id="SetSparkColors">SetSparkColors(<a href="#type-color">color</a><a href="#type-array">[3]</a>)</h2>
+<p>Exactly the same as <code><a href="#SetShieldColors" class=func>SetShieldColors</a></code>, including the default values, but sets the "spark colors".</p>
+<h2 id="SetOrbColors">SetOrbColors(<a href="#type-color">color</a><a href="#type-array">[3]</a>)</h2>
+<p>Exactly the same as <code><a href="#SetShieldColors" class=func>SetShieldColors</a></code>, including the default values, but sets the "orb colors".</p>
 <h2 id="LoadSounds">LoadSounds(<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a>)</h2>
 <p>Adds or replaces a named sound effect, which can be invoked by Audiosurf 2 or <a href="mods.html#PlaySound">mods</a>. Names are case-insensitive.</p>
 <h3 id="LoadSounds-builtin">Built-in Sounds</h3>
@@ -251,6 +274,11 @@ return register0.x == 0 ? body : half4(color.xyz, 0.01);</pre>
 	<li>rail (if air seconds &lt; 1.2 then volume = 0.2)</li>
 	<li>trickdone</li>
 	<li>trickfail</li>
+</ul>
+<h2 id="SetVideoScreenTransform">SetVideoScreenTransform(<a href="#type-transform">transform</a>)</h2>
+<p>Change the position of the video screen, if one exists.</p>
+<ul class="seealso">
+	<li><a href="#IsVideoscreenUsed">IsVideoscreenUsed</a></li>
 </ul>
 <h2 id="SetPlayer">SetPlayer{}</h2>
 <pre><code><a href="#type-float">float</a> <strong>fov</strong> = 90
@@ -499,6 +527,8 @@ float sizescaler ?= 1</code></pre>
 	<a href="#type-address">address</a>/<a href="#type-mesh">mesh</a> <strong>mesh</strong> = nil
 	<a href="#type-vector3">vector3</a> <strong>scale</strong> ?= {1,1,1}
 }, ...}</code></pre>
+<h2 id="OverrideTrackColorForDynamicBlockColors">OverrideTrackColorForDynamicBlockColors(<a href="#type-color">color</a>)</h2>
+<p>Overrides the color of "highway color" and "inverse highway color" blocks defined by <code><a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{ blocktype_highway, blocktype_highwayinverted }</code> If called in <code><a href="#Update">Update</a>()</code>, changes will take effect on the next frame.</p>
 <h2 id="CreateRail">CreateRail{}</h2>
 <pre><code><a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;rail&quot;</em>
 <a href="#type-vector2">vector2</a> <strong>positionOffset</strong> = {0,0} <em>-- added to every coordinate in crossSectionShape</em>
@@ -587,9 +617,28 @@ vector3[][] crossSectionShapeList = nil
 	<li><a href="glossary.html#extrude">extrude</a></li>
 </ul>
 <h2 id="CreateRailedObject">CreateRailedObject{}</h2>
-Exactly identical to <a href="#CreateObject">CreateObject{}</a>.
+<p>An alias for <a href="#CreateObject">CreateObject{}</a>.</p>
 <h2 id="CreatePrototype">CreatePrototype{}</h2>
-Exactly identical to <a href="#CreateObject">CreateObject{}</a>.
+<p>An alias for <a href="#CreateObject">CreateObject{}</a>.</p>
+<h2 id="RepeatObject">RepeatObject{}</h2>
+<pre><code>string prefabName = nil <em>-- Required. This refers to <a href="#CreateObject">CreateObject</a>{name} or a built-in object asset.</em>
+int[] nodes = (throw NullReferenceException) <em>-- Zero-based track node indexes. (0 is the first node.)</em>
+vector3[] offsets = {{0,0,0}, ...} <em>-- World-space offset from the corresponding node's position.</em>
+vector3[] scales = {{1,1,1}, ...}
+vector3[] rotations = {{0,0,0}, ...}
+int count = 5 <em>-- The number of objects that will be visible simultaneously.</em>
+int renderBehindDistance = 10 <em>-- Wait until an object's node is this many nodes behind <a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.floor" class=func>math.floor</a>(<a href="#Update">tracklocation</a>) before reassigning it to a future node.</em></code></pre>
+<ul class="seealso">
+	<li><a href="#CreateObject">CreateObject</a></li>
+	<li><a href="#GetTrack">GetTrack</a></li>
+	<li><a href="glossary.html#node">node</a></li>
+	<li><a href="glossary.html#world-space">world space</a></li>
+	<li><a href="#BatchRenderEveryFrame">BatchRenderEveryFrame</a></li>
+</ul>
+<p>This seems to be similar in purpose to <code><a href="#BatchRenderEveryFrame">BatchRenderEveryFrame</a></code> except it uses a pool of real objects (attached components such as thrusters will work) and we are working in world space (offset by node position only) rather than node space. Once the player passes by an object's node, it will be teleported to the next node in <code>nodes</code> that an object hasn't been placed on already.</p>
+<p>At startup it creates the specified number of <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Object.Instantiate.html">instances</a> of the specified object, leaves their transform at the original object's position, and assigns them to imaginary node <code>-1</code>. Whenever the current node minus <code>renderBehindDistance</code> is greater than an object's assigned node, it will get reassigned to the next unused node index in <code>nodes</code> and transformed accordingly. When it reaches the end of <code>nodes</code> it will stop making changes and the objects will continue to exist in their current locations.</p>
+<p><code>prefabName</code> is first checked against the list of prototypes, which can be named objects created by CreateObject, or built-in prototypes. If no prototype is found, it will do <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Resources.Load.html" class=func>Resources.Load</a>(prefabName)</code> and then immediately unsafe-cast the result to <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/GameObject.html" class=type> UnityEngine.GameObject</a></code>. I am not sure if this can be exploited to instantiate other kinds of resources.</p>
+<p>When working with the <code><a href="#GetTrack" class=func>GetTrack</a>()</code> array to choose nodes, you will need to subtract the Lua array indexes by one to convert it to the zero-based indexes expected by this function. An entry in <code>nodes</code> that is too large (<code>node[i] >= #<a href="#GetTrack" class=func>GetTrack</a>()</code>) will cause the rest of the array to be ignored. Negative indexes will throw IndexOutOfRangeException at the point where it attempts to assign an object to that node. If any of the other arrays are smaller than <code>nodes</code>, that array will be replaced with the default.</p>
 <h2 id="BatchRenderEveryFrame">BatchRenderEveryFrame{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>prefabName</strong> <em>-- mandatory</em>
 <a href="#type-int">int</a><a href="#type-array">[]</a> <strong>locations</strong> <em>-- mandatory. ints lower than 1 will be treated as 1</em>
@@ -679,10 +728,14 @@ float intensity = 0.5
 float range ?= ?
 table shadows = nil <em>-- this is the same as <a href="#CreateLight">CreateLight</a>{<strong>shadows</strong>}. omitting it disables shadows.</em></code></pre>
 <h2 id="BuildMaterial"><a href="#type-materialid">materialid</a> BuildMaterial(<a href="#type-material">material</a>)</h2>
-<p>Creates a <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Material.html" class=func>UnityEngine.Material</a></code> object and returns a reference token for it. This allows a single material to be used on multiple objects with less waste, and allows the material to be modified during <code><a href="#Update" class=func>Update</a>()</code> via <code><a href="#UpdateShaderSettings" class=func>UpdateShaderSettings</a>{}</code></p>
-<h2 id="UpdateShaderSettings">UpdateShaderSettings(<a href="#type-table">table</a>)</h2>
+<p>Creates a <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Material.html" class=func>UnityEngine.Material</a></code> object and returns a reference token for it. This allows a single material to be used on multiple objects with less waste, and allows the material to be modified during <code><a href="#Update" class=func>Update</a>()</code> via <code><a href="#UpdateMaterial" class=func>UpdateMaterial</a>{}</code></p>
+<h2 id="CreateMaterial"><a href="#type-materialid">materialid</a> CreateMaterial(<a href="#type-material">material</a>)</h2>
+<p>An alias for <code><a href="#BuildMaterial" class=func>BuildMaterial</a>{}</code></p>
+<h2 id="UpdateMaterial">UpdateMaterial(<a href="#type-table">table</a>)</h2>
 <pre><code>materialid material
 {string=float} shadersettings ?= ? <em>-- omitted settings are left at their previous values</em></code></pre>
+<h2 id="UpdateShaderSettings">UpdateShaderSettings(<a href="#type-table">table</a>)</h2>
+<p>An alias for <code><a href="#UpdateMaterial" class=func>UpdateMaterial</a>{}</code></p>
 <h2 id="BuildMesh"><a href="#type-mesh">mesh</a> BuildMesh{}</h2>
 <p>Can be one of the following tables:</p>
 <pre><code><a href="#type-mesh">mesh</a> <strong>mesh</strong> = nil <em>-- if not nil, modifies a previously created mesh (this will cause existing objects made with the mesh to update)</em>
