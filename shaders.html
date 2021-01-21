@@ -44,9 +44,9 @@
 <h1 id="overview">Overview</h1>
 <p>Property types we can set:</p>
 <ul>
-  <li><strong>2D</strong>: _MainTex via <code>texture=...</code> and all others via <code><a href="#type-material">textures</a>={_Property=...}</code></li>
-  <li><strong>Color</strong>: _Color via <code>color=...</code>, <code><a href="#SetScene" class="func">watertint</a>=...</code>, etc. and all others via <code><a href="#type-material">shadercolors</a>={_Property=...}</code></li>
-  <li><strong>Float</strong> and <strong>Range(a,b)</strong>: <code><a href="#type-material">shadersettings</a>={_Property=..., ...}</code> and <code><a href="#type-materialcolor">shadercolors</a>={...={... , param=&quot;_Property&quot;, paramMin=a, paramMax=b}}</code></li>
+  <li><strong>2D</strong>: _MainTex via <code>texture=...</code> and all others via <code><a href="skins.html#type-material">textures</a>={_Property=...}</code></li>
+  <li><strong>Color</strong>: _Color via <code>color=...</code>, <code><a href="skins.html#SetScene" class="func">watertint</a>=...</code>, etc. and all others via <code><a href="skins.html#type-material">shadercolors</a>={_Property=...}</code></li>
+  <li><strong>Float</strong> and <strong>Range(a,b)</strong>: <code><a href="skins.html#type-material">shadersettings</a>={_Property=..., ...}</code> and <code><a href="skins.html#type-materialcolor">shadercolors</a>={...={... , param=&quot;_Property&quot;, paramMin=a, paramMax=b}}</code></li>
   <li><strong>Vector</strong>: &quot;Four component vectors and colors are <a href="http://docs.unity3d.com/Documentation/ScriptReference/Material.SetVector.html">the same</a> in Unity shaders. (xyzw in the vector becomes rgba in the color).&quot;</li>
 </ul>
 <p>If you specify a shader that ends in &quot;.shader&quot; or &quot;.txt&quot; it will load that shader file from your skin folder. It does this by feeding the contents of the file into <a href="glossary.html#unity">Unity</a>'s <a href="http://docs.unity3d.com/Documentation/ScriptReference/Material-ctor.html">Material constructor</a> so it must be a <a href="http://docs.unity3d.com/Documentation/Manual/ShaderTut1.html">fixed function</a> shader or one that was compiled by the Unity editor.</p>
