@@ -199,8 +199,59 @@ return register0.x == 0 ? body : half4(color.xyz, 0.01);</pre>
 </ul>
 
 <h2 id="SetTrackColors">SetTrackColors(<a href="#type-color">color</a><a href="#type-array">[]</a>)</h2>
+<p>Set the sequence of colors that get turned into the "highway colors" gradient. The first color is the low intensity color.</p>
 <h2 id="SetBlockColors">SetBlockColors(<a href="#type-color">color</a><a href="#type-array">[]</a>)</h2>
+<p>Block colors used by puzzle gamemodes.</p>
 <h2 id="LoadSounds">LoadSounds(<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a>)</h2>
+<p>Adds or replaces a named sound effect, which can be invoked by Audiosurf 2 or <a href="mods.html#PlaySound">mods</a>. Names are case-insensitive.</p>
+<h3 id="LoadSounds-builtin">Built-in Sounds</h3>
+<ul>
+	<li>crowdroar</li>
+	<li>hit</li>
+	<li>hitblack</li>
+	<li>hitgrey</li>
+	<li>hitgreypro</li>
+	<li>jump</li>
+	<li>jumpfail</li>
+	<li>jumploop</li>
+	<li>landcrash</li>
+	<li>landsafe</li>
+	<li>levelup</li>
+	<li>matchblack</li>
+	<li>matchhuge</li>
+	<li>matchlarge</li>
+	<li>matchmedium</li>
+	<li>matchsmall</li>
+	<li>musiclost (maybe)</li>
+	<li>overfill</li>
+	<li>overfillwarning</li>
+	<li>rail</li>
+	<li>trickdone</li>
+	<li>trickfail</li>
+</ul>
+<h3 id="LoadSounds-used">Sounds Used by Game Functions</h3>
+<ul>
+	<li>crowdroar</li>
+	<li>hit (Pitch shifts from 100% to 300% as the number of filled puzzle cells increases from 0 to 21.)</li>
+	<li>hitgrey</li>
+	<li>hitgreypro</li>
+	<li>jump</li>
+	<li>jumpfail</li>
+	<li>jumploop (air seconds)</li>
+	<li>landcrash</li>
+	<li>landsafe (if air seconds &lt; 1.2 then volume = 0.1)</li>
+	<li>levelup</li>
+	<li>levelup</li>
+	<li>matchhuge</li>
+	<li>matchlarge</li>
+	<li>matchmedium</li>
+	<li>matchsmall</li>
+	<li>overfill</li>
+	<li>overfillwarning</li>
+	<li>rail (if air seconds &lt; 1.2 then volume = 0.2)</li>
+	<li>trickdone</li>
+	<li>trickfail</li>
+</ul>
 <h2 id="SetPlayer">SetPlayer{}</h2>
 <pre><code><a href="#type-float">float</a> <strong>fov</strong> = 90
 bool cameraortho = false <em>-- orthographic cameras</em>
@@ -628,6 +679,7 @@ float intensity = 0.5
 float range ?= ?
 table shadows = nil <em>-- this is the same as <a href="#CreateLight">CreateLight</a>{<strong>shadows</strong>}. omitting it disables shadows.</em></code></pre>
 <h2 id="BuildMaterial"><a href="#type-materialid">materialid</a> BuildMaterial(<a href="#type-material">material</a>)</h2>
+<p>Creates a <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Material.html" class=func>UnityEngine.Material</a></code> object and returns a reference token for it. This allows a single material to be used on multiple objects with less waste, and allows the material to be modified during <code><a href="#Update" class=func>Update</a>()</code> via <code><a href="#UpdateShaderSettings" class=func>UpdateShaderSettings</a>{}</code></p>
 <h2 id="UpdateShaderSettings">UpdateShaderSettings(<a href="#type-table">table</a>)</h2>
 <pre><code>materialid material
 {string=float} shadersettings ?= ? <em>-- omitted settings are left at their previous values</em></code></pre>
