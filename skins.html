@@ -824,7 +824,7 @@ table builtin = nil or {
 float blendamount = 0 <em>-- BlendAmount</em>
 address lut = nil <em>-- LutTexture, clamp, no mipmaps</em>
 address blendlut = nil <em>-- LutBlendTexture, clamp, no mipmaps</em>
-address mask = nil <em>-- MaskTexture, clamp, no mipmaps</code></pre></em>
+address mask = nil <em>-- MaskTexture, clamp, no mipmaps</em></code></pre>
 <h4 id="AddPostEffect-builtin-CandelaSSRR">Candela SSRR (?)</h4>
 <p>Enables the <a href="https://forum.unity.com/threads/released-candela-ssrr-v2-advanced-screen-space-pbs-reflections-for-unity-5.342803/">Candela SSRR</a> effect. (Screen Space Ray-traced Reflections) All it does is check if the object exists and, if found, activates it. I can't find the class in the version of Audiosurf 2 I am looking at, and it was made for an older version of Unity, so <strong>this might be a removed feature</strong>. Because this component is added in the editor, like <code>PostEffects</code>, I am not sure which one renders first.</p>
 <pre><code>string name = "CandelaSSR" / "CandelaSSRR" / "SSR" / "ssr"
@@ -836,7 +836,7 @@ address mask = nil <em>-- MaskTexture, clamp, no mipmaps</code></pre></em>
 	<li>renderGlowShader: <code>"Hidden/Render Selective Glow"</code></li>
 	<li>blurShader: <code>"Hidden/HeathenBlurConeTap"</code></li>
 	<li>fastBlurShader: <code>"Hidden/_HeathenFastBlur"</code></li>
-	<li>UseFastBlur: if <code><a href="#GetQualityLevel4" class=func>GetQualityLevel4</a>() <= 1</code></li>
+	<li>UseFastBlur: if <code><a href="#GetQualityLevel4" class=func>GetQualityLevel4</a>() &lt;= 1</code></li>
 </ul>
 <pre><code>string name = "SelectiveGlow" / "selectiveglow" / "HeathenSelectiveGlow"
 <em>-- no options</em></code></pre>
@@ -845,7 +845,7 @@ address mask = nil <em>-- MaskTexture, clamp, no mipmaps</code></pre></em>
 <pre><code>string name = "SENaturalBloomAndDirtyLens" / "NaturalBloom" / "SENaturalBloom" / "senaturalbloom" / "naturalbloom"
 float dirtintensity = 0.05 <em>-- <a href="https://github.com/sonicether/SE-Natural-Bloom-Dirty-Lens/blob/bc15de63773354ca99d2a24abe065814e8ba60cf/Assets/SE%20Natural%20Bloom/Scripts/SENaturalBloomAndDirtyLens.cs#L24">lensDirtIntensity</a>, suggested range is 0.0 to 0.95</em>
 float bloomintensity = 0.05 <em>-- <a href="https://github.com/sonicether/SE-Natural-Bloom-Dirty-Lens/blob/bc15de63773354ca99d2a24abe065814e8ba60cf/Assets/SE%20Natural%20Bloom/Scripts/SENaturalBloomAndDirtyLens.cs#L18">bloomIntensity</a>, suggested range is 0.0 to 0.4</em>
-address dirt = nil <em>-- <a href="https://github.com/sonicether/SE-Natural-Bloom-Dirty-Lens/blob/bc15de63773354ca99d2a24abe065814e8ba60cf/Assets/SE%20Natural%20Bloom/Scripts/SENaturalBloomAndDirtyLens.cs#L26">lensDirtTexture</a>, clamp, no mipmaps</code></pre></em>
+address dirt = nil <em>-- <a href="https://github.com/sonicether/SE-Natural-Bloom-Dirty-Lens/blob/bc15de63773354ca99d2a24abe065814e8ba60cf/Assets/SE%20Natural%20Bloom/Scripts/SENaturalBloomAndDirtyLens.cs#L26">lensDirtTexture</a>, clamp, no mipmaps</em></code></pre>
 <h4 id="AddPostEffect-builtin-SSAOPro">SSAO Pro</h4>
 <p>The <a href="https://forum.unity.com/threads/ssao-pro-high-quality-screen-space-ambient-occlusion.274003/">SSAO Pro</a> effect. Adds <code>SSAOPro</code> with default settings.</p>
 <ul class="seealso">
@@ -864,7 +864,7 @@ address dirt = nil <em>-- <a href="https://github.com/sonicether/SE-Natural-Bloo
 </ul>
 <p>It also takes some fog settings from <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderSettings.html">RenderSettings</a></code> (<code>fogMode</code>, <code>fogDensity</code>, <code>fogStartDistance</code>, <code>fogEndDistance</code>), so <code><a href="#SetScene" class=func>SetScene</a>{fogenabled,fogcolor,fogdensity,fogstart,fogend}</code> will change this effect.</p>
 <pre><code>string name = "GlobalFog"
-float height = -400 <em>-- "Fog top Y coordinate"</code></pre></em>
+float height = -400 <em>-- "Fog top Y coordinate"</em></code></pre>
 <h3 id="AddPostEffect-manual">Manual Effects</h3>
 <p>With custom shaders it has always been possible to use special vertex shaders to position geometry directly in screen space without using <code>AddPostEffect</code> and sample the screen using <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-GrabPass.html">GrabPass</a>. An example is available <a href="lib/postprocess_example.html">here</a>.</p>
 <!-- InstanceEndEditable -->

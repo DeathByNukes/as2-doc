@@ -23,7 +23,7 @@
 <h1 id="types">Types</h1>
 <script type="text/javascript">writeTypes();</script>
 <!-- InstanceBeginEditable name="content" -->
-<h1 id="script-execution">Script Execution</a></h1>
+<h1 id="script-execution">Script Execution</h1>
 <p>The mod script is executed during the loading screen when starting a song. A function in the script named <code><a href="#Update" class="func">Update()</a></code>, if present, will be executed every frame during actual gameplay.</p>
 <h2 id="Update">Update(<a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-table">table</a>, <a href="#type-float">float</a>)</h2>
 <p>This function is executed inside of <a href="http://docs.unity3d.com/Documentation/ScriptReference/MonoBehaviour.LateUpdate.html">Unity's LateUpdate</a> function.<br>
@@ -41,14 +41,14 @@ Arguments:</p>
 <a href="#type-float">float</a> <strong>playerstrafe</strong> <em>-- the player's current offset from the center of the track</em>
 <a href="#type-table">table</a> <strong>input</strong> <em>-- the same table returned by <a href="#GetInput" class="func">GetInput()</a></em>
 <a href="#type-float">float</a> <strong>currentWakeboarderJumpHeight</strong></code></pre>
-<h1 id="script-functions">Script Functions</a></h1>
+<h1 id="script-functions">Script Functions</h1>
 <p>TODO</p>
 <h2 id="AutomagicTable"><a href="#type-table">table</a> AutomagicTable()</h2>
 <p>Creates an &quot;automagic table&quot;. Attempting to access a sub-table inside the table automatically generates that table.</p>
 <pre class="NppLua"><span class="sc11">a</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">AutomagicTable</span><span class="sc10">()</span><span class="sc0">
 </span><span class="sc11">a.b.c.d</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"a.b and a.b.c are automatically created"</span></pre>
 <p>It is the exact same thing as this: <a href="http://lua-users.org/wiki/AutomagicTables">http://lua-users.org/wiki/AutomagicTables</a></p>
-<h1 id="customization-functions">Customization Functions</a></h1>
+<h1 id="customization-functions">Customization Functions</h1>
 <h2 id="GameplaySettings">GameplaySettings{}</h2>
 <pre><code><a href="#type-float">float</a> <strong>jumpheightscaler</strong> = 1
 <a href="#type-float">float</a> <strong>gravity</strong> = -0.45
@@ -312,7 +312,7 @@ WakeboarderCrossedOptimalJumpSpot</code></pre></dd>
 	<a href="#type-int">int</a> <strong>puzzle_col</strong> = 0
 	<a href="#type-bool">bool</a> <strong>add_top</strong> = false
 }, ...}
-<a href="#type-table[]">table</a><a href="#type-array">[]</a><a href="#type-array">[]</a> <strong>cells</strong> ?= ? or {{{
+<a href="#type-table">table</a><a href="#type-array">[]</a><a href="#type-array">[]</a> <strong>cells</strong> ?= ? or {{{
 	<a href="#type-int">int</a> <strong>type</strong> = -1
 }, ...}, ...}
 <a href="#type-table">table</a> <strong>timing</strong> ?= ? or {

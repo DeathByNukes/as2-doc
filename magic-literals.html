@@ -20,19 +20,19 @@
 <h1 id="overview">Overview</h1>
 <p>This is a list of various &quot;special&quot; values that can be used in some of the Lua API functions.</p>
 <ul class="seealso">
-	<li><a href="https://en.wikipedia.org/wiki/Magic_number_(programming)">Magic number (programming)</a></a></li>
-	<li><a href="https://en.wikipedia.org/wiki/Literal_(computer_programming)">Literal (computer programming)</a></a></li>
+	<li><a href="https://en.wikipedia.org/wiki/Magic_number_(programming)">Magic number (programming)</a></li>
+	<li><a href="https://en.wikipedia.org/wiki/Literal_(computer_programming)">Literal (computer programming)</a></li>
 </ul>
 <h1 id="layers">Layers</h1>
 <p>Layers determine which camera an object will be rendered on, and can also sometimes be given other special functions.</p>
 <p>According to Dylan there are 3 cameras: background, foreground, and close. They are drawn to the framebuffer in that order, and the <a href="http://en.wikipedia.org/wiki/Z-buffering">depth buffer</a> is cleared before the next one, so objects on the later cameras will always cover up objects on the previous camera no matter where they are in the world. If you have the <a href="skins.html#SetScene">standard glow effect</a> enabled, all objects drawn to the background camera will be part of the glow effect.</p>
 <p>This list is probably incomplete because I'm unable to extract the layer definitions from the game files. You can see Dylan's official documentation <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=413812198#583986">here</a> (&quot;Advanced Editing&quot; section, &quot;Rendering Layers&quot; subsection). I have included the <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/Layers.html">Unity &quot;Builtin&quot; layers</a> in the list as well though I don't know if they are used.</p>
 <ul class="seealso">
-  <li><a href="glossary.html#layer">layer</a></a></li>
-  <li><a href="glossary.html#render-queue">render queue</a></a></li>
-  <li><a href="glossary.html#framebuffer">framebuffer</a></a></li>
-  <li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/Layers.html">Layers</a></a></li>
-  <li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/class-Camera.html">Camera</a></a></li>
+  <li><a href="glossary.html#layer">layer</a></li>
+  <li><a href="glossary.html#render-queue">render queue</a></li>
+  <li><a href="glossary.html#framebuffer">framebuffer</a></li>
+  <li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/Layers.html">Layers</a></li>
+  <li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/class-Camera.html">Camera</a></li>
 </ul>
 <dl>
   <dt id="layer-0"><dfn>0</dfn> <em>Builtin Layer: Default</em></dt>
@@ -69,7 +69,7 @@
             <li>aurora</li>
           </ul>
         </li>
-        <li><a href="#SetSkybox">skysphere</a> if <code><a href="skins.html#GetQualityLevel" class="func">GetQualityLevel()</a> <= 1</code></li>
+        <li><a href="#SetSkybox">skysphere</a> if <code><a href="skins.html#GetQualityLevel" class="func">GetQualityLevel()</a> &lt;= 1</code></li>
         <li>water</li>
         <li>&quot;block stash&quot;</li>
       </ul>
@@ -120,7 +120,7 @@
 </table>
 <h1 id="render-queue">Render Queue</h1>
 <ul class="seealso">
-  <li><a href="glossary.html#render-queue">render queue</a></a></li>
+  <li><a href="glossary.html#render-queue">render queue</a></li>
 </ul>
 <ol>
 	<li value="1000"><strong>Background</strong>, skywires (neon, sandstorm, classic)</li>
@@ -139,7 +139,7 @@
 </ol>
 <h1 id="special-textures">Special Textures</h1>
 <ul class="seealso">
-  <li><a href="glossary.html#texture">texture</a></a></li>
+  <li><a href="glossary.html#texture">texture</a></li>
 </ul>
 <p>The texture loading is hidden behind some multithreading code that's hard to read so I'm just going to repeat <a href="http://www.audio-surf.com/forum/index.php/topic,13163.msg93835.html#msg93835">Dylan's announcement</a>.</p>
 <p>You can set any texture to one of these special values:</p>
