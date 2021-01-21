@@ -14,8 +14,7 @@
 <address>Author: <a href="index.html#contact">DeathByNukes</a></address>
 <p>This is a part of my <a href="index.html">Audiosurf 2 scripting documentation</a>.</p>
 <!-- InstanceBeginEditable name="pre-content" -->
-<p>This page documents the version released <a href="changelog.html#14">May ‎29, ‎2014</a>.</p>
-<p>The documentation for <a href="#BatchRenderEveryFrame">BatchRenderEveryFrame</a> has the latest variables but the extended description doesn't account for the changes yet.</p>
+<p>This page documents the version released <a href="changelog.html#14">May ‎29, ‎2014</a>. Some changes have been integrated since then but it is currently inconsistent.</p>
 <!-- InstanceEndEditable -->
 <h1 id="format">Documentation Format</h1>
 <code><span class="example_type">type</span> <strong>name</strong> = default or choice2 or choice3 <em>-- extra information</em></code>
@@ -559,6 +558,7 @@ vector3[] rotations = nil
 <a href="#type-float">float</a> <strong>songspeedratio</strong> = nil <em>-- internal name "compression", is disabled unless you set this. cannot be switched off once enabled</em>
 vector3[] worldspaceoffsets = nil
 <a href="#type-color">color</a><a href="#type-array">[]</a>/<a href="#type-string">string</a> <strong>colors</strong> = nil or {...} or &quot;highway&quot; or &quot;highwayinverted&quot; or &quot;nodecolor&quot; <em>-- nodecolor sets the individual objects' colors to the node they are attached to. highway and highwayinverted act like <a href="#type-material">materialcolor</a>. highwayinverted is bugged and is identical to highway</em></code></pre>
+<p><strong>The below documentation hasn't been updated for newly added settings <code>rotations</code> and <code>worldspaceoffsets</code>.</strong></p>
 <p>Each number in <code><strong>locations</strong></code> is the index of a track node to place an instance at. (<code><a href="#GetTrack" class="func">GetTrack</a></code> gets a list of all nodes) The other optional array settings are used to modify specific instances specified in <code><strong>locations</strong></code>. If set, they should be the same array length as <code><strong>locations</strong></code> and the order of the entries determines which location they will influence.</p>
 <p>By default, an instance is placed at the center of a node. <code><strong>offsets</strong></code> can be used to move them away from the center. Offset is relative to the node's position and rotation, so a positive X offset will always move it to the right of the track. Positive Y moves up and positive Z moves forward.</p>
 <p>Here are some terms I will use in the following explanations:</p>
