@@ -21,7 +21,7 @@
 <h1 id="#terms">Terms</h1>
 <dl>
 	<dt id="track"><dfn>track</dfn></dt>
-	<dd>The bumpy path that the player follows through the level. It is typically represented by one or more <a href="#rail">rails</a>.</dd>
+	<dd>The bumpy path that the player follows through the level. It is typically represented by one or more <a href="#rail">rails</a> and is composed of <a href="#node">track nodes</a>.</dd>
 	<dt id="node"><dfn>node</dfn></dt>
 	<dd>
 		<ol>
@@ -32,8 +32,15 @@
 	<dt id="lerp"><dfn>lerp</dfn></dt>
 	<dd><a href="https://www.google.com/search?q=lerp+OR+%22linear+interpolation%22">Linear interpolation</a>. A transition or fade between two values. For a pair of coordinates, this is finding a point on the line between them. For colors, this is a gradient from the first to the second color.</dd>
 	<dt id="extrude"><dfn>extrude</dfn></dt>
+	<dd>
+		<ul class="seealso">
+			<li><a href="#node">extrusion node</a></li>
+			<li><a href="skins.html#CreateRail">CreateRail</a></li>
+			<li><a href="https://en.wikipedia.org/wiki/Extrusion">Extrusion</a></li>
+		</ul>
+	</dd>
 	<dt id="intensity"><dfn>intensity</dfn></dt>
-	<dd>Audiosurf 2's estimation of how intense a portion of the song is.  This is different from the track slope.</dd>
+	<dd>Audiosurf 2's estimation of how intense a portion of the song is.  This is different from the <a href="#track">track</a> slope.</dd>
 	<dt id="normalized-intensity"><dfn>normalized intensity</dfn></dt>
 	<dd>The <a href="#intensity">intensity</a> divided by the most intense part of the song.</dd>
 	<dt id="smooth-intensity"><dfn>smooth intensity</dfn></dt>
@@ -50,7 +57,7 @@
 	<dt id="block"><dfn>block</dfn></dt>
 	<dd>The objects that the player can collide with.</dd>
 	<dt id="skywires"><dfn>skywires</dfn></dt>
-	<dd>In stock skins, the lines in the sky emanating from the end of the track.</dd>
+	<dd>In stock skins and Audiosurf 1, the lines in the sky emanating from the end of the <a href="#track">track</a>.</dd>
 	<dt id="game-object"><dfn>game object</dfn></dt>
 	<dt id="prefab"><dfn>prefab</dfn></dt>
 	<dt id="prototype"><dfn>prototype</dfn></dt>
@@ -70,11 +77,13 @@
 		</ul>
 	</dd>
 	<dt id="world-space"><dfn>world space</dfn></dt>
-	<dd>Coordinates in world space are relative to the center of the level. The first node usually starts off facing forward.</dd>
+	<dd>Coordinates in world space are relative to the center of the level. The first <a href="#node">track node</a> is usually in the <a href="#origin">center</a> of world space, facing <a href="#coordinate">forward</a>.</dd>
 	<dt id="node-space"><dfn>node space</dfn></dt>
-	<dd>Coordinates relative to a specific node's position and rotation.</dd>
+	<dd>Coordinates relative to a specific <a href="#node">track node</a>'s position and rotation.</dd>
 	<dt id="object-space"><dfn>object space</dfn></dt>
 	<dd>Coordinates relative to the position and rotation that an object is placed at. <a href="#model">Models</a> are built in object space.</dd>
+	<dt id="screen-space"><dfn>screen space</dfn></dt>
+	<dd>Coordinates relative to some point on the 2D viewport that the scene is rendered into. Generally X is horizontal, Y is vertical, and Z is depth.</dd>
 	<dt id="vector"><dfn>vector</dfn></dt>
 	<dd>There are two relevant definitions of this term.
 		<ol>
@@ -148,7 +157,7 @@
 		</ul>
 	</dd>
 	<dt id="vertex-color"><dfn>vertex color</dfn></dt>
-	<dd>A color and alpha value associated with a specific vertex. Differently colored vertices will <a href="#lerp">lerp</a> across the <a href="#triangle">triangles</a>, forming gradients. Vertex colors are how Audiosurf 2 colors different portions of the track according to the highway colors. (<a href="skins.html#CreateRail">CreateRail</a>'s colorMode setting.) Vertex colors are also used for coloring <a href="skins.html#SetWake">SetWake</a> and <a href="skins.html#type-gameobject">thrusters</a>. OBJ files do not support vertex colors.</dd>
+	<dd>A color and alpha value associated with a specific vertex. Differently colored vertices will <a href="#lerp">lerp</a> across the <a href="#triangle">triangles</a>, forming gradients. Vertex colors are how Audiosurf 2 colors different portions of the <a href="#track">track</a> according to the highway colors. (<a href="skins.html#CreateRail">CreateRail</a>'s colorMode setting.) Vertex colors are also used for coloring <a href="skins.html#SetWake">SetWake</a> and <a href="skins.html#type-gameobject">thrusters</a>. OBJ files do not support vertex colors.</dd>
 	<dt id="UV"><dfn>UV</dfn></dt>
 	<dd>Controls how a <a href="#texture">texture</a> is applied to a <a href="#model">model</a>. Internally, each <a href="#vertex">vertex</a> on a face gets two numbers, U and V (X and Y) associated with it. {0, 0} is the bottom left of the texture and {1, 1} is the top right. Those points in the texture are <a href="#lerp">stretched</a> across the corresponding points on the face.
 		<ul class="seealso">
@@ -209,22 +218,40 @@
 	<dd>
 		Objects in the game are marked as being on specific layers, which influences how they are rendered into the scene. Layers DO NOT work like Photoshop layers. Though specific layers might cause some objects to appear on top of others, that is not how all of them work. They are more like categories or labels.
 		<ul class="seealso">
-			<li><a href="magic-literals.html#layers">layers (full documentation)</a></a></li>
-			<li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/Layers.html">Layers</a></a></li>
+			<li><a href="magic-literals.html#layers">layers (full documentation)</a></li>
+			<li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/Layers.html">Layers</a></li>
 		</ul>
 	</dd>
 	<dt id="framebuffer"><dfn>framebuffer</dfn></dt>
 	<dd>
 		A 2D buffer on the GPU that holds a single frame image, usually sized according to the current screen resolution. When things are "rendered", they are drawn into the framebuffer sort of like painting on a canvas. A fragment shader function is responsible for drawing individual pixels into the framebuffer. In shaders you can make readable copies of the framebuffer via <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-GrabPass.html">GrabPass</a>.
 		<ul class="seealso">
-			<li><a href="https://en.wikipedia.org/wiki/Framebuffer">Framebuffer</a></a></li>
+			<li><a href="https://en.wikipedia.org/wiki/Framebuffer">Framebuffer</a></li>
+		</ul>
+	</dd>
+	<dt id="depth-buffer"><dfn>depth buffer</dfn></dt>
+	<dd>
+		A 2D buffer of floating-point numbers that tracks the distance of objects from the camera on a per-pixel basis. Also known as the "Z buffer" because in <a href="#screen-space">screen space</a> the Z <a href="#coordinate">coordinate</a> usually represents depth. It is used to determine which parts of polygons cover up other polygons. Depth ordering issues are sometimes seen in transparent objects because the depth buffer is only useful for ordering opaque objects. In Unity, shaders determine how a material interacts with the depth buffer.
+		<ul class="seealso">
+			<li><a href="https://en.wikipedia.org/wiki/Z-buffering">Z-buffering</a></li>
+			<li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-CullAndDepth.html">Culling & Depth Testing in Shaders</a></li>
 		</ul>
 	</dd>
 	<dt id="render-queue"><dfn>render queue</dfn></dt>
-	<dd>Determines the <a href="http://docs.unity3d.com/Documentation/Components/SL-SubshaderTags.html">order</a> that materials are rendered in. Generally only matters for shaders that have some sort of transparency. If not set, it defaults to a value specified by the shader, which is usually appropriate. For solid objects, the <a href="http://en.wikipedia.org/wiki/Z-buffering">depth buffer</a> ensures things are visible in the correct order regardless of the queue order. Different transparent shaders can interact with the depth buffer in different ways.</dd>
+	<dd>Determines the <a href="http://docs.unity3d.com/Documentation/Components/SL-SubshaderTags.html">order</a> that materials are rendered in. Generally only matters for shaders that have some sort of transparency. If not set, it defaults to a value specified by the shader, which is usually appropriate. For solid objects, the <a href="#depth-buffer">depth buffer</a> ensures things are visible in the correct order regardless of the queue order. Different transparent shaders can interact with the depth buffer in different ways.</dd>
 	<dt id="cull"><dfn>cull</dfn></dt>
+	<dd>
+		Culling is the process of determining what should and shouldn't be rendered. This is done mostly for optimization but in the case of <a href="#depth-buffer">depth culling</a> it is also critical to getting the correct image. Frustum culling, the process of culling entire objects that are out of the camera's field of view, can cause problems if an object's <a href="#bounding-box">bounding box</a> is incorrect.
+		<ul class="seealso">
+			<li><a href="depth-buffer">depth buffer</a></li>
+			<li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-CullAndDepth.html">Culling & Depth Testing in Shaders</a></li>
+			<li><a href="https://en.wikipedia.org/wiki/Hidden-surface_determination">Hidden-surface determination</a></li>
+		</ul>
+	</dd>
 	<dt id="culling-plane"><dfn>culling plane</dfn></dt>
+	<dd>The front or back end of the <a href="#depth-buffer">depth buffer</a>. Pixels of normal objects that are further away than the far culling plane or closer to the camera than the near culling plane will not be drawn.</dd>
 	<dt id="bounding-box"><dfn>bounding box</dfn></dt>
+	<dd>A simple box that completely encloses a smaller and more complex object, used to optimize and simplify various calculations. An axis-aligned bounding box (AABB) has no rotation, so it can be completely defined with just two <a href="#coordinate">coordinates</a> representing opposite corners of the box. (Minecraft blocks are axis-aligned cubes.) Bounding boxes are used in <a href="#cull">frustum culling</a> and objects can be incorrectly culled if the box doesn't correctly enclose the entire object.</dd>
 </dl>
 <!-- Add blank space so any definition can be scrolled to the top. -->
 <div style="height: 100vh; display: inline-block;"></div>
