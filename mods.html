@@ -300,6 +300,7 @@ WakeboarderCrossedOptimalJumpSpot</code></pre></dd>
 <h2 id="PlayBuiltInSound">PlayBuiltInSound{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>soundType</strong> = "none" or "grunt"
 <a href="#type-string">string</a> <strong>avatar</strong> = "AvatarMcFly" or "AvatarIphoneLady" or "AvatarBear" or "AvatarRobot"</code></pre>
+<p>For types other than <code>grunt</code>, this is identical to <code><a href="#PlaySound" class=func>PlaySound</a>{name=soundType}</code>.</p>
 <h2 id="GetJumpHeights"><a href="#type-float">float</a><a href="#type-array">[]</a> GetJumpHeights{}</h2>
 <p>input table or launchNode can be nil to use the current node</p>
 <pre><code><a href="#type-int">int</a> <strong>launchNode</strong> = nil</code></pre>
@@ -346,14 +347,21 @@ WakeboarderCrossedOptimalJumpSpot</code></pre></dd>
 <a href="#type-float">float</a><a href="#type-array">[]</a> <strong>shoulderlines</strong> ?= {4.5,-4.5}
 <a href="#type-float">float</a> <strong>trackwidth</strong> ?= 11.6
 <a href="#type-bool">bool</a> <strong>prefersteep</strong> = false
-<a href="#type-double">double</a><a href="#type-array">[]</a> <strong>*</strong> <em>-- any double values in the table will be passed through</em>
-<a href="#type-string">string</a><a href="#type-array">[]</a> <strong>*</strong> <em>-- strings too</em>
-<em>-- note: if you try to call SetSkinProperties more than once, setting a double or string that was already set previously will cause an error. (uses <a href="http://msdn.microsoft.com/en-us/library/k7z0zy8k(v=vs.110).aspx">Dictionary<>.Add()</a>)</em></code></pre>
+<a href="#type-double">double</a> <strong>*</strong> <em>-- any double values in the table will be passed through</em>
+<a href="#type-string">string</a> <strong>*</strong> <em>-- strings too</em>
+<em>-- note: if you try to call SetSkinProperties more than once, setting a double or string that was already set previously will cause an error. (uses <a href="http://msdn.microsoft.com/en-us/library/k7z0zy8k(v=vs.110).aspx">Dictionary&lt;&gt;.Add()</a>)</em></code></pre>
 <h2 id="PlaySound">PlaySound{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>name</strong>
 <a href="#type-float">float</a> <strong>volume</strong> = 1
 <a href="#type-float">float</a> <strong>pitch</strong> = 1
 <a href="#type-float">float</a> <strong>loopseconds</strong> = 0</code></pre>
+<p>If the sound does not exist, no sound will play and an error will be logged.</p>
+<ul class="seealso">
+    <li><a href="#LoadSounds">LoadSounds</a></li>
+    <li><a href="#PlayBuiltInSound">PlayBuiltInSound</a></li>
+</ul>
+<h2 id="LoadSounds">LoadSounds(<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a>)</h2>
+<p>Identical to skins' <code><a href="skins.html#LoadSounds" class="func">LoadSounds{}</a></code>.</p>
 <h2 id="GetQualityLevel"><a href="#type-int">int</a> GetQualityLevel()</h2>
 <p>Same as skins' <code><a href="skins.html#GetQualityLevel" class="func">GetQualityLevel()</a></code></p>
 <h2 id="SetScoreboardNote">SetScoreboardNote{}</h2>
