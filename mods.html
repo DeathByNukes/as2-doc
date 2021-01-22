@@ -341,15 +341,13 @@ WakeboarderCrossedOptimalJumpSpot</code></pre></dd>
 <em>-- end</em></code></pre>
 <h2 id="HideTraffic">HideTraffic(<a href="#type-int">int</a><a href="#type-array">[]</a>)</h2>
 <p>Numbers less than 1 will be treated as 1.</p>
-<h2 id="SetSkinProperties">SetSkinProperties{}</h2>
-<p>Sets the values the skin will see when calling <code><a href="skins.html#GetSkinProperties" class="func">GetSkinProperties()</a></code></p>
-<pre><code><a href="#type-float">float</a><a href="#type-array">[]</a> <strong>lanedividers</strong> ?= {-1.5,1.5}
-<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>shoulderlines</strong> ?= {4.5,-4.5}
-<a href="#type-float">float</a> <strong>trackwidth</strong> ?= 11.6
-<a href="#type-bool">bool</a> <strong>prefersteep</strong> = false
-<a href="#type-double">double</a> <strong>*</strong> <em>-- any double values in the table will be passed through</em>
-<a href="#type-string">string</a> <strong>*</strong> <em>-- strings too</em>
-<em>-- note: if you try to call SetSkinProperties more than once, setting a double or string that was already set previously will cause an error. (uses <a href="http://msdn.microsoft.com/en-us/library/k7z0zy8k(v=vs.110).aspx">Dictionary&lt;&gt;.Add()</a>)</em></code></pre>
+<h2 id="SetSkinProperties">SetSkinProperties(<a href="#type-dict">{</a><a href="#type-string">string</a><a href="#type-dict">=</a>*<a href="#type-dict">}</a>)</h2>
+<pre><code><a href="#type-bool">bool</a> <strong>*</strong> ?= nil
+<a href="#type-double">double</a> <strong>*</strong> ?= nil
+<a href="#type-string">string</a> <strong>*</strong> ?= nil
+<a href="#type-dict">{</a>*<a href="#type-dict">=</a>*<a href="#type-dict">}</a> <strong>*</strong> ?= nil <em>-- Keys and values can be a mixture of <a href="#type-bool">bool</a>, <a href="#type-double">double</a>, and <a href="#type-string">string</a>. A nil key will cause an exception to be thrown.</em></code></pre>
+<p>Sets the values the skin will see when calling <code><a href="skins.html#GetSkinProperties" class="func">GetSkinProperties</a>()</code>. Please read the <code><a href="skins.html#GetSkinProperties" class="func">GetSkinProperties</a></code> documentation for the full details.</p>
+<p><code><strong>colorcount</strong></code> is a reserved property name and it will always be silently overwritten with current <code><a href="#GameplaySettings" class=func>GameplaySettings</a>{<strong>colorcount</strong>}</code> setting.</p>
 <h2 id="PlaySound">PlaySound{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>name</strong>
 <a href="#type-float">float</a> <strong>volume</strong> = 1

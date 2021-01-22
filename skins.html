@@ -82,14 +82,31 @@ float antitrafficstrength</code></pre>
 <p>Gets the highway color at the current point in song playback. The returned table contains both styles of color. (<code>color.r</code> and <code>color[1]</code> are equivalent)</p>
 <h2 id="GetSongCompletionPercentage"><a href="#type-float">float</a> GetSongCompletionPercentage()</h2>
 <p>The current point in song playback. The returned number ranges from 0.0 to 1.0.</p>
-<h2 id="GetSkinProperties"><a href="#type-table">table</a> GetSkinProperties()</h2>
-<p>returned <code><a href="#type-table">table</a></code>:</p>
-<pre><code><a href="#type-float">float</a> <strong>trackwidth</strong>
+<h2 id="GetSkinProperties"><a href="#type-dict">{</a><a href="#type-string">string</a><a href="#type-dict">=</a>*<a href="#type-dict">}</a> GetSkinProperties()</h2>
+<p>Output:</p>
+<pre><code><a href="#type-bool">bool</a> <strong>*</strong>
+<a href="#type-double">double</a> <strong>*</strong>
+<a href="#type-string">string</a> <strong>*</strong>
+<a href="#type-dict">{</a>*<a href="#type-dict">=</a>*<a href="#type-dict">}</a> <strong>*</strong> <em>-- Keys and values can be a mixture of <a href="#type-bool">bool</a>, <a href="#type-double">double</a>, and <a href="#type-string">string</a>.</em>
+<a href="#type-int">int</a> <strong>colorcount</strong> <em>-- Set by <a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{<strong>colorcount</strong>}, defaults to 1.</em></code></pre>
+<p>Mods can add whatever values they want to the table as long they are one of the basic Lua types. The values can also be Lua tables with keys and values of any of the basic types. Functions and deeper nested tables are not supported, but mods could include them as strings and the skin could convert the strings into Lua code via <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-loadstring" class=func>loadstring</a>()</code>. Mods can add and overwrite skin properties at any time; skins can call the function again during <code><a href="#Update" class=func>Update</a></code> to see the changes. (The automatic system used internally to transfer the values from mods to skins also supports <a href="https://www.lua.org/manual/5.1/manual.html#lua_pushlightuserdata">light userdata</a>, but I don't think Audiosurf 2 ever produces that type and it can't be created by scripts.)</p>
+<h3 id="GetSkinProperties-standard">Standard Properties</h3>
+<p>These are the properties set by built-in mods and the ones based on them:</p>
+<pre><code><a href="#type-double">double</a> <strong>trackwidth</strong>
 <a href="#type-bool">bool</a> <strong>prefersteep</strong>
-<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>lanedividers</strong>
-<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>shoulderlines</strong>
-<a href="#type-int">int</a> <strong>colorcount</strong>
-<em>-- arbitrary string and double values from the mod are also included here</em></code></pre>
+<a href="#type-double">double</a><a href="#type-array">[]</a> <strong>lanedividers</strong>
+<a href="#type-double">double</a><a href="#type-array">[]</a> <strong>shoulderlines</strong></code></pre>
+<h3 id="GetSkinProperties-extended">Extended Properties</h3>
+<p>Here are extra properties I have been voluntarily supporting in my skins:</p>
+<pre><code><a href="#type-double">double</a> <strong>disableWater</strong> <em>-- set a nonzero number to disable water</em>
+<a href="#type-double">double</a> <strong>forceLaneDividers</strong> <em>set a nonzero number to keep the skin from ignoring them if there aren't many of them</em>
+<a href="#type-double">double</a> <strong>trackheight</strong> <em>-- ask for extra vertical empty space above the track floor</em>
+<a href="#type-double">double</a> <strong>skinnyGreyBlocks</strong> <em>-- set to 0 if your grey blocks have the same hitbox as normal blocks, any other number if they have a skinny hitbox like the ones in <a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{<strong>automatic_traffic_collisions</strong> = true}</em></code></pre>
+<p><em>(<code><a href="#type-bool">bool</a></code> properties weren't supported in the past and I haven't yet updated my skins, but I will add support eventually.)</em></p>
+<p>As always, <a href="index.html#contact">contact me</a> if you have something to add.</p>
+<ul class="seealso">
+	<li><a href="mods.html#SetSkinProperties">SetSkinProperties</a></li>
+</ul>
 <h2 id="GetModeName"><a href="#type-string">string</a> GetModeName()</h2>
 <p>Gets the folder name of the current mod, converted to lowercase.</p>
 <h2 id="GetTrafficSpeedRatio"><a href="#type-float">float</a> GetTrafficSpeedRatio()</h2>
