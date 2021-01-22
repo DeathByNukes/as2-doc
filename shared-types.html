@@ -32,7 +32,7 @@
 		<dt><dfn id="type-dict">{*=*}</dfn></dt>
 		<dd>a pair of types enclosed in braces like this is <a href="http://www.lua.org/pil/3.6.html">a table that can be filled with arbitrary keys/values</a> of the specified types. (aka dictionary) Example: <code><a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-int">int</a><a href="#type-dict">}</a>: {foo = 1, [&quot;bar!&quot;] = 2, ...}, <a href="#type-dict">{</a><a href="#type-vector3" class=func>vector3</a><a href="#type-dict">=</a><a href="#type-vector3">vector3</a><a href="#type-dict">}</a>: {[{0,0,0}] = {0,0,0}, [{0,0,0}] = {0,0,0}, ...}</code></dd>
 		<dt><dfn id="type-address">address</dfn></dt>
-		<dd>the same thing as a string but if it doesn't contain &quot;http:&quot; in it then the skin path will be added to the beginning of it.</dd>
+		<dd>the same thing as a string but if it doesn't start with &quot;http:&quot; in it then the skin path will be added to the beginning of it.</dd>
 		<dt><dfn id="type-color">color</dfn></dt>
 		<dd>a lua table of 4 numbers red/green/blue/alpha formatted as <code>{0,0,0,0}</code> or <code>{r=0,g=0,b=0,a=0}</code>. Alpha can be nil/omitted and defaults to 100%. If the first 3 numbers are 1.0 or less, the numbers are all treated as <code><a href="#type-double">double</a>s</code> in the range 0.0-1.0. Otherwise they are treated as <code><a href="#type-int">int</a>s</code> in the range 0-255.</dd>
 		<dt><dfn id="type-vector3">vector3</dfn></dt>
