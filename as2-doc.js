@@ -1,5 +1,5 @@
 $.ajaxSetup({
-  async: false
+	async: false
 });
 
 function writeNavigation(max_header_level, show_all_headers)

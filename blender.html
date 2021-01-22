@@ -23,26 +23,26 @@
 <p>An important thing to understand about Blender and most 3D modeling programs is they aren't specifically designed to make models for video games. Many of them, including Blender, focus on &quot;rendering&quot; capabilities for producing photorealistic images or videos from your models. Many 3D modeler features cannot survive the conversion process needed to load the model into a game. Features like shaders, materials, animations, and lighting typically cannot be converted or can only be partially converted with some extra work. In some cases Blender lacks simple functionality that would make producing game models much easier. Blender also has &quot;game creation&quot; tools, but they are used for Blender's own game engine and generally should be ignored. Keep this in mind when you look at Blender documentation and tutorials. While we're on that subject, also be aware of the version of Blender you are using. Currently, searching the internet will often show both &quot;Doc:2.6&quot; and &quot;Doc:2.4&quot; pages. Blender 2.6 had a big facelift and the old documentation is often useless.</p>
 <h1 id="glossary">Glossary</h1>
 <dl>
-  <dt><dfn id="term-model">model</dfn></dt>
-  <dd>A <a href="https://en.wikipedia.org/wiki/3D_model">model</a> (aka <a href="http://en.wikipedia.org/wiki/Polygon_mesh">mesh</a>) is a 3D shape. The ship, blocks, background objects, and some track shapes (the hexagon tunnel in the Resistance skin) are examples of models. A model is a <a href="http://en.wikipedia.org/wiki/Polygon_mesh">collection</a> of 3D points (vertices) that define the shape and position of polygons (faces). Most models also attach UV coordinates to each vertex on a face, which control how textures are applied to the model.</dd>
-  <dt><dfn id="term-texture">texture</dfn></dt>
-  <dd>A <a href="http://en.wikipedia.org/wiki/Texture_mapping">texture</a> is a typical 2D image that is applied to a 3D surface.</dd>
-  <dt><dfn id="term-material">material</dfn></dt>
-  <dd>A collection of settings that are applied to a face. Textures are one part of a material. Audiosurf 2 lets us specify material settings via the <a href="skins.html#type-material">material</a> type. Some AS2 <a href="skins.html#customization-functions">customization functions</a> don't include the material type and instead expose a limited number of material settings.</dd>
-  <dt><dfn id="term-UV">UV</dfn></dt>
-  <dd>A <a href="http://en.wikipedia.org/wiki/UV_mapping">UV map</a> controls how a texture is applied to a model. Internally, each vertex on a face gets two numbers, U and V (X and Y) associated with it. {0, 0} is the bottom left of the texture and {1, 1} is the top right. Those points in the texture are stretched across the corresponding points on the face. By default, Blender displays UV coordinates scaled by the size of the image instead of their true values.</dd>
-  <dt><dfn id="term-vertex-color">vertex color</dfn></dt>
-  <dd>A color and alpha value associated with a specific vertex. When the vertices on a face have different vertex colors, they will form a color gradient going across the face. Vertex colors are how Audiosurf 2 colors different portions of the track according to the highway colors at that part of the track. The <code>colorMode</code> setting in <a href="skins.html#CreateRail">CreateRail</a> controls how it generates vertex colors. Vertex colors are also used for coloring <a href="skins.html#SetWake">SetWake</a> and <a href="skins.html#type-gameobject">thrusters</a>.</dd>
-  <dt><dfn id="term-vertex-normal">vertex normal</dfn></dt>
-  <dd>A vertex <a href="https://en.wikipedia.org/wiki/Vertex_normal">normal</a> is a vector3 associated with a specific vertex. It tells the shader which direction is up, relative to the model surface the vertex is a part of. Many shader techniques like smooth shading, specularity, and bump mapping depend on normals.</dd>
-  <dt><dfn id="term-vertex-tangent">vertex tangent</dfn></dt>
-  <dd>A vertex <a href="http://docs.unity3d.com/Documentation/ScriptReference/Mesh-tangents.html">tangent</a> is a vector4 associated with a specific vertex. When used with vertex normals and some heavy math, a shader can determine how the surface is oriented. Advanced shader techniques like bump and parallax mapping need this.</dd>
-  <dt><dfn id="term-sub-mesh">sub-mesh</dfn></dt>
-  <dd>The Unity engine can only apply one material to all faces in a mesh. When multiple materials are needed, the mesh faces must be grouped into sub-meshes. One material can be applied to each sub-mesh.</dd>
-  <dt><dfn id="term-cull">cull</dfn></dt>
-  <dd>In some cases the game engine may skip drawing an object, effectively making it invisible. This is referred to as &quot;culling&quot; the object. Culling is usually done in cases where it's obvious the player won't see the object either way, in an attempt to increase frames per second.</dd>
-  <dt><dfn id="term-bounding-box">bounding box</dfn></dt>
-  <dd>A simple axis-aligned box definition (aligned in model space) that should contain all parts of the model. The model will be culled if its bounding box is outside the player's view. If a model's shader transforms its shape so that parts of it stick out of the bounding box, the model might be culled incorrectly in some cases. This is an important obstacle for advanced techniques like shader-based animations and screen overlays.</dd>
+	<dt><dfn id="term-model">model</dfn></dt>
+	<dd>A <a href="https://en.wikipedia.org/wiki/3D_model">model</a> (aka <a href="http://en.wikipedia.org/wiki/Polygon_mesh">mesh</a>) is a 3D shape. The ship, blocks, background objects, and some track shapes (the hexagon tunnel in the Resistance skin) are examples of models. A model is a <a href="http://en.wikipedia.org/wiki/Polygon_mesh">collection</a> of 3D points (vertices) that define the shape and position of polygons (faces). Most models also attach UV coordinates to each vertex on a face, which control how textures are applied to the model.</dd>
+	<dt><dfn id="term-texture">texture</dfn></dt>
+	<dd>A <a href="http://en.wikipedia.org/wiki/Texture_mapping">texture</a> is a typical 2D image that is applied to a 3D surface.</dd>
+	<dt><dfn id="term-material">material</dfn></dt>
+	<dd>A collection of settings that are applied to a face. Textures are one part of a material. Audiosurf 2 lets us specify material settings via the <a href="skins.html#type-material">material</a> type. Some AS2 <a href="skins.html#customization-functions">customization functions</a> don't include the material type and instead expose a limited number of material settings.</dd>
+	<dt><dfn id="term-UV">UV</dfn></dt>
+	<dd>A <a href="http://en.wikipedia.org/wiki/UV_mapping">UV map</a> controls how a texture is applied to a model. Internally, each vertex on a face gets two numbers, U and V (X and Y) associated with it. {0, 0} is the bottom left of the texture and {1, 1} is the top right. Those points in the texture are stretched across the corresponding points on the face. By default, Blender displays UV coordinates scaled by the size of the image instead of their true values.</dd>
+	<dt><dfn id="term-vertex-color">vertex color</dfn></dt>
+	<dd>A color and alpha value associated with a specific vertex. When the vertices on a face have different vertex colors, they will form a color gradient going across the face. Vertex colors are how Audiosurf 2 colors different portions of the track according to the highway colors at that part of the track. The <code>colorMode</code> setting in <a href="skins.html#CreateRail">CreateRail</a> controls how it generates vertex colors. Vertex colors are also used for coloring <a href="skins.html#SetWake">SetWake</a> and <a href="skins.html#type-gameobject">thrusters</a>.</dd>
+	<dt><dfn id="term-vertex-normal">vertex normal</dfn></dt>
+	<dd>A vertex <a href="https://en.wikipedia.org/wiki/Vertex_normal">normal</a> is a vector3 associated with a specific vertex. It tells the shader which direction is up, relative to the model surface the vertex is a part of. Many shader techniques like smooth shading, specularity, and bump mapping depend on normals.</dd>
+	<dt><dfn id="term-vertex-tangent">vertex tangent</dfn></dt>
+	<dd>A vertex <a href="http://docs.unity3d.com/Documentation/ScriptReference/Mesh-tangents.html">tangent</a> is a vector4 associated with a specific vertex. When used with vertex normals and some heavy math, a shader can determine how the surface is oriented. Advanced shader techniques like bump and parallax mapping need this.</dd>
+	<dt><dfn id="term-sub-mesh">sub-mesh</dfn></dt>
+	<dd>The Unity engine can only apply one material to all faces in a mesh. When multiple materials are needed, the mesh faces must be grouped into sub-meshes. One material can be applied to each sub-mesh.</dd>
+	<dt><dfn id="term-cull">cull</dfn></dt>
+	<dd>In some cases the game engine may skip drawing an object, effectively making it invisible. This is referred to as &quot;culling&quot; the object. Culling is usually done in cases where it's obvious the player won't see the object either way, in an attempt to increase frames per second.</dd>
+	<dt><dfn id="term-bounding-box">bounding box</dfn></dt>
+	<dd>A simple axis-aligned box definition (aligned in model space) that should contain all parts of the model. The model will be culled if its bounding box is outside the player's view. If a model's shader transforms its shape so that parts of it stick out of the bounding box, the model might be culled incorrectly in some cases. This is an important obstacle for advanced techniques like shader-based animations and screen overlays.</dd>
 </dl>
 <h1 id="file-capabilities">File Capabilities</h1>
 <h2 id="model-capabilities">Models</h2>
@@ -66,38 +66,38 @@
 <h1>Exporting from Blender</h1>
 <p>To create an OBJ file of your model, go to <strong>File</strong> -&gt; <strong>Export</strong> -&gt; <strong>Wavefront (.obj)</strong>. On the left there are some settings that change how the model is exported. The official documentation for OBJ export is <a href="http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Import-Export/Wavefront_OBJ">here</a>. You should read the &quot;<a href="http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Import-Export/Wavefront_OBJ#Export_Options">Export Options</a>&quot; section before reading the rest of this.</p>
 <dl>
-  <dt>Selection Only</dt>
-  <dd>Useful if you want to make a scene around your object to preview how it will look in-game. If you don't want to export hidden objects you can do a &quot;select all&quot; before exporting and use this.</dd>
-  <dt>Animation</dt>
-  <dd>Might be useful when making models for mesh morphing.</dd>
-  <dt>Apply Modifiers</dt>
-  <dd>If you don't know what modifiers are then you haven't used any and this setting doesn't concern you.</dd>
-  <dt>Include Edges</dt>
-  <dd>Only matters if you have edges that aren't part of a face. In that case you should usually leave this off. AS2 will ignore the two-point faces this generates.</dd>
-  <dt>Smooth Groups, Bitflag Smooth Groups</dt>
-  <dd>Pretty sure AS2 doesn't support reading this. Include normals instead.</dd>
-  <dt>Include Normals</dt>
-  <dd>If you leave this off, AS2 can still automatically generate normals. I'm not sure if normal generation is faster or slower than parsing them from the obj file. Smoothing groups will influence the normals that Blender exports so you should turn this on when using them. Warning: AS2 normal options have misleading names like &quot;recalculateNormals&quot;. What they actually do is enable or disable normals. Normals in the file are ignored when it's turned off and loaded or calculated when it's turned on.</dd>
-  <dt>Include UVs</dt>
-  <dd>AS2 supports OBJ files without UVs so you can turn this off if using a shader that doesn't need them.</dd>
-  <dt>Write Materials</dt>
-  <dd><strong>This is mandatory.</strong> You can delete the MTL file afterward but AS2's OBJ reader will crash if the OBJ doesn't contain any material settings.
-  <p>If you leave it off then AS2 will completely fail to load the model and this message will appear on-screen:</p>
-  <pre>failed:example.obj. check output_log.txt for details</pre>
-  <p>In the log file you will see the same message and this will be above it:</p>
-  <pre>Argument is out of range.
+	<dt>Selection Only</dt>
+	<dd>Useful if you want to make a scene around your object to preview how it will look in-game. If you don't want to export hidden objects you can do a &quot;select all&quot; before exporting and use this.</dd>
+	<dt>Animation</dt>
+	<dd>Might be useful when making models for mesh morphing.</dd>
+	<dt>Apply Modifiers</dt>
+	<dd>If you don't know what modifiers are then you haven't used any and this setting doesn't concern you.</dd>
+	<dt>Include Edges</dt>
+	<dd>Only matters if you have edges that aren't part of a face. In that case you should usually leave this off. AS2 will ignore the two-point faces this generates.</dd>
+	<dt>Smooth Groups, Bitflag Smooth Groups</dt>
+	<dd>Pretty sure AS2 doesn't support reading this. Include normals instead.</dd>
+	<dt>Include Normals</dt>
+	<dd>If you leave this off, AS2 can still automatically generate normals. I'm not sure if normal generation is faster or slower than parsing them from the obj file. Smoothing groups will influence the normals that Blender exports so you should turn this on when using them. Warning: AS2 normal options have misleading names like &quot;recalculateNormals&quot;. What they actually do is enable or disable normals. Normals in the file are ignored when it's turned off and loaded or calculated when it's turned on.</dd>
+	<dt>Include UVs</dt>
+	<dd>AS2 supports OBJ files without UVs so you can turn this off if using a shader that doesn't need them.</dd>
+	<dt>Write Materials</dt>
+	<dd><strong>This is mandatory.</strong> You can delete the MTL file afterward but AS2's OBJ reader will crash if the OBJ doesn't contain any material settings.
+	<p>If you leave it off then AS2 will completely fail to load the model and this message will appear on-screen:</p>
+	<pre>failed:example.obj. check output_log.txt for details</pre>
+	<p>In the log file you will see the same message and this will be above it:</p>
+	<pre>Argument is out of range.
 Parameter name: index</pre></dd>
-  <dt>Triangulate Faces</dt>
-  <dd>AS2 can only load faces with 3 or 4 points. All others will be ignored. This probably bloats the file size so I only turn it on when the model looks wrong without it. If you want to avoid this setting and your model is mostly triangles and quads you might consider manually splitting the unsupported faces.
-  <p>Leaving this off can generate the following messages in output_log.txt:</p>
-  <pre>At least one object uses quads...automatic triangle conversion is being used, which may not produce best results
+	<dt>Triangulate Faces</dt>
+	<dd>AS2 can only load faces with 3 or 4 points. All others will be ignored. This probably bloats the file size so I only turn it on when the model looks wrong without it. If you want to avoid this setting and your model is mostly triangles and quads you might consider manually splitting the unsupported faces.
+	<p>Leaving this off can generate the following messages in output_log.txt:</p>
+	<pre>At least one object uses quads...automatic triangle conversion is being used, which may not produce best results
 Polygons which are not quads or triangles have been skipped</pre></dd>
-  <dt>Write Nurbs</dt>
-  <dd>Yeah keep this turned off.</dd>
-  <dt>Polygroups, Objects as OBJ Objects/Groups, Material Groups</dt>
-  <dd>You can switch these off unless you're doing <a href="#multiple-materials">multiple materials</a> or want to make it easier for other people to import your OBJ files back into Blender. By default AS2 combines the groups/objects into a single model.</dd>
-  <dt>Keep Vertex Order</dt>
-  <dd>Consistent vertex order is needed for mesh morphing and for modifying the model via BuildMesh.</dd>
+	<dt>Write Nurbs</dt>
+	<dd>Yeah keep this turned off.</dd>
+	<dt>Polygroups, Objects as OBJ Objects/Groups, Material Groups</dt>
+	<dd>You can switch these off unless you're doing <a href="#multiple-materials">multiple materials</a> or want to make it easier for other people to import your OBJ files back into Blender. By default AS2 combines the groups/objects into a single model.</dd>
+	<dt>Keep Vertex Order</dt>
+	<dd>Consistent vertex order is needed for mesh morphing and for modifying the model via BuildMesh.</dd>
 </dl>
 <h2 id="multiple-materials">Multiple Materials</h2>
 <p>Multiple materials per model is only supported for models that will be used in <a href="skins.html#type-gameobject">gameobject</a> definitions. In that case, a list of materials is specified in the gameobject <code>materials</code> setting. In order to use multiple materials, your model needs to have sub-meshes. The first material in the materials list will go to the first sub-mesh and so on. By default, Audiosurf 2's OBJ importer does not support sub-meshes. To enable support you must load the model with <a href="skins.html#BuildMesh">BuildMesh</a>'s <code>submeshesWhenCombining</code> option: </p>
@@ -106,55 +106,55 @@ Polygons which are not quads or triangles have been skipped</pre></dd>
 </span><span class="sc2">-- with
 </span><span class="sc11">mesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">BuildMesh</span><span class="sc10">{</span><span class="sc11">mesh</span><span class="sc10">=</span><span class="sc6">"example.obj"</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">submeshesWhenCombining</span><span class="sc10">=</span><span class="sc5">true</span><span class="sc10">},</span></code></pre>
 <p>With this enabled, different OBJ groups will go to different sub-meshes.
-  If you aren't sure what order the groups are in, open the OBJ file with Notepad++ and look for lines starting with &quot;g&quot; followed by a group name. All face definitions (&quot;f&quot;) after a group definition go in that group.</p>
+	If you aren't sure what order the groups are in, open the OBJ file with Notepad++ and look for lines starting with &quot;g&quot; followed by a group name. All face definitions (&quot;f&quot;) after a group definition go in that group.</p>
 <p>In the OBJ exporter, these are options that control how groups are created:</p>
 <dl>
-  <dt>Objects as OBJ Groups</dt>
-  <dd>Each blender object goes into its own group. This is the most straightforward way of creating groups. By joining and splitting objects you can get exact control over how groups are made without having to mess with Blender materials.</dd>
-  <dt>Objects as OBJ Objects</dt>
-  <dd>This is like the above, but puts them in &quot;objects&quot; instead. It overrides the above setting, completely replacing the group definitions with object definitions. I think AS2 will treat objects the same as groups but I suggest leaving this off to keep things simple. I haven't tested how it interacts with the other export options.</dd>
-  <dt>Material Groups</dt>
-  <dd>Groups individual faces based on what material is assigned to them in Blender. According to my tests, <strong>each Blender object gets its own set of unique material groups</strong> even if two objects are using the same material and &quot;Objects as OBJ Groups&quot; is disabled. If you're trying to consolidate groups across multiple Blender objects this option won't work for you. On the other hand, if you want to keep everything inside of a single Blender object then this is the ideal option for you. This option still works when &quot;Write Materials&quot; is disabled.</dd>
-  <dt>Polygroups</dt>
-  <dd>Groups faces based on the vertex groups its vertices are in. It &quot;guesses&quot; in cases where not all of the face's vertices are in the same group. I haven't tested this option.</dd>
+	<dt>Objects as OBJ Groups</dt>
+	<dd>Each blender object goes into its own group. This is the most straightforward way of creating groups. By joining and splitting objects you can get exact control over how groups are made without having to mess with Blender materials.</dd>
+	<dt>Objects as OBJ Objects</dt>
+	<dd>This is like the above, but puts them in &quot;objects&quot; instead. It overrides the above setting, completely replacing the group definitions with object definitions. I think AS2 will treat objects the same as groups but I suggest leaving this off to keep things simple. I haven't tested how it interacts with the other export options.</dd>
+	<dt>Material Groups</dt>
+	<dd>Groups individual faces based on what material is assigned to them in Blender. According to my tests, <strong>each Blender object gets its own set of unique material groups</strong> even if two objects are using the same material and &quot;Objects as OBJ Groups&quot; is disabled. If you're trying to consolidate groups across multiple Blender objects this option won't work for you. On the other hand, if you want to keep everything inside of a single Blender object then this is the ideal option for you. This option still works when &quot;Write Materials&quot; is disabled.</dd>
+	<dt>Polygroups</dt>
+	<dd>Groups faces based on the vertex groups its vertices are in. It &quot;guesses&quot; in cases where not all of the face's vertices are in the same group. I haven't tested this option.</dd>
 </dl>
 <p>Here is an example scene with multiple materials set up:<br>
 <img src="blender-multi-material.png" width="538" height="416" alt="blender screenshot"></p>
 <p>Exporting with &quot;Objects as OBJ Groups&quot; creates these groups in this order:</p>
 <ul>
-  <li>objectB_meshB (6 faces)</li>
-  <li>objectA_meshA (6 faces)</li>
+	<li>objectB_meshB (6 faces)</li>
+	<li>objectA_meshA (6 faces)</li>
 </ul>
 <p>Exporting with &quot;Material Groups&quot;:</p>
 <ul>
-  <li>objectB_meshB_materialB (6 faces)</li>
-  <li>objectA_meshA_materialA (5 faces)</li>
-  <li>objectA_meshA_materialB_a (1 face)</li>
+	<li>objectB_meshB_materialB (6 faces)</li>
+	<li>objectA_meshA_materialA (5 faces)</li>
+	<li>objectA_meshA_materialB_a (1 face)</li>
 </ul>
 <h2 id="vertex-color-limits">Vertex Colors</h2>
 <p>OBJ files can't contain vertex colors but the script can add some by loading it with BuildMesh then calling BuildMesh a second time with the <code>colortable</code> setting included. colortable, unfortunately, is simply a flat list of colors that matches up with the order vertices are specified in the OBJ file. Writing them all into the script by hand would be tedious, but might be feasible in some scenarios:</p>
 <pre class="NppLua"><code><span class="sc11">cube_mesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">BuildMesh</span><span class="sc10">{</span><span class="sc11">mesh</span><span class="sc10">=</span><span class="sc6">"cube.obj"</span><span class="sc10">}</span><span class="sc0">
 
 </span><span class="sc11">BuildMesh</span><span class="sc10">{</span><span class="sc0">
-    </span><span class="sc11">mesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">cube_mesh</span><span class="sc10">,</span><span class="sc0">
-    </span><span class="sc11">colortable</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
-        </span><span class="sc10">{</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">},</span><span class="sc0">
-        </span><span class="sc10">{</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">0</span><span class="sc10">},</span><span class="sc0">
-        </span><span class="sc10">{</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc4">0</span><span class="sc10">},</span><span class="sc0">
-        </span><span class="sc10">{</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc4">0</span><span class="sc10">},</span><span class="sc0">
-        </span><span class="sc10">{</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">},</span><span class="sc0">
-        </span><span class="sc10">{</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">},</span><span class="sc0">
-    </span><span class="sc10">},</span><span class="sc0">
+	</span><span class="sc11">mesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">cube_mesh</span><span class="sc10">,</span><span class="sc0">
+	</span><span class="sc11">colortable</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
+		</span><span class="sc10">{</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">},</span><span class="sc0">
+		</span><span class="sc10">{</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">0</span><span class="sc10">},</span><span class="sc0">
+		</span><span class="sc10">{</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc4">0</span><span class="sc10">},</span><span class="sc0">
+		</span><span class="sc10">{</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc4">0</span><span class="sc10">},</span><span class="sc0">
+		</span><span class="sc10">{</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">},</span><span class="sc0">
+		</span><span class="sc10">{</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">},</span><span class="sc0">
+	</span><span class="sc10">},</span><span class="sc0">
 </span><span class="sc10">}</span><span class="sc0">
 
 </span><span class="sc11">CreateObject</span><span class="sc10">{</span><span class="sc0">
-    </span><span class="sc11">name</span><span class="sc10">=</span><span class="sc6">"colorful cube"</span><span class="sc10">,</span><span class="sc0">
-    </span><span class="sc11">railoffset</span><span class="sc10">=</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc0">
-    </span><span class="sc11">floatonwaterwaves</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">false</span><span class="sc10">,</span><span class="sc0">
-    </span><span class="sc11">gameobject</span><span class="sc10">={</span><span class="sc0">
-        </span><span class="sc11">mesh</span><span class="sc10">=</span><span class="sc11">cube_mesh</span><span class="sc10">,</span><span class="sc0">
-        </span><span class="sc11">shader</span><span class="sc10">=</span><span class="sc6">"VertexColorUnlitTinted"</span><span class="sc10">,</span><span class="sc0">
-    </span><span class="sc10">}</span><span class="sc0">
+	</span><span class="sc11">name</span><span class="sc10">=</span><span class="sc6">"colorful cube"</span><span class="sc10">,</span><span class="sc0">
+	</span><span class="sc11">railoffset</span><span class="sc10">=</span><span class="sc4">0</span><span class="sc10">,</span><span class="sc0">
+	</span><span class="sc11">floatonwaterwaves</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">false</span><span class="sc10">,</span><span class="sc0">
+	</span><span class="sc11">gameobject</span><span class="sc10">={</span><span class="sc0">
+		</span><span class="sc11">mesh</span><span class="sc10">=</span><span class="sc11">cube_mesh</span><span class="sc10">,</span><span class="sc0">
+		</span><span class="sc11">shader</span><span class="sc10">=</span><span class="sc6">"VertexColorUnlitTinted"</span><span class="sc10">,</span><span class="sc0">
+	</span><span class="sc10">}</span><span class="sc0">
 </span><span class="sc10">}</span></code></pre>
 <p>Another possibility is exporting to OBJ and also to an alternative format like <a href="https://en.wikipedia.org/wiki/PLY_(file_format)">Stanford .PLY</a> or <a href="https://en.wikipedia.org/wiki/COLLADA">Collada .DAE</a> which supports vertex colors, then gathering all the colors from the file's source code using regular expressions.</p>
 <!-- InstanceEndEditable -->

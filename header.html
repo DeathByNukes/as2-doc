@@ -35,55 +35,55 @@
 </span><span class="sc13">io</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
 
 </span><span class="sc5">do</span><span class="sc0">
-    </span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">auto</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">assign</span><span class="sc0">
+	</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">auto</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">assign</span><span class="sc0">
 
-    </span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">auto</span><span class="sc10">(</span><span class="sc11">tab</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">key</span><span class="sc10">)</span><span class="sc0">
-        </span><span class="sc5">return</span><span class="sc0"> </span><span class="sc13">setmetatable</span><span class="sc10">({},</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
-                </span><span class="sc11">__index</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">auto</span><span class="sc10">,</span><span class="sc0">
-                </span><span class="sc11">__newindex</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">assign</span><span class="sc10">,</span><span class="sc0">
-                </span><span class="sc11">parent</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">tab</span><span class="sc10">,</span><span class="sc0">
-                </span><span class="sc11">key</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">key</span><span class="sc0">
-        </span><span class="sc10">})</span><span class="sc0">
-    </span><span class="sc5">end</span><span class="sc0">
+	</span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">auto</span><span class="sc10">(</span><span class="sc11">tab</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">key</span><span class="sc10">)</span><span class="sc0">
+		</span><span class="sc5">return</span><span class="sc0"> </span><span class="sc13">setmetatable</span><span class="sc10">({},</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
+			</span><span class="sc11">__index</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">auto</span><span class="sc10">,</span><span class="sc0">
+			</span><span class="sc11">__newindex</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">assign</span><span class="sc10">,</span><span class="sc0">
+			</span><span class="sc11">parent</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">tab</span><span class="sc10">,</span><span class="sc0">
+			</span><span class="sc11">key</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">key</span><span class="sc0">
+		</span><span class="sc10">})</span><span class="sc0">
+	</span><span class="sc5">end</span><span class="sc0">
 
-    </span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">meta</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc11">__index</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">auto</span><span class="sc10">}</span><span class="sc0">
+	</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">meta</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc11">__index</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">auto</span><span class="sc10">}</span><span class="sc0">
 
-    </span><span class="sc2">-- The if statement below prevents the table from being
-</span><span class="sc0">    </span><span class="sc2">-- created if the value assigned is nil. This is, I think,
-</span><span class="sc0">    </span><span class="sc2">-- technically correct but it might be desirable to use
-</span><span class="sc0">    </span><span class="sc2">-- assignment to nil to force a table into existence.
-</span><span class="sc0">
-    </span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">assign</span><span class="sc10">(</span><span class="sc11">tab</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">key</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">val</span><span class="sc10">)</span><span class="sc0">
-        </span><span class="sc2">-- if val ~= nil then
-</span><span class="sc0">        </span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">oldmt</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc13">getmetatable</span><span class="sc10">(</span><span class="sc11">tab</span><span class="sc10">)</span><span class="sc0">
-        </span><span class="sc11">oldmt.parent</span><span class="sc10">[</span><span class="sc11">oldmt.key</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">tab</span><span class="sc0">
-        </span><span class="sc13">setmetatable</span><span class="sc10">(</span><span class="sc11">tab</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">meta</span><span class="sc10">)</span><span class="sc0">
-        </span><span class="sc11">tab</span><span class="sc10">[</span><span class="sc11">key</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">val</span><span class="sc0">
-        </span><span class="sc2">-- end
-</span><span class="sc0">    </span><span class="sc5">end</span><span class="sc0">
+	</span><span class="sc2">-- The if statement below prevents the table from being</span><span class="sc0">
+	</span><span class="sc2">-- created if the value assigned is nil. This is, I think,</span><span class="sc0">
+	</span><span class="sc2">-- technically correct but it might be desirable to use</span><span class="sc0">
+	</span><span class="sc2">-- assignment to nil to force a table into existence.</span><span class="sc0">
 
-    </span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">AutomagicTable</span><span class="sc10">()</span><span class="sc0">
-        </span><span class="sc5">return</span><span class="sc0"> </span><span class="sc13">setmetatable</span><span class="sc10">({},</span><span class="sc0"> </span><span class="sc11">meta</span><span class="sc10">)</span><span class="sc0">
-    </span><span class="sc5">end</span><span class="sc0">
+	</span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">assign</span><span class="sc10">(</span><span class="sc11">tab</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">key</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">val</span><span class="sc10">)</span><span class="sc0">
+		</span><span class="sc2">-- if val ~= nil then</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">oldmt</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc13">getmetatable</span><span class="sc10">(</span><span class="sc11">tab</span><span class="sc10">)</span><span class="sc0">
+		</span><span class="sc11">oldmt.parent</span><span class="sc10">[</span><span class="sc11">oldmt.key</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">tab</span><span class="sc0">
+		</span><span class="sc13">setmetatable</span><span class="sc10">(</span><span class="sc11">tab</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">meta</span><span class="sc10">)</span><span class="sc0">
+		</span><span class="sc11">tab</span><span class="sc10">[</span><span class="sc11">key</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">val</span><span class="sc0">
+		</span><span class="sc2">-- end</span><span class="sc0">
+	</span><span class="sc5">end</span><span class="sc0">
 
-    </span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">fif</span><span class="sc10">(</span><span class="sc11">test</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">if_true</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">if_false</span><span class="sc10">)</span><span class="sc0">
-        </span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">test</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0"> </span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">if_true</span><span class="sc0"> </span><span class="sc5">else</span><span class="sc0"> </span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">if_false</span><span class="sc0"> </span><span class="sc5">end</span><span class="sc0">
-    </span><span class="sc5">end</span><span class="sc0">
+	</span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">AutomagicTable</span><span class="sc10">()</span><span class="sc0">
+		</span><span class="sc5">return</span><span class="sc0"> </span><span class="sc13">setmetatable</span><span class="sc10">({},</span><span class="sc0"> </span><span class="sc11">meta</span><span class="sc10">)</span><span class="sc0">
+	</span><span class="sc5">end</span><span class="sc0">
 
-    </span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">deepcopy</span><span class="sc10">(</span><span class="sc11">orig</span><span class="sc10">)</span><span class="sc0">
-        </span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">orig_type</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc13">type</span><span class="sc10">(</span><span class="sc11">orig</span><span class="sc10">)</span><span class="sc0">
-        </span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">copy</span><span class="sc0">
-        </span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">orig_type</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc7">'table'</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
-            </span><span class="sc11">copy</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{}</span><span class="sc0">
-            </span><span class="sc5">for</span><span class="sc0"> </span><span class="sc11">orig_key</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">orig_value</span><span class="sc0"> </span><span class="sc5">in</span><span class="sc0"> </span><span class="sc13">next</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">orig</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0"> </span><span class="sc5">do</span><span class="sc0">
-                </span><span class="sc11">copy</span><span class="sc10">[</span><span class="sc11">deepcopy</span><span class="sc10">(</span><span class="sc11">orig_key</span><span class="sc10">)]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">deepcopy</span><span class="sc10">(</span><span class="sc11">orig_value</span><span class="sc10">)</span><span class="sc0">
-            </span><span class="sc5">end</span><span class="sc0">
-            </span><span class="sc13">setmetatable</span><span class="sc10">(</span><span class="sc11">copy</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">deepcopy</span><span class="sc10">(</span><span class="sc13">getmetatable</span><span class="sc10">(</span><span class="sc11">orig</span><span class="sc10">)))</span><span class="sc0">
-        </span><span class="sc5">else</span><span class="sc0"> </span><span class="sc2">-- number, string, boolean, etc
-</span><span class="sc0">            </span><span class="sc11">copy</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">orig</span><span class="sc0">
-        </span><span class="sc5">end</span><span class="sc0">
-        </span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">copy</span><span class="sc0">
-    </span><span class="sc5">end</span><span class="sc0">
+	</span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">fif</span><span class="sc10">(</span><span class="sc11">test</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">if_true</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">if_false</span><span class="sc10">)</span><span class="sc0">
+		</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">test</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0"> </span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">if_true</span><span class="sc0"> </span><span class="sc5">else</span><span class="sc0"> </span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">if_false</span><span class="sc0"> </span><span class="sc5">end</span><span class="sc0">
+	</span><span class="sc5">end</span><span class="sc0">
+
+	</span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">deepcopy</span><span class="sc10">(</span><span class="sc11">orig</span><span class="sc10">)</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">orig_type</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc13">type</span><span class="sc10">(</span><span class="sc11">orig</span><span class="sc10">)</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">copy</span><span class="sc0">
+		</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">orig_type</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc7">'table'</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
+			</span><span class="sc11">copy</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{}</span><span class="sc0">
+			</span><span class="sc5">for</span><span class="sc0"> </span><span class="sc11">orig_key</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">orig_value</span><span class="sc0"> </span><span class="sc5">in</span><span class="sc0"> </span><span class="sc13">next</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">orig</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0"> </span><span class="sc5">do</span><span class="sc0">
+				</span><span class="sc11">copy</span><span class="sc10">[</span><span class="sc11">deepcopy</span><span class="sc10">(</span><span class="sc11">orig_key</span><span class="sc10">)]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">deepcopy</span><span class="sc10">(</span><span class="sc11">orig_value</span><span class="sc10">)</span><span class="sc0">
+			</span><span class="sc5">end</span><span class="sc0">
+			</span><span class="sc13">setmetatable</span><span class="sc10">(</span><span class="sc11">copy</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">deepcopy</span><span class="sc10">(</span><span class="sc13">getmetatable</span><span class="sc10">(</span><span class="sc11">orig</span><span class="sc10">)))</span><span class="sc0">
+		</span><span class="sc5">else</span><span class="sc0"> </span><span class="sc2">-- number, string, boolean, etc</span><span class="sc0">
+			</span><span class="sc11">copy</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">orig</span><span class="sc0">
+		</span><span class="sc5">end</span><span class="sc0">
+		</span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">copy</span><span class="sc0">
+	</span><span class="sc5">end</span><span class="sc0">
 </span><span class="sc5">end</span></code></pre>
 <p>AutomagicTable matches the code found here: <a href="http://lua-users.org/wiki/AutomagicTables">http://lua-users.org/wiki/AutomagicTables</a></p>
 <!-- InstanceEndEditable -->

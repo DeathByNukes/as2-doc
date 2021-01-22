@@ -45,16 +45,16 @@ float intensity <em>-- the same as <a href="#GetIntensity">GetIntensity</a>()</e
 <p><a href="#print">Prints</a> the amount of time elapsed since the last time this function was called. The argument should be the name of your skin.</p>
 <h2 id="GetTrack"><a href="#type-table">table</a><a href="#type-array">[]</a> GetTrack()</h2>
 <pre><code><a href="#type-table">table</a> <strong>pos</strong> {
-    <a href="#type-float">float</a> <strong>x</strong>
-    <a href="#type-float">float</a> <strong>y</strong>
-    <a href="#type-float">float</a> <strong>z</strong>
+	<a href="#type-float">float</a> <strong>x</strong>
+	<a href="#type-float">float</a> <strong>y</strong>
+	<a href="#type-float">float</a> <strong>z</strong>
 }
 <a href="#type-float">float</a> <strong>seconds</strong>
 <a href="#type-table">table</a> <strong>color</strong> {
-    <a href="#type-float">float</a> <strong>r</strong>
-    <a href="#type-float">float</a> <strong>g</strong>
-    <a href="#type-float">float</a> <strong>b</strong>
-    <a href="#type-float">float</a> <strong>a</strong>
+	<a href="#type-float">float</a> <strong>r</strong>
+	<a href="#type-float">float</a> <strong>g</strong>
+	<a href="#type-float">float</a> <strong>b</strong>
+	<a href="#type-float">float</a> <strong>a</strong>
 }
 <em>-- the following rotation values are in degrees. they are the node's absolute rotation not delta</em>
 <a href="#type-float">float</a> <strong>pan</strong> <em>-- rotation around the y axis</em>
@@ -379,45 +379,45 @@ vector3 skyScreen_FixedTrackOffset = nil</code></pre>
 <p>It's not possible to alter these by setting one of the other values by a really big number; it rejects the entire time setting if one of the values is out of range. The daylight savings time setting is active no matter which time of year you specify, so the effective time zone is UTC -7 (pacific daylight time).</p>
 <p>This is how the true  world-space cloud positions are calculated from our settings:</p>
 <pre class="NppLua"><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">SetSkybox</span><span class="sc10">(</span><span class="sc11">table</span><span class="sc10">)</span><span class="sc0">
-    </span><span class="sc2">...</span><span class="sc0">
-    </span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">lua_clouddensity</span><span class="sc0"> </span><span class="sc10">&lt;=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
-        </span><span class="sc11">silverLining.hasCumulusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">false</span><span class="sc0">
-    </span><span class="sc5">else</span><span class="sc0">
-        </span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11"><a href="lib/track_bounds.html">track_bounds</a>.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">lua_cloudmaxheight</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">])</span><span class="sc0">
-        </span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cloud_min</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">lua_cloudminheight</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">])</span><span class="sc0"> </span><span class="sc2">-- track_bounds.max is [sic]. doesn't matter though.
+	</span><span class="sc2">...</span><span class="sc0">
+	</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">lua_clouddensity</span><span class="sc0"> </span><span class="sc10">&lt;=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
+		</span><span class="sc11">silverLining.hasCumulusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">false</span><span class="sc0">
+	</span><span class="sc5">else</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11"><a href="lib/track_bounds.html">track_bounds</a>.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">lua_cloudmaxheight</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">])</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cloud_min</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">lua_cloudminheight</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">])</span><span class="sc0"> </span><span class="sc2">-- track_bounds.max is [sic]. doesn't matter though.
 </span><span class="sc0">        </span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc14">math.max</span><span class="sc10">(</span><span class="sc11">cloud_max</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">cloud_min</span><span class="sc10">)</span><span class="sc0">
-        
-        </span><span class="sc11">silverLining.hasCumulusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc0">
-        </span><span class="sc11">silverLining.cumulusCoverage</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">lua_clouddensity</span><span class="sc0">
-        </span><span class="sc11">silverLining.cumulusPosition</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
-            </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">],</span><span class="sc0">
-            </span><span class="sc10">(</span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">cloud_min</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">/</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc10">,</span><span class="sc0">
-            </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]</span><span class="sc0">
-        </span><span class="sc10">}</span><span class="sc0">
-        </span><span class="sc11">silverLining.cumulusDimensions</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
-            </span><span class="sc14">math.max</span><span class="sc10">(</span><span class="sc4">80000</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.min</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">])),</span><span class="sc0">
-            </span><span class="sc4">2</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">silverLining.cumulusPosition</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]),</span><span class="sc0">
-            </span><span class="sc14">math.max</span><span class="sc10">(</span><span class="sc4">80000</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.min</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]))</span><span class="sc0">
-        </span><span class="sc10">}</span><span class="sc0">
-    </span><span class="sc5">end</span><span class="sc0">
-    </span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
-        </span><span class="sc11">silverLining.hasCirrusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">false</span><span class="sc0">
-    </span><span class="sc5">else</span><span class="sc0">
-        </span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cirrus_y</span><span class="sc0">
-        </span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0"> </span><span class="sc10">&lt;=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
-            </span><span class="sc11">cirrus_y</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">track_bounds.min</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0"> </span><span class="sc2">-- BUG: subtracting a negative number
-</span><span class="sc0">        </span><span class="sc5">else</span><span class="sc0">
-            </span><span class="sc11">cirrus_y</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0">
-        </span><span class="sc5">end</span><span class="sc0">
-        
-        </span><span class="sc11">silverLining.hasCirrusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc0">
-        </span><span class="sc11">silverLining.cirrusPosition</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
-            </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">],</span><span class="sc0">
-            </span><span class="sc11">cirrus_y</span><span class="sc10">,</span><span class="sc0">
-            </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]</span><span class="sc0">
-        </span><span class="sc10">}</span><span class="sc0">
-    </span><span class="sc5">end</span><span class="sc0">
-    </span><span class="sc2">...</span><span class="sc0">
+
+		</span><span class="sc11">silverLining.hasCumulusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc0">
+		</span><span class="sc11">silverLining.cumulusCoverage</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">lua_clouddensity</span><span class="sc0">
+		</span><span class="sc11">silverLining.cumulusPosition</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
+			</span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">],</span><span class="sc0">
+			</span><span class="sc10">(</span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">cloud_min</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">/</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc10">,</span><span class="sc0">
+			</span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]</span><span class="sc0">
+		</span><span class="sc10">}</span><span class="sc0">
+		</span><span class="sc11">silverLining.cumulusDimensions</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
+			</span><span class="sc14">math.max</span><span class="sc10">(</span><span class="sc4">80000</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.min</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">])),</span><span class="sc0">
+			</span><span class="sc4">2</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">silverLining.cumulusPosition</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]),</span><span class="sc0">
+			</span><span class="sc14">math.max</span><span class="sc10">(</span><span class="sc4">80000</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.min</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]))</span><span class="sc0">
+		</span><span class="sc10">}</span><span class="sc0">
+	</span><span class="sc5">end</span><span class="sc0">
+	</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
+		</span><span class="sc11">silverLining.hasCirrusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">false</span><span class="sc0">
+	</span><span class="sc5">else</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cirrus_y</span><span class="sc0">
+		</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0"> </span><span class="sc10">&lt;=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
+			</span><span class="sc11">cirrus_y</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">track_bounds.min</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0"> </span><span class="sc2">-- BUG: subtracting a negative number</span><span class="sc0">
+		</span><span class="sc5">else</span><span class="sc0">
+			</span><span class="sc11">cirrus_y</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0">
+		</span><span class="sc5">end</span><span class="sc0">
+
+		</span><span class="sc11">silverLining.hasCirrusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc0">
+		</span><span class="sc11">silverLining.cirrusPosition</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
+			</span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">],</span><span class="sc0">
+			</span><span class="sc11">cirrus_y</span><span class="sc10">,</span><span class="sc0">
+			</span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]</span><span class="sc0">
+		</span><span class="sc10">}</span><span class="sc0">
+	</span><span class="sc5">end</span><span class="sc0">
+	</span><span class="sc2">...</span><span class="sc0">
 </span><span class="sc5">end</span></pre>
 <h2 id="UpdateProceduralSky">UpdateProceduralSky{}</h2>
 <pre><code><a href="#type-float">float</a> <strong>latitude</strong> ?= 42
@@ -663,14 +663,14 @@ vector3[] worldspaceoffsets = nil
 <p>By default, an instance is placed at the center of a node. <code><strong>offsets</strong></code> can be used to move them away from the center. Offset is relative to the node's position and rotation, so a positive X offset will always move it to the right of the track. Positive Y moves up and positive Z moves forward.</p>
 <p>Here are some terms I will use in the following explanations:</p>
 <dl>
-  <dt>CurrentNode</dt>
-  <dd>The fractional index of the track node that the player is currently &quot;on&quot;. (When the player is halfway between nodes 3 and 4, CurrentNode is 3.5)</dd>
-  <dt>CurrentPos</dt>
-  <dd>The world-space position of CurrentNode.</dd>
-  <dt>CurrentTime</dt>
-  <dd>The number of seconds into the song that CurrentNode represents.</dd>
-  <dt>Track</dt>
-  <dd>The array returned by <code><a href="#GetTrack" class="func">GetTrack</a>()</code>.</dd>
+	<dt>CurrentNode</dt>
+	<dd>The fractional index of the track node that the player is currently &quot;on&quot;. (When the player is halfway between nodes 3 and 4, CurrentNode is 3.5)</dd>
+	<dt>CurrentPos</dt>
+	<dd>The world-space position of CurrentNode.</dd>
+	<dt>CurrentTime</dt>
+	<dd>The number of seconds into the song that CurrentNode represents.</dd>
+	<dt>Track</dt>
+	<dd>The array returned by <code><a href="#GetTrack" class="func">GetTrack</a>()</code>.</dd>
 </dl>
 <p>If you use <code><strong>songspeedratio</strong></code>, the numbers in <code><strong>locations</strong></code> are relative to CurrentNode rather than the beginning of the track. (the objects will move along with you) The number specified by <code><strong>songspeedratio</strong></code> scales the locations, allowing you to indirectly specify non-integers.</p>
 <p><code><strong>maxDistanceShown</strong></code> is based on the difference between CurrentNode and the number in <code><strong>locations</strong></code>. The actual per-frame condition for hiding is <code><strong>locations</strong>[i] - CurrentNode &gt; <strong>maxDistanceShown</strong></code> so it won't re-hide objects later. Strangely, this behavior is not affected by <code><strong>songspeedratio</strong></code> in any way. Locations are still relative to the beginning of the track when considering distance. This means you probably want to set <code><strong>maxDistanceShown</strong></code> larger than the highest number in <code><strong>locations</strong></code> when using <code><strong>songspeedratio</strong></code> in order to disable it. Combining the two might be useful for some strange special effects.</p>

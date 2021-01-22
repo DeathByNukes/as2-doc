@@ -11,6 +11,8 @@ body {
 	font-family: 'Segoe UI', 'Lucida Grande', Verdana, Arial, Helvetica, sans-serif;
 	color: #000;
 	background-color: #FFF;
+	-moz-tab-size: 4;
+	tab-size: 4;
 }
 a[href^="#"] {
 	/* css3 selector */
@@ -156,8 +158,8 @@ span[title] {
 .seealso a[href^="http://forum.unity3d.com/"]:before,
 .seealso a[href^="http://wiki.blender.org/"]:before,
 .seealso a[href^="http://www.lua.org/"]:before {
-    background-size: 16px;
-    content: "";
+	background-size: 16px;
+	content: "";
 	display: inline-block;
 	width: 16px;
 	height: 16px;
@@ -166,17 +168,17 @@ span[title] {
 	vertical-align: bottom;
 }
 .seealso a[href^="https://en.wikipedia.org/"]:before {
-    background-image: url(https://en.wikipedia.org/favicon.ico);
+	background-image: url(https://en.wikipedia.org/favicon.ico);
 }
 .seealso a[href^="https://docs.unity3d.com/"]:before,
 .seealso a[href^="http://forum.unity3d.com/"]:before {
-    background-image: url(https://docs.unity3d.com/StaticFilesManual/images/favicons/favicon.png);
+	background-image: url(https://docs.unity3d.com/StaticFilesManual/images/favicons/favicon.png);
 }
 .seealso a[href^="http://wiki.blender.org/"]:before {
-    background-image: url(http://www.blender.org/wp-content/themes/bthree/assets/images/favicon.ico);
+	background-image: url(http://www.blender.org/wp-content/themes/bthree/assets/images/favicon.ico);
 }
 .seealso a[href^="http://www.lua.org/"]:before {
-    background-image: url(lua.png);
+	background-image: url(lua.png);
 }
 dt dfn{
 	font-style: normal;
