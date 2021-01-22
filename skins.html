@@ -101,22 +101,10 @@ float antitrafficstrength</code></pre>
 <h2 id="GetAlbumArtPalette"><a href="#type-color">color</a><a href="#type-array">[]</a> GetAlbumArtPalette{}</h2>
 <pre><code><a href="#type-int">int</a> <strong>mincount</strong> = 3
 <a href="#type-int">int</a> <strong>maxcount</strong> = 5</code></pre>
-<p>... is how it's supposed to be, but it appears to be bugged. this is difficult to explain so here is the the C# code I am seeing:</p>
-<pre><code>LuaTable GetAlbumArtPalette(LuaTable table)
-{
-	int min = 3;
-	int max = 5;
-	if (table != null)
-	{
-		<em>// int LuaX.OtoI(object o, int defaultValue);</em>
-		LuaX.OtoI(table["mincount"], min); <em>// ignored</em>
-		min = LuaX.OtoI(table["maxcount"], max); <em>// max assigned to min using max's default</em>
-	}
-	if (max &lt; min)
-		max = min;
-	...
-}</code></pre>
-<p>The returned colors are in <code>{r=0-1, g=0-1, b=0-1, a=1}</code> format.</p>
+<p>Color format: <code>{r=0-1, g=0-1, b=0-1, a=1}</code></p>
+<p>Reads the <code><a href="magic-literals.html#special-textures">&lt;ALBUMART&gt;</a></code> texture with a tool named Color Thief and produces colors that presumably came from that image. If there is no album art it generates <code>mincount</code> random colors. (Each color is just 3 random floats between 0.0 and 1.0 inclusive. There is no attempt to avoid greys or produce a tasteful palette.)</p>
+<p>According to Dylan: It picks out prominent colors from the album art image. Less colorful images return less colors and if you force it to return more with a high <code>mincount</code> the colors will have less variation.</p>
+<p><code>mincount</code> and <code>maxcount</code> used to be bugged but it is fixed now.</p>
 <h2 id="IsVideoscreenUsed"><a href="#type-bool">bool</a> IsVideoscreenUsed()</h2>
 <p>True if the current song is a video.</p>
 <ul class="seealso">
