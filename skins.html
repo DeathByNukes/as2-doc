@@ -71,10 +71,66 @@ float antitrafficstrength</code></pre>
 <ul class="seealso">
 	<li><a href="#Update">Update</a></li>
 </ul>
-<h2 id="GetSpectrum"><a href="#type-float">float</a><a href="#type-array">[]</a> GetSpectrum()</h2>
-<p>Gets the <a href="https://en.wikipedia.org/wiki/Fast_Fourier_transform">Fast Fourier Transform</a> of the current point in song playback. (array contains 16 floats. a 512 version is available in the code but isn't exposed to lua yet)</p>
-<h2 id="GetLogSpectrum"><a href="#type-float">float</a><a href="#type-array">[]</a> GetLogSpectrum()</h2>
-<p>I have only skimmed the code but it looks like this splits up the 512 bin spectrum logarithmically rather than linearly before averaging them down to 16. (&quot;horizontal&quot; log scale) The numeric scale of the individual bins (&quot;vertical&quot; scale) is the same as the regular spectrum.</p>
+<h2 id="GetSpectrum"><a href="#type-float">float</a><a href="#type-array">[16]</a> GetSpectrum()</h2>
+<p>An alias of <code><a href="#UpdateSpectrum" class=func>UpdateSpectrum</a>(<strong>nil</strong>)</code></p>
+<h2 id="UpdateSpectrum"><a href="#type-float">float</a><a href="#type-array">[16]</a>/<a href="#type-table">table</a> UpdateSpectrum(<a href="#type-table">table</a>)</h2>
+<p>Gets the music frequency spectrum of the current point in song playback. If you pass a <code><a href="#type-table">table</a></code> as the argument, it will <a href="https://www.lua.org/manual/5.1/manual.html#pdf-rawset">set</a> the spectrum values into that table instead of creating a new table. (Reusing the same table every frame improves performance.)</p>
+<ul class="seealso">
+	<li><a href="#Update">Update</a></li>
+</ul>
+<h3 id="UpdateSpectrum-internal">What it Does</h3>
+<ol>
+	<li>The <a href="https://github.com/mborgerding/kissfft">Kiss FFT</a> library is used to do a <a href="https://en.wikipedia.org/wiki/Fast_Fourier_transform">Fast Fourier Transform</a> of the current point in the song. I can't tell what it does here because it's compiled C++.</li>
+	<li>The library returns an array of 512 float numbers. They seem to be frequency bins containing the magnitude squared. (a^2 + b^2) In practice the magnitude seems to be in the range 0 to 2.</li>
+	<li>The bins are broken up into groups of 32 and the average of each group is calculated, resulting in 16 bins.</li>
+</ol>
+<h3 id="UpdateSpectrum-math">How to Interpret It</h3>
+<pre class=LuaCode><code>spectrum = UpdateSpectrum(spectrum)
+for i=1,#spectrum do
+	local bin = spectrum[i]
+	<em>-- To get the magnitude of a bin:</em>
+	local magnitude = math.sqrt(bin)
+	<em>-- To convert the above magnitude to decibels:</em>
+	local db = 20 * math.log10(magnitude / 2)
+	<em>-- If you aren't going to use magnitude, you can optimize the decibels equation:</em>
+	local db = 10 * math.log10(bin / 4)
+	<em>-- Getting the above values in a useful 0 to 1 range:</em>
+	local magnitude_normalized = magnitude / 2
+	local db_normalized = math.min(0, (db + 60) / 60) <em>-- Cut off values less than -60db.</em>
+end</code></pre>
+<ul class="seealso">
+	<li><a href="https://stackoverflow.com/questions/4675457/how-to-generate-the-audio-spectrum-using-fft-in-c">How to generate the audio spectrum using fft in C++?</a></li>
+</ul>
+<h3 id="UpdateSpectrum-glitch">Glitch</h3>
+<p>Currently, the beginning and end sections of gameplay when audio isn't playing are glitched. In the beginning the spectrum returns unpredictable random values as if it is reinterpreting arbitrary memory. In the end, the values either freeze at their last position or produce more noise. Here is how you can deal with that if it causes you problems:</p>
+<pre class=LuaCode><code>track = GetTrack() <em>-- Your skin probably already does this. Avoid doing it more than once because it's expensive.</em>
+
+<em>-- Some extra nodes with negative time are added to the start of the track.</em>
+local first_real_node
+for i=1,#track do
+	if track[i].seconds >= 0 then
+		first_real_node = i
+		break
+	end
+end
+if first_real_node == nil then error("negative length song") end
+
+<em>-- Currently the number of extra nodes at the end is always 44. They are clones of the last node with modified position/seconds and zero maxair/trafficstrength.</em>
+local last_real_node = #track - 44
+
+local spectrum, UpdateSpectrum = GetSpectrum(), UpdateSpectrum
+function Update()
+	if location >= first and location <= last then
+		UpdateSpectrum(spectrum)
+	else
+		for i=1,#spectrum do spectrum[i] = 0 end
+	end
+	<em>-- Do things with the spectrum here.</em>
+end</code></pre>
+<h2 id="GetLogSpectrum"><a href="#type-float">float</a><a href="#type-array">[16]</a> GetLogSpectrum()</h2>
+<p>I have only skimmed the code but it looks like this is a variant of <code><a href="#GetSpectrum" class=func>GetSpectrum</a></code> that splits up the 512 bin spectrum logarithmically rather than linearly before averaging them down to 16. (&quot;horizontal&quot; log scale) The numeric scale of the individual bins (&quot;vertical&quot; scale) is the same as the regular spectrum. It seems to have been forgotten about when <code><a href="#UpdateSpectrum" class=func>UpdateSpectrum</a></code> was added.</p>
+<h2 id="UpdateSpectrum512"><a href="#type-float">float</a><a href="#type-array">[512]</a>/<a href="#type-table">table</a> UpdateSpectrum512(<a href="#type-table">table</a>)</h2>
+<p>This gets the full 512 bin audio spectrum that <code><a href="#UpdateSpectrum" class=func>UpdateSpectrum</a></code> and <code><a href="#GetLogSpectrum" class=func>GetLogSpectrum</a></code> read from internally to produce their results.</p>
 <h2 id="GetMillisecondsSinceStartup"><a href="#type-float">float</a> GetMillisecondsSinceStartup()</h2>
 <p>Unity's <a href="https://docs.unity3d.com/ScriptReference/Time-realtimeSinceStartup.html">Time.realtimeSinceStartup</a> * 1000.</p>
 <p>Note that this is the time since Audiosurf 2 started (potentially more than an hour ago) not the time since this particular track started. Can be useful as a seed to <code><a href="http://www.lua.org/manual/5.1/manual.html#pdf-math.randomseed">math.randomseed</a></code> if non-deterministic behavior is desired. (By default it is seeded with the song length.)</p>
