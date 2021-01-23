@@ -346,7 +346,8 @@ SetShieldColors{
 bool cameraortho = false <em>-- orthographic cameras</em>
 <a href="#type-bool">bool</a> <strong>cameraignoreslope</strong> = false
 <a href="#type-float">float</a> <strong>cameraHeightTrackingRatio</strong> = 1
-<a href="#type-string">string</a> <strong>cameramode</strong> = "first" or third" or "first_jumpthird" or "first_trickthird" or "third_trickjumpthird" <em>-- case insensitive. generates an error if it is a string that doesn't match</em>
+<a href="#type-string">string</a> <strong>cameramode</strong> = "first" or third" or "first_jumpthird" or "first_trickthird" or "third_trickjumpthird" <em>-- case insensitive. throws an exception if it is a string that doesn't match</em>
+string cameradynamics = null or "high" <em>-- "use extra dynamic camera", adjust the camera "bias"</em>
 <a href="#type-table">table</a> <strong>camfirst</strong> ?= nil or {
 	<a href="#type-vector3">vector3</a> <strong>pos</strong> = {0,0,0} <em>-- default if camfirst is nil: {1, 2.7, 3.50475}</em>
 	<a href="#type-vector3">vector3</a> <strong>rot</strong> = {0,0,0} <em>-- default if camfirst is nil: {20.49113, 0, 0}</em>
@@ -371,13 +372,14 @@ bool cameraortho = false <em>-- orthographic cameras</em>
 	bool reflect ?= false <em>-- cannot be disabled once set to true</em>
 	<a href="#type-float">float</a> <strong>min_hover_height</strong> = 0
 	<a href="#type-float">float</a> <strong>max_hover_height</strong> = 0
-	<a href="#type-bool">bool</a> <strong>use_water_rooster</strong> = true
+	<a href="#type-bool">bool</a> <strong>use_water_rooster</strong> = true <em>-- cannot be re-enabled once set to false</em>
 	<a href="#type-float">float</a> <strong>rollscaler</strong> = -1
-	<a href="#type-color">color</a> <strong>roostercolor</strong> = {0.133, 0.22, 0.486, 1}
-	<a href="#type-float">float</a> <strong>water_rooster_z_offset</strong> = -1.04
+	float panscaler = 0
 	<a href="#type-bool">bool</a> <strong>smooth_tilting</strong> = false
 	<a href="#type-float">float</a> <strong>smooth_tilting_speed</strong> = 10
 	<a href="#type-float">float</a> <strong>smooth_tilting_max_offset</strong> = -20
+	<a href="#type-float">float</a> <strong>water_rooster_z_offset</strong> = -1.04
+	<a href="#type-color">color</a> <strong>roostercolor</strong> = {0.133, 0.22, 0.486, 1}
 }
 <a href="#type-gameobject">gameobject</a> <strong>airvehicle</strong> ?= nil
 <a href="#type-gameobject">gameobject</a> <strong>watervehicle</strong> ?= nil
@@ -385,10 +387,43 @@ bool cameraortho = false <em>-- orthographic cameras</em>
 	<a href="#type-bool">bool</a> <strong>use_water_rooster</strong> = true
 	<a href="#type-color">color</a> <strong>roostercolor</strong> = {0.133, 0.22, 0.486, 1}
 	<a href="#type-float">float</a> <strong>water_rooster_z_offset</strong> ?= -1.04
-	<a href="#type-gameobject">gameobject</a> <strong>arms</strong> ?= nil
-	<a href="#type-gameobject">gameobject</a> <strong>leg</strong> ?= nil
-	<a href="#type-gameobject">gameobject</a> <strong>body</strong> ?= nil
-	<a href="#type-gameobject">gameobject</a> <strong>board</strong> ?= nil
+	<a href="#type-gameobject">gameobject</a> <strong>arms</strong> ?= ? or {
+		<em>-- The object will be completely created in the usual way, and then some things will be shallow copied to the real object.</em>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/MeshFilter-mesh.html" class=type>UnityEngine.MeshFilter.mesh</a>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer-sharedMaterial.html" class=type>UnityEngine.Renderer.sharedMaterial</a>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer.html" class=type>UnityEngine.Renderer</a>.<span title="Compatibility shim: shadowCastingMode = castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off">castShadows</span>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer-receiveShadows.html" class=type>UnityEngine.Renderer.receiveShadows</a>
+	}
+	<a href="#type-gameobject">gameobject</a> <strong>leg</strong> ?= <strong>arm</strong> or {
+		<em>-- The object will be completely created in the usual way, and then some things will be shallow copied to the real object.</em>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/MeshFilter-mesh.html" class=type>UnityEngine.MeshFilter.mesh</a>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer-sharedMaterial.html" class=type>UnityEngine.Renderer.sharedMaterial</a>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer.html" class=type>UnityEngine.Renderer</a>.<span title="Compatibility shim: shadowCastingMode = castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off">castShadows</span>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer-receiveShadows.html" class=type>UnityEngine.Renderer.receiveShadows</a>
+	}
+	<a href="#type-gameobject">gameobject</a> <strong>body</strong> ?= ? or {
+		<em>-- The object will be completely created in the usual way, and then some things will be shallow copied to the real object.</em>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/MeshFilter-mesh.html" class=type>UnityEngine.MeshFilter.mesh</a>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer-sharedMaterial.html" class=type>UnityEngine.Renderer.sharedMaterial</a>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer.html" class=type>UnityEngine.Renderer</a>.<span title="Compatibility shim: shadowCastingMode = castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off">castShadows</span>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer-receiveShadows.html" class=type>UnityEngine.Renderer.receiveShadows</a>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/GameObject-layer.html" class=type>UnityEngine.GameObject.layer</a> <em>-- Default: <a href="magic-literals.html#layers">14</a></em>
+	}
+	<a href="#type-gameobject">gameobject</a> <strong>board</strong> ?= ? or {
+		<em>-- The object will be completely created in the usual way, and then some things will be shallow copied to the real object.</em>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/MeshFilter-mesh.html" class=type>UnityEngine.MeshFilter.mesh</a>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer-sharedMaterial.html" class=type>UnityEngine.Renderer.sharedMaterial</a>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer.html" class=type>UnityEngine.Renderer</a>.<span title="Compatibility shim: shadowCastingMode = castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off">castShadows</span>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer-receiveShadows.html" class=type>UnityEngine.Renderer.receiveShadows</a>
+	}
+	<a href="#type-gameobject">gameobject</a> <strong>towrope_node</strong> ?= ? or {
+		<em>-- The object will be completely created in the usual way, and then some things will be shallow copied to the real object.</em>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer-sharedMaterial.html" class=type>UnityEngine.Renderer.sharedMaterial</a>
+	}
+	<a href="#type-gameobject">gameobject</a> <strong>towboat</strong> ?= ? or {
+		<em>-- The object will be completely created in the usual way, and then some things will be shallow copied to the real object.</em>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer-sharedMaterial.html" class=type>UnityEngine.Renderer.sharedMaterial</a> <em>-- <a href="#type-materialcolor">materialcolor</a> dynamic colors will be disabled. Maybe because it is going to apply its own dynamic coloring. <a href="#UpdateMaterial" class=func>UpdateMaterial</a> should still work.</em>
+	}
 }
 <em>-- End of first run only</em></code></pre>
 <h2 id="SetBackgroundColor">SetBackgroundColor(<a href="#type-color">color</a>)</h2>
