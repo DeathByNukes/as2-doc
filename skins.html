@@ -81,9 +81,10 @@ float antitrafficstrength</code></pre>
 <h3 id="UpdateSpectrum-internal">What it Does</h3>
 <ol>
 	<li>The <a href="https://github.com/mborgerding/kissfft">Kiss FFT</a> library is used to do a <a href="https://en.wikipedia.org/wiki/Fast_Fourier_transform">Fast Fourier Transform</a> of the current point in the song. I can't tell what it does here because it's compiled C++.</li>
-	<li>The library returns an array of 512 float numbers. They seem to be frequency bins containing the magnitude squared. (a^2 + b^2) In practice the magnitude seems to be in the range 0 to 2.</li>
+	<li>The C++ code returns an array of 512 float numbers. They seem to be frequency bins containing the magnitude squared. (a^2 + b^2)</li>
 	<li>The bins are broken up into groups of 32 and the average of each group is calculated, resulting in 16 bins.</li>
 </ol>
+<p>The magnitude seems to be in the range 0 to 2. From what I've read, this way of producing a smaller spectrum is technically different from what you would get if you directly calculated a 16 bin spectrum. A smaller FFT would use information from a smaller time span and so change more rapidly.</p>
 <h3 id="UpdateSpectrum-math">How to Interpret It</h3>
 <pre class=LuaCode><code>spectrum = UpdateSpectrum(spectrum)
 for i=1,#spectrum do
