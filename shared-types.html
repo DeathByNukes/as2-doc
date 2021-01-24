@@ -93,24 +93,38 @@
 				<li><a href="glossary.html#render-queue">render queue</a></li>
 			</ul>
 		</dd>
+		<dt><dfn id="type-rotation">rotation</dfn></dt>
+		<dd>
+			A <code><a href="#type-vector3">vector3</a></code> containing Euler rotation angles (degrees rotation around each axis) or a <code>UnityEngine.Quaternion</code>.
+			<ul class="seealso">
+				<li><a href="https://en.wikipedia.org/wiki/Euler_angles">Euler angles</a></li>
+				<li><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Quaternion.Euler.html" title="This is what is used internally.">Quaternion.Euler</a></li>
+			</ul>
+		</dd>
 		<dt><dfn id="type-scale">scale</dfn></dt>
-		<dd>a <code><a href="#type-vector3">vector3</a></code> or a table:
+		<dd>
+			A <code><a href="#type-vector3">vector3</a></code> or a table:
 			<pre><code><a href="#type-vector3">vector3</a> <strong>min</strong> = {0,0,0} <em>-- if these are both equal, max is ignored and min is treated like the vector3 version of <a href="#type-scale">scale</a></em>
 <a href="#type-vector3">vector3</a> <strong>max</strong> = {0,0,0}
 <a href="#type-string">string</a> <strong>scaletype</strong> = "intensity" <em>-- unused</em></code></pre>
+			(Personal note: this is <code>SceneManager.SetScale(object,GameObject)</code>)
 		</dd>
 		<dt><dfn id="type-transform">transform</dfn></dt>
-		<dd>a table:
+		<dd>
+			A table:
 			<pre><code><a href="#type-vector3">vector3</a> <strong>pos</strong> = {0,0,0} <em>-- can also use "<strong>position</strong>"</em>
-<a href="#type-vector3">vector3</a> <strong>rot</strong> = {0,0,0} <em>-- can also use "<strong>rotation</strong>". it is a unity "Quaternion.Euler"</em>
+<a href="#type-rotation">rotation</a> <strong>rot</strong> = {0,0,0} <em>-- can also use "<strong>rotation</strong>". it is a unity "Quaternion.Euler"</em>
 <a href="#type-scale">scale</a> <strong>scale</strong> = {1,1,1}
 <a href="#type-string">string</a> <strong>lookat</strong> = "end" or "start" or "camera"</code></pre>
+			(Personal note: this is <code>SceneManager.ApplyTransform(LuaTable,GameObject)</code>)
 		</dd>
 		<dt><dfn id="type-transform2">transform2</dfn></dt>
-		<dd>a table:
+		<dd>
+			A table:
 			<pre><code><a href="#type-vector3">vector3</a> <strong>position</strong> = {0,0,0} <em>-- can also use "<strong>pos</strong>"</em>
-<a href="#type-vector3">vector3</a> <strong>rotation</strong> = {0,0,0} <em>-- can also use "<strong>rot</strong>". it is a unity "Quaternion.Euler"</em>
+<a href="#type-rotation">rotation</a> <strong>rotation</strong> = {0,0,0} <em>-- can also use "<strong>rot</strong>". it is a unity "Quaternion.Euler"</em>
 <a href="#type-scale">scale</a> <strong>scale</strong> = {1,1,1}</code></pre>
+			(Personal note: this is <code>LuaX.ApplyTransform(LuaTable,Transform)</code>)
 		</dd>
 		<dt><dfn id="type-mesh">mesh</dfn></dt>
 		<dd> An <code><a href="#type-int">int</a></code> returned by <code><a href="#BuildMesh" class=func>BuildMesh{}</a></code> which identifies a built mesh. It can be used in most places where you would normally supply an <a href="glossary.html#obj">OBJ</a> filename. Cannot be used with mesh morphing. (BuildMesh is powerful enough that you could implement mesh morphing manually if needed)
