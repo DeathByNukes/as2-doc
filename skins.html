@@ -730,11 +730,11 @@ vector3[][] crossSectionShapeList = nil
 	<dt>static</dt>
 	<dd>Uses <code><strong>perShapeNodeColors</strong></code>, <code><strong>color</strong></code>, or black.</dd>
 	<dt>aurora</dt>
-	<dd>Uses highway color multiplied by the intensity squared. The intensity it uses is not &quot;normalized&quot; like <code><a href="#GetTrack">GetTrack</a>()[i].intensity</code> is. (whatever that means.) The alpha is multiplied as well. If all the highway colors have an alpha of 1 (the default) then this allows a shader to determine the exact intensity.</dd>
+	<dd>Uses highway color multiplied by the intensity squared. The intensity it uses is not <a href="glossary.html#normalized-intensity">normalized</a> like <code><a href="#GetTrack" class=func>GetTrack</a>()[i].intensity</code> is. The alpha is multiplied as well. If all the highway colors have an alpha of 1 (the default) then this allows a shader to determine the exact intensity.</dd>
 	<dt>highwayflat</dt>
 	<dd>TODO</dd>
 	<dt>trackposition</dt>
-	<dd>Instead of storing a color, stores the zero-based node index divided by the number of nodes. It is stored via a C# implementation of EncodeFloatRGBA. <a href="https://docs.unity3d.com/Documentation/Components/SL-BuiltinIncludes.html">DecodeFloatRGBA</a> can probably decode it. This is useful in rail <a href="#skyscreen">skyscreen</a> shaders. (I don't understand why he won't just pass this information through UV or <a href="http://docs.unity3d.com/Documentation/ScriptReference/Mesh-uv2.html">UV2</a>.)</dd>
+	<dd>Instead of storing a color, stores the zero-based node index divided by the number of nodes, encoded with <code><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-BuiltinFunctions.html" class=func>EncodeFloatRGBA</a></code>. This is useful in rail <a href="#skyscreen">skyscreen</a> shaders. (I don't understand why he won't just pass this information through UV or <a href="http://docs.unity3d.com/Documentation/ScriptReference/Mesh-uv2.html">UV2</a>.)</dd>
 </dl>
 <h2 id="CreateRepeatedMeshRail">CreateRepeatedMeshRail{}</h2>
 <pre><code><em>-- calls to this function after the <a href="#script-execution">first run</a> are ignored</em>

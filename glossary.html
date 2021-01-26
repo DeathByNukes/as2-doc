@@ -238,12 +238,18 @@
 		</ul>
 	</dd>
 	<dt id="render-queue"><dfn>render queue</dfn></dt>
-	<dd>Determines the <a href="http://docs.unity3d.com/Documentation/Components/SL-SubshaderTags.html">order</a> that materials are rendered in. Generally only matters for shaders that have some sort of transparency. If not set, it defaults to a value specified by the shader, which is usually appropriate. For solid objects, the <a href="#depth-buffer">depth buffer</a> ensures things are visible in the correct order regardless of the queue order. Different transparent shaders can interact with the depth buffer in different ways.</dd>
+	<dd>
+		Determines the order that materials are rendered in. Generally only matters for shaders that have some sort of transparency. If not set, it defaults to a value specified by the shader, which is usually appropriate. For solid objects, the <a href="#depth-buffer">depth buffer</a> ensures things are visible in the correct order regardless of the queue order. Different transparent shaders can interact with the depth buffer in different ways.
+		<ul class="seealso">
+			<li><a href="magic-literals.html#render-queue">render queue (numbers)</a></li>
+			<li><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-SubShaderTags.html">ShaderLab: SubShader Tags: Queue tag</a></li>
+		</ul>
+	</dd>
 	<dt id="cull"><dfn>cull</dfn></dt>
 	<dd>
 		Culling is the process of determining what should and shouldn't be rendered. This is done mostly for optimization but in the case of <a href="#depth-buffer">depth culling</a> it is also critical to getting the correct image. Frustum culling, the process of culling entire objects that are out of the camera's field of view, can cause problems if an object's <a href="#bounding-box">bounding box</a> is incorrect.
 		<ul class="seealso">
-			<li><a href="depth-buffer">depth buffer</a></li>
+			<li><a href="#depth-buffer">depth buffer</a></li>
 			<li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-CullAndDepth.html">Culling & Depth Testing in Shaders</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Hidden-surface_determination">Hidden-surface determination</a></li>
 		</ul>
