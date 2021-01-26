@@ -56,29 +56,52 @@
 	<li><a href="glossary.html#vertex-shader">vertex shader</a></li>
 	<li><a href="glossary.html#pixel-shader">pixel shader</a></li>
 </ul>
-<h1 id="skyscreen">Sky Screen Shaders</h1>
-<p>TODO: write this</p>
+<h1 id="skyscreen">Skyscreen Shaders</h1>
 <ul class="seealso">
-	<li><a href="skins.html#SetSkybox">SetSkybox</a></li>
-	<li><a href="skins.html#CreateRail">CreateRail</a></li>
+	<li><a href="skins.html#SetSkybox">SetSkybox{}</a></li>
+	<li><a href="skins.html#CreateRail">CreateRail{}</a></li>
+	<li><a href="glossary.html#track">track</a></li>
 </ul>
-<h2 id="skyscreen-params">Shader Variables</h2>
+<p>These shader variables are automatically provided to <code><strong>skyscreen</strong></code> shaders:</p>
 <pre class="NppCg"><code><span class="sc16">float4</span><span class="sc0"> </span><span class="sc11">iPrimaryColor</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// highway color
 </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">iIntensity</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// normalized intensity
 </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">iFloorHeight</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// <a href="lib/track_bounds.html">track_bounds</a>.min[2]);
 </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">iCeilingHeight</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// track_bounds.max[2]);
 </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">iIntensityTime</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// a counter which gains <a href="https://docs.unity3d.com/Documentation/ScriptReference/Time-deltaTime.html">deltaTime</a> * iIntensity every frame
-</span><span class="sc16">float4x4</span><span class="sc0"> </span><span class="sc11">_ViewProjectInverse</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// <a href="https://docs.unity3d.com/Documentation/ScriptReference/Camera.html">Camera</a>.<a href="https://docs.unity3d.com/Documentation/ScriptReference/Camera-main.html">main</a>.<a href="https://docs.unity3d.com/Documentation/ScriptReference/Camera-worldToCameraMatrix.html">worldToCameraMatrix</a>.<a href="https://docs.unity3d.com/Documentation/ScriptReference/Matrix4x4-inverse.html">inverse</a>
-</span><span class="sc16">float4x4</span><span class="sc0"> </span><span class="sc11">_ProjectInverse</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// Camera.main.<a href="https://docs.unity3d.com/Documentation/ScriptReference/Camera-projectionMatrix.html">projectionMatrix</a>.inverse
+</span><span class="sc16">float4x4</span><span class="sc0"> </span><span class="sc11">_ViewProjectInverse</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// (Camera.main.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Camera-projectionMatrix.html">projectionMatrix</a> * Camera.main.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Camera-worldToCameraMatrix.html">worldToCameraMatrix</a>).<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Matrix4x4-inverse.html">inverse</a>
+</span><span class="sc16">float4x4</span><span class="sc0"> </span><span class="sc11">_ProjectInverse</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// Camera.main.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Camera-projectionMatrix.html">projectionMatrix</a>.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Matrix4x4-inverse.html">inverse</a>
 </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">_Scale</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// always 1
-</span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">_TrackLocation</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// the interpolated current node index
+</span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">_TrackLocation</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// the interpolated current node index (<a href="#Update">Update</a> <strong>tracklocation</strong> but starting at 0 instead of 1)
 </span><span class="sc16">float</span><span class="sc0"> </span><span class="sc11">iNumTrackNodes</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// the number of nodes
-// The following are only sent if <strong>skyScreen_TrackOffset</strong> was set
+// iTrackTex is only sent if <strong>skyScreen_TrackOffset</strong> was set
 </span><span class="sc16">sampler2D</span><span class="sc0"> </span><span class="sc11">iTrackTex</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// 1024 x 4, RGBA32, no mipmaps, point filtering, clamped, 0 aniso
-</span><span class="sc16">sampler2D</span><span class="sc0"> </span><span class="sc11">iTrackColors</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// 8192 x ceil(iNumTrackNodes / 8192.0), no mipmaps, bilinear filtering, clamped, 0 aniso
-</span><span class="sc16">sampler2D</span><span class="sc0"> </span><span class="sc11">iTrackNodes</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// 8192 x 12*ceil(iNumTrackNodes / 8192.0), no mipmaps, point filtering, clamped, 0 aniso
-// The following is only sent if <strong>skyScreen_FixedTrackOffset</strong> was set
+// The following are only sent if <strong>skyScreen_FixedTrackOffset</strong> was set
+</span><span class="sc16">sampler2D</span><span class="sc0"> </span><span class="sc11">iTrackColors</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// 8192 x (12 * ceil(iNumTrackNodes / 8192.0)), RGBA32, no mipmaps, bilinear filtering, clamped, 0 aniso
+</span><span class="sc16">sampler2D</span><span class="sc0"> </span><span class="sc11">iTrackIntensities</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// 8192 x ceil(iNumTrackNodes / 8192.0), RGBA32, no mipmaps, point filtering, clamped, 0 aniso
+</span><span class="sc16">sampler2D</span><span class="sc0"> </span><span class="sc11">iTrackNodes</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// 8192 x 12*ceil(iNumTrackNodes / 8192.0), RGBA32, no mipmaps, point filtering, clamped, 0 aniso
 </span><span class="sc16">float4</span><span class="sc0"> </span><span class="sc11">trackOffset</span><span class="sc10">;</span><span class="sc0"> </span><span class="sc2">// the 3 values that were provided to <strong>skyScreen_FixedTrackOffset</strong>. the 4th value is always 0</span></code></pre>
+<h2 id=skyscreen-FixedTrackOffset>FixedTrackOffset</h2>
+<p>This gives you images containing per-node details about the entire track. The first node is in the bottom left and it moves right until it wraps and starts at the beginning of the next row, moving upward. I am not sure why he chose 2D images with wrapping rather than 1D images, which would be simpler and have better clamping / interpolation.</p>
+<h3 id=skyscreen-FixedTrackOffset-iTrackColors>iTrackColors</h3>
+<p>The highway colors for every node. The textures are only generated on the skyscreen's first update frame and will not reflect changes to the highway after that.</p>
+<h3 id=skyscreen-FixedTrackOffset-iTrackIntensities>iTrackIntensities</h3>
+<p>The normalized intensity for every node. It is encoded with <code><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-BuiltinFunctions.html" class=func>EncodeFloatRGBA</a>(intensityNormalized)</code>.</p>
+<h3 id=skyscreen-FixedTrackOffset-iTrackNodes>iTrackNodes</h3>
+<p>This one gets more complicated: each logical row takes up 12 contiguous pixel rows in the image. 4 vectors are encoded in each logical row, from bottom to top: <strong>right</strong> (1,0,0), <strong>up</strong> (0,1,0), <strong>forward</strong> (0,0,1), and <strong>position</strong>. <strong>Right</strong>/<strong>up</strong>/<strong>forward</strong> have the node's rotation applied to them and they are relative to the node's world-space <strong>position</strong>. A vector's 3 coordinates each get their own pixel row, with X on the bottom, and are encoded with <code><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-BuiltinFunctions.html" class=func>EncodeFloatRGBA</a>((coordinate + 100000f) / 200000f)</code>.</p>
+<h2 id=skyscreen-TrackOffset>TrackOffset</h2>
+<h3 id=skyscreen-TrackOffset-iTrackTex>iTrackTex</h3>
+<p>Each column in this 1024 pixel wide image represents a <a href="glossary.html#node">track node</a>. For each node, <code><strong>skyScreen_TrackOffset</strong></code> is converted from node space to camera space (not viewport space) and the bottom two pixels are the <a href="glossary.html#coordinate">X and Y coordinates</a> of that, encoded via <code><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-BuiltinFunctions.html" class=func>EncodeFloatRGBA</a>((coordinate + 100000f) / 200000f)</code>. The next two pixels are a node color and <code><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-BuiltinFunctions.html" class=func>EncodeFloatRGBA</a>(intensityNormalized)</code>.</p>
+<p>As for which nodes are selected, it is difficult understand the intention behind the complicated selection process. My guess is that this is something "good enough" found through experimentation and is designed for a specific shader. The set of nodes it selects from starts out as the first 1024 nodes and once <code><strong>iIntensityTime</strong></code> reaches 200 the selection window will start moving forward. When the selection window hits the end of the track it will keep moving forward and the last node will appear in the selection window multiple times.</p>
+<p>
+	Selection criteria:
+	<ul>
+		<li>The node's index in the selection window (start 0, end 1023) is greater than or equal to the column index (left 0, right 1023).</li>
+		<li>The <a href="glossary.html#coordinate">Z coordinate</a> of the offset in camera space (mentioned previously) is greater than or equal to the column index. (In other words, offset positions must be at least X units away from the camera plane.)</li>
+	</ul>
+	For each column, the first acceptable node will be selected, so the general trend for successful selections is earlier nodes on the left.
+</p>
+<p>The node before the selected node (index clamped to the selection window) and the selected node will be <a href="glossary.html#lerp">lerped</a> based on this ratio: <code>abs(previous.z - column_index) / (abs(selected.z - column_index) + abs(previous.z - column_index))</code> If no qualifying node is found, most of the information will be reused from the last column that successfully selected a node (or zero) but the top two pixels will take their color and intensity from the first node in the selection window, and their interpolation is always with the next node (index clamped to the track size) rather than the previous node. (But the interpolation amount is the same as the others and does get reused.)</p>
+
 <h1 id="list">Shader List</h1>
 <p>Here's a list of built-in shaders and their <a href="http://docs.unity3d.com/Documentation/Components/SL-Properties.html">properties</a>. This list may be out of date relative to the rest of the documentation. Let me know if you think a new shader has been added and I will update it.</p>
 <dl class="codeDefs shadersList">

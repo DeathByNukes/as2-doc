@@ -428,97 +428,151 @@ string cameradynamics = null or "high" <em>-- "use extra dynamic camera", adjust
 }
 <em>-- End of first run only</em></code></pre>
 <h2 id="SetBackgroundColor">SetBackgroundColor(<a href="#type-color">color</a>)</h2>
-<p>Example: <code>SetBackgroundColor{0, 127, 255} <em>-- #007FFF</em></code></p>
+<pre class=LuaCode><code>SetBackgroundColor{0, 127, 255} <em>-- #007FFF</em></code></pre>
+<p>Sets the background color of the "<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Camera-main.html">main camera</a>", which will permanently change the camera mode to clear whatever was drawn by previous cameras. I don't know which camera is the main camera.</p>
+<ul class="seealso">
+	<li><a href="#SetSkybox">SetSkybox{}</a></li>
+	<li><a href="magic-literals.html#layers">Layers</a></li>
+</ul>
 <h2 id="SetSkybox">SetSkybox{}</h2>
-<p>Can be one of the following tables:</p>
-<pre><code><a href="#type-table">table</a> <strong>sky</strong> = {
-	<em>-- this is <a href="#silver-lining">Silver Lining</a></em>
-	<a href="#type-double">double</a> <strong>month</strong> = 2.0
-	<a href="#type-double">double</a> <strong>hour</strong> = 12.0
-	<a href="#type-double">double</a> <strong>minute</strong> = 0.0
-	<a href="#type-double">double</a> <strong>cloudmaxheight</strong> = 1.1 <em>-- cumulus clouds. 1.0 is the top of the level (track boundaries), -1.0 is the bottom, and 0 is the center.</em>
-	<a href="#type-double">double</a> <strong>cloudminheight</strong> = -1.1
-	<a href="#type-double">double</a> <strong>clouddensity</strong> = 0.6 <em>-- 0 or less disables cumulus clouds. setting this too high causes severe graphical glitches and lag</em>
-	<a href="#type-double">double</a> <strong>cirrusposition</strong> = 0.0 <em>-- 0 disables cirrus clouds. positive numbers are added to the top of the track, <strong>negative numbers</strong> are <strong>subtracted</strong> from the bottom of the track (bug)
-	-- the above values will be checked against the existing settings and the function will abort if they are the same. <strong>flare</strong> is applied before the abort though.</em>
-	<a href="#type-bool">bool</a> <strong>flare</strong> = true <em>-- once turned off it cannot be turned back on</em>
+<pre><code><em>-- Some things in this list have the same name because that name can contain any one of the listed types.</em>
+<a href="#type-materialcolor">materialcolor</a> <strong>color</strong> ?= ? <em>-- Can be used with <strong>skysphere</strong>, <a href="#type-string">string</a> <strong>sky</strong>, and <strong>custom</strong>.</em>
+<a href="#type-string">string</a> <strong>sky</strong> = nil <em>-- Loads an embedded skybox material. Internally loads a resource named like "Skyboxes/<strong>sky</strong>/<strong>sky</strong>". (TODO: find a way to list them.)</em>
+<a href="#type-table">table</a> <strong>sky</strong> = nil or {
+	<em>-- This table controls <a href="#silver-lining">Silver Lining</a>.</em>
+	<a href="#type-int">int</a> <strong>month</strong> = 2.0
+	<a href="#type-int">int</a> <strong>hour</strong> = 12.0
+	<a href="#type-int">int</a> <strong>minute</strong> = 0.0
+	<a href="#type-double">double</a> <strong>cloudmaxheight</strong> = 1.1 <em>-- Cumulus clouds. 1.0 is the top of the level (<a href="lib/track_bounds.html">track boundaries</a>), -1.0 is the bottom, and 0 is the center.</em>
+	<a href="#type-double">double</a> <strong>cloudminheight</strong> = -1.1 <em>-- These two settings are ignored if <strong>cloudminheight</strong> and <strong>cloudmaxheight</strong> are specified.</em>
+	<a href="#type-double">double</a> <strong>clouddensity</strong> = 0.6 <em>-- 0 or less disables cumulus clouds. setting this too high causes severe graphical glitches and lag.</em>
+	<a href="#type-double">double</a> <strong>cirrusposition</strong> = 0.0 <em>-- 0 disables cirrus clouds. Positive and negative numbers are offset from the top and bottom of the <a href="lib/track_bounds.html">track</a>, respectively.</em>
 	bool showsun = true
-	<a href="#type-float">float</a> <strong>latitude</strong> ?= 42 <em>-- bug: lat and long are stored as doubles but the lua values are needlessly downcast to floats before being assigned</em>
-	<a href="#type-float">float</a> <strong>longitude</strong> ?= 185.6
+	vector3 cloudboundsmin = <em>-- By default <a href="glossary.html#coordinate">Y</a> uses <strong>cloudminheight</strong>, <a href="glossary.html#coordinate">XZ</a> is <a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.max" class=func>max</a>(80000, <a href="lib/track_bounds.html">track_bounds</a>.min.XZ * 2).</em>
+	vector3 cloudboundsmax = <em>-- By default <a href="glossary.html#coordinate">Y</a> uses <strong>cloudmaxheight</strong>, <a href="glossary.html#coordinate">XZ</a> is <a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.max" class=func>max</a>(80000, <a href="lib/track_bounds.html">track_bounds</a>.max.XZ * 2).</em>
+	<a href="#type-bool">bool</a> <strong>flare</strong> = true <em>-- Once turned off it cannot be turned back on. <a href="#SetSkybox-conditions">Unlike the other settings</a>, this one is guaranteed to take effect.</em>
+
+	<a href="#type-double">double</a> <strong>latitude</strong> ?= 42
+	<a href="#type-double">double</a> <strong>longitude</strong> ?= 185.6
 	<a href="#type-bool">bool</a> <strong>useProceduralAmbientLight</strong> ?= true
 	<a href="#type-bool">bool</a> <strong>useProceduralSunLight</strong> ?= true
-}</code></pre>
-<pre><code><a href="#type-color">color</a> <strong>color</strong> = nil
-<a href="#type-string">string</a> <strong>sky</strong> = nil <em>-- loads an embedded skybox. TODO: make a list of these</em></code></pre>
-<pre><code><a href="#type-color">color</a> <strong>color</strong> = nil
-<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a> <strong>custom</strong> = nil <em>-- uses texture settings clamp/mipmaps=true/bilinear</em></code></pre>
-<pre><code><a href="#type-color">color</a> <strong>color</strong> = nil
+	vector3 windspeed ?= {10, 0, 10}
+}
+<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a> <strong>custom</strong> = nil <em>-- Textures (clamp, mipmaps, bilinear). Names to use: _BackTex _DownTex _FrontTex _LeftTex _RightTex _UpTex</em>
+<em>-- IF <strong>custom</strong> is a table these values will be read as nil:</em>
+<a href="#type-address">address</a> <strong>skysphere</strong> ?= ? or "default" or (...) <em>-- Texture (repeat, no mipmaps, bilinear). "default" will leave the texture at its current setting but allow you to change the other settings. This setting is only applied on the first run but you must supply a string whenever you want to change the other skysphere settings.</em>
+UnityEngine.Material <strong>skysphere</strong> ?= ?
+string skyscreen <em>-- Shader name.</em>
+UnityEngine.Material skyscreen
+int skyscreenlayer = <a href="magic-literals.html#layers">18</a> <em>-- If the background camera is disabled, it uses layer 13 instead of your setting.</em>
+vector3 skyScreen_TrackOffset = nil <em>-- A position in <a href="glossary.html#node-space">node space</a>.</em>
+vector3 skyScreen_FixedTrackOffset = nil
+<em>-- END IF</em>
+<em>-- IF <strong>skysphere</strong> is a string:</em>
+rotation sphererot ?= ? <em>-- If you want to change this setting on the UnityEngine.Material version of <strong>skyscreen</strong>, call SetSkybox a second time with <strong>skyscreen</strong> = "default".</em>
+string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
 <a href="#type-vector2">vector2</a> <strong>texturescale</strong> ?= ?
 <a href="#type-vector2">vector2</a> <strong>textureoffset</strong> ?= ?
-<a href="#type-address">address</a> <strong>skysphere</strong> <em>-- this setting is only used on the first run. however, you MUST supply a string to it in all cases in order for SetSkybox to know you are trying to modify the skysphere</em></code></pre>
-<pre><code>string skyscreen <em>-- shader name</em>
-int skyscreenlayer = 18
-vector3 skyScreen_TrackOffset = null
-vector3 skyScreen_FixedTrackOffset = nil</code></pre>
+<em>-- END IF</em></code></pre>
 <ul class="seealso">
-	<li><a href="shaders.html#skyscreen">Sky Screen Shaders</a></li>
+	<li><a href="#SetBackgroundColor">SetBackgroundColor{}</a></li>
 </ul>
-<h3 id="silver-lining">Silver Lining</h3>
+<h3 id="SetSkybox-conditions">Conditions</h3>
+<p>If your table does not satisfy at least one of these conditions, <code>SetSkybox</code> will exit early without applying most changes.</p>
+<ul>
+	<li><code><strong>skyscreen</strong></code> is a <code><a href="#type-string">string</a></code> or Material (and <code><strong>custom</strong></code> is not a <code><a href="#type-table">table</a></code>).</li>
+	<li><code><strong>skysphere</strong></code> is a <code><a href="#type-string">string</a></code> or Material (and <code><strong>custom</strong></code> is not a <code><a href="#type-table">table</a></code>).</li>
+	<li><code>(<strong>sky</strong> <span title="If not the desired type, will be read as nil.">as</span> <a href="#type-string">string</a>)</code> is different from the last time.</li>
+	<li><code><strong>color</strong></code> is a <code><a href="#type-color">color</a></code> and it wasn't last time, or vice versa.</li>
+	<li><code><strong>color</strong></code> is a <code><a href="#type-color">color</a></code> and that color is different from last time.</li>
+	<li>The keys of <code>(<strong>custom</strong> <span title="If not the desired type, will be read as nil.">as</span> <a href="#type-table">table</a>)</code>, converted to a <code><a href="#type-string">string</a></code>, is different from last time. (Bug: Values used to be included and now they aren't. Adding and removing unused keys should be enough to force it to recognize a difference.)</li>
+	<li><code><strong>sky</strong></code> is a <code><a href="#type-table">table</a></code> and it wasn't last time, or vice versa.</li>
+	<li>
+		<code><strong>sky</strong></code> is a <code><a href="#type-table">table</a></code> and any of these values (or their defaults, if unspecified) are different from the last time:
+		<ul>
+			<li><code><strong>month</strong></code> (Compared as <code><a href="#type-double">double</a></code> even though the fraction isn't used.)</li>
+			<li><code><strong>hour</strong></code> (Compared as <code><a href="#type-double">double</a></code> even though the fraction isn't used.)</li>
+			<li><code><strong>minute</strong></code> (Compared as <code><a href="#type-double">double</a></code> even though the fraction isn't used.)</li>
+			<li><code><strong>cloudmaxheight</strong></code></li>
+			<li><code><strong>cloudminheight</strong></code></li>
+			<li><code><strong>clouddensity</strong></code></li>
+			<li><code><strong>cirrusposition</strong></code></li>
+		</ul>
+	</li>
+</ul>
+<p>The "last time" memory is only updated by successful runs, and all of its variables start at zero/nil. Unspecified values will be remembered as if their defaults were specified.</p>
+<h3 id="SetSkybox-combinations">Combining Settings</h3>
+<p>If <code><strong>sky</strong></code> is a <code><a href="#type-table">table</a></code> its settings will be applied and will not block any other settings. If it is not a table, <a href="#silver-lining">Silver Lining</a> will be disabled.</p>
+<p>
+	The following settings are checked in order and if one contains the required type then it will be applied and the settings after it will not be applied.
+	<ol>
+		<li><code><a href="#type-string">string</a>/UnityEngine.Material <strong>skyscreen</strong></code></li>
+		<li><code><a href="#type-string">string</a>/UnityEngine.Material <strong>skysphere</strong></code></li>
+		<li><code><a href="#type-string">string</a> <strong>sky</strong></code></li>
+		<li><code><a href="#type-table">table</a> <strong>custom</strong></code></li>
+	</ol>
+	If any of those 4 settings were present, <code><strong>color</strong></code> will be applied. If you mix <code><strong>skyscreen</strong></code> with one of the other 3, that one will also be applied with a null material because of a spaghetti bug.
+</p>
+<h3 id="silver-lining">Silver Lining Skybox</h3>
 <p><a href="http://forum.unity3d.com/threads/107166-SilverLining-for-Unity-3D-volumetric-clouds-sim-quality-procedural-skies">Silver Lining</a> is highly customizable but AS2 doesn't expose most of the interesting options or even most of the basic options. Here's some of the important locked settings:</p>
 <ul>
 	<li>year = 2010</li>
 	<li>day = 1</li>
 	<li>daylightSavingsTime = true</li>
 	<li>timeZone = -8.0</li>
-	<li>windVelocity = {10, 0, 10}</li>
 	<li>altitude = 0</li>
 </ul>
 <p>It's not possible to alter these by setting one of the other values by a really big number; it rejects the entire time setting if one of the values is out of range. The daylight savings time setting is active no matter which time of year you specify, so the effective time zone is UTC -7 (pacific daylight time).</p>
-<p>This is how the true  world-space cloud positions are calculated from our settings:</p>
-<pre class="NppLua"><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">SetSkybox</span><span class="sc10">(</span><span class="sc11">table</span><span class="sc10">)</span><span class="sc0">
-	</span><span class="sc2">...</span><span class="sc0">
-	</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">lua_clouddensity</span><span class="sc0"> </span><span class="sc10">&lt;=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
-		</span><span class="sc11">silverLining.hasCumulusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">false</span><span class="sc0">
-	</span><span class="sc5">else</span><span class="sc0">
-		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11"><a href="lib/track_bounds.html">track_bounds</a>.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">lua_cloudmaxheight</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">])</span><span class="sc0">
-		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cloud_min</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">lua_cloudminheight</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">])</span><span class="sc0"> </span><span class="sc2">-- track_bounds.max is [sic]. doesn't matter though.
-</span><span class="sc0">        </span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc14">math.max</span><span class="sc10">(</span><span class="sc11">cloud_max</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">cloud_min</span><span class="sc10">)</span><span class="sc0">
-
-		</span><span class="sc11">silverLining.hasCumulusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc0">
-		</span><span class="sc11">silverLining.cumulusCoverage</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">lua_clouddensity</span><span class="sc0">
-		</span><span class="sc11">silverLining.cumulusPosition</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
-			</span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">],</span><span class="sc0">
-			</span><span class="sc10">(</span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">cloud_min</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">/</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc10">,</span><span class="sc0">
-			</span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]</span><span class="sc0">
-		</span><span class="sc10">}</span><span class="sc0">
-		</span><span class="sc11">silverLining.cumulusDimensions</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
-			</span><span class="sc14">math.max</span><span class="sc10">(</span><span class="sc4">80000</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.min</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">])),</span><span class="sc0">
-			</span><span class="sc4">2</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">cloud_max</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">silverLining.cumulusPosition</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]),</span><span class="sc0">
-			</span><span class="sc14">math.max</span><span class="sc10">(</span><span class="sc4">80000</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc0"> </span><span class="sc10">*</span><span class="sc0"> </span><span class="sc10">(</span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">track_bounds.min</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]))</span><span class="sc0">
-		</span><span class="sc10">}</span><span class="sc0">
-	</span><span class="sc5">end</span><span class="sc0">
-	</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
-		</span><span class="sc11">silverLining.hasCirrusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">false</span><span class="sc0">
-	</span><span class="sc5">else</span><span class="sc0">
-		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cirrus_y</span><span class="sc0">
-		</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0"> </span><span class="sc10">&lt;=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
-			</span><span class="sc11">cirrus_y</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">track_bounds.min</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">-</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0"> </span><span class="sc2">-- BUG: subtracting a negative number</span><span class="sc0">
-		</span><span class="sc5">else</span><span class="sc0">
-			</span><span class="sc11">cirrus_y</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">track_bounds.max</span><span class="sc10">[</span><span class="sc4">2</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">+</span><span class="sc0"> </span><span class="sc11">lua_cirrusposition</span><span class="sc0">
-		</span><span class="sc5">end</span><span class="sc0">
-
-		</span><span class="sc11">silverLining.hasCirrusClouds</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc0">
-		</span><span class="sc11">silverLining.cirrusPosition</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
-			</span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">1</span><span class="sc10">],</span><span class="sc0">
-			</span><span class="sc11">cirrus_y</span><span class="sc10">,</span><span class="sc0">
-			</span><span class="sc11">track_bounds.center</span><span class="sc10">[</span><span class="sc4">3</span><span class="sc10">]</span><span class="sc0">
-		</span><span class="sc10">}</span><span class="sc0">
-	</span><span class="sc5">end</span><span class="sc0">
-	</span><span class="sc2">...</span><span class="sc0">
-</span><span class="sc5">end</span></pre>
+<ul class="seealso">
+	<li><a href="#UpdateProceduralSky">UpdateProceduralSky{}</a></li>
+</ul>
+<h3 id="SetSkybox-skysphere"><code><strong>skysphere</strong></code> Skybox</h3>
+<pre class=LuaCode><code>SetSkybox{
+	color = {1,1,1},
+	skysphere = "Sky.jpg",
+	texturescale = {1,1},
+	textureoffset  = {0,0},
+	sphererot = {0,0,0},
+	<em>--emissionmap = "SkyGlow.jpg", -- ???</em>
+}</code></pre>
+<p>I assume this takes a 360 degree "equirectangular" panorama texture.</p>
+<ul class="seealso">
+	<li><a href="https://www.cgskies.com/">CGSkies</a></li>
+	<li><a href="https://duckduckgo.com/?q=free+panorama+sky">Web Search: free panorama sky</a></li>
+	<li><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/StandardShaderMaterialParameterEmission.html">Emission</a></li>
+</ul>
+<h3 id="SetSkybox-custom"><code><strong>custom</strong></code> Skybox</h3>
+<pre class=LuaCode><code>SetSkybox{
+	color = {1,1,1},
+	custom = {
+		_FrontTex = "MySkybox/Front.jpg",
+		_BackTex  = "MySkybox/Back.jpg",
+		_LeftTex  = "MySkybox/Left.jpg",
+		_RightTex = "MySkybox/Right.jpg",
+		_UpTex    = "MySkybox/Up.jpg",
+		_DownTex  = "MySkybox/Down.jpg",
+	},
+}</code></pre>
+<p>A classic 6-sided skybox, also known as a cubemap skybox. They have more consistent texture stretching than a spherical texture. (Converting an existing spheremap to a cubemap is probably pointless unless you're also going to decrease the resolution.)</p>
+<ul class="seealso">
+	<li><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/class-Skybox.html">Skybox</a></li>
+	<li><a href="https://en.wikipedia.org/wiki/Skybox_%28video_games%29">Skybox (video games)</a></li>
+	<li><a href="https://jaxry.github.io/panorama-to-cubemap/">Panorama to Cubemap</a></li>
+	<li><a href="https://www.cgskies.com/resources_tutorial_transform.php">Panorama Transformations</a></li>
+	<li><a href="https://duckduckgo.com/?q=free+skybox+texture">Web Search: free skybox texture</a></li>
+</ul>
+<h3 id="SetSkybox-skyscreen"><code><strong>skyscreen</strong></code> Skybox</h3>
+<p>This is for using procedural skybox shaders. Like a post-processing effect it simply draws your material as a full-screen <a href="glossary.html#quad">quad</a> but does so <a href="glossary.html#render-queue">before</a> the rest of the scene is drawn instead of after it. Shaders made for this purpose change what they draw based on the camera angle.</p>
+<ul class="seealso">
+	<li><a href="shaders.html#skyscreen">Skyscreen Shaders</a></li>
+	<li><a href="skins.html#CreateRail">CreateRail{}</a></li>
+	<li><a href="#AddPostEffect">AddPostEffect{}</a></li>
+	<li><a href="https://docs.unity3d.com/Manual/shader-skybox-procedural.html">Procedural skybox</a></li>
+</ul>
 <h2 id="UpdateProceduralSky">UpdateProceduralSky{}</h2>
 <pre><code><a href="#type-float">float</a> <strong>latitude</strong> ?= 42
 <a href="#type-float">float</a> <strong>longitude</strong> ?= 185.6</code></pre>
+<p>Updates parts of the <a href="#silver-lining">Silver Lining</a> skybox without having to deal with <a href="#SetSkybox">SetSkybox</a>.</p>
 <h2 id="SetRings">SetRings{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>texture</strong> = nil <em>-- bug: only supports built-in shaders</em>
 <a href="#type-string">string</a> <strong>shader</strong> = nil
