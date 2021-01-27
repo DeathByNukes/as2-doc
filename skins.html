@@ -461,15 +461,15 @@ string cameradynamics = null or "high" <em>-- "use extra dynamic camera", adjust
 <a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a> <strong>custom</strong> = nil <em>-- Textures (clamp, mipmaps, bilinear). Names to use: _BackTex _DownTex _FrontTex _LeftTex _RightTex _UpTex</em>
 <em>-- IF <strong>custom</strong> is a table these values will be read as nil:</em>
 <a href="#type-address">address</a> <strong>skysphere</strong> ?= ? or "default" or (...) <em>-- Texture (repeat, no mipmaps, bilinear). "default" will leave the texture at its current setting but allow you to change the other settings. This setting is only applied on the first run but you must supply a string whenever you want to change the other skysphere settings.</em>
-UnityEngine.Material <strong>skysphere</strong> ?= ?
+<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>skysphere</strong> ?= ?
 string skyscreen <em>-- Shader name.</em>
-UnityEngine.Material skyscreen
+<a href="#type-UnityEngine.Material">UnityEngine.Material</a> skyscreen
 int skyscreenlayer = <a href="magic-literals.html#layers">18</a> <em>-- If the background camera is disabled, it uses layer 13 instead of your setting.</em>
 vector3 skyScreen_TrackOffset = nil <em>-- A position in <a href="glossary.html#node-space">node space</a>.</em>
 vector3 skyScreen_FixedTrackOffset = nil
 <em>-- END IF</em>
 <em>-- IF <strong>skysphere</strong> is a string:</em>
-rotation sphererot ?= ? <em>-- If you want to change this setting on the UnityEngine.Material version of <strong>skyscreen</strong>, call SetSkybox a second time with <strong>skyscreen</strong> = "default".</em>
+rotation sphererot ?= ? <em>-- If you want to change this setting on the <a href="#type-UnityEngine.Material">UnityEngine.Material</a> version of <strong>skyscreen</strong>, call SetSkybox a second time with <strong>skyscreen</strong> = "default".</em>
 string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
 <a href="#type-vector2">vector2</a> <strong>texturescale</strong> ?= ?
 <a href="#type-vector2">vector2</a> <strong>textureoffset</strong> ?= ?
@@ -506,8 +506,8 @@ string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
 <p>
 	The following settings are checked in order and if one contains the required type then it will be applied and the settings after it will not be applied.
 	<ol>
-		<li><code><a href="#type-string">string</a>/UnityEngine.Material <strong>skyscreen</strong></code></li>
-		<li><code><a href="#type-string">string</a>/UnityEngine.Material <strong>skysphere</strong></code></li>
+		<li><code><a href="#type-string">string</a>/<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>skyscreen</strong></code></li>
+		<li><code><a href="#type-string">string</a>/<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>skysphere</strong></code></li>
 		<li><code><a href="#type-string">string</a> <strong>sky</strong></code></li>
 		<li><code><a href="#type-table">table</a> <strong>custom</strong></code></li>
 	</ol>
@@ -608,28 +608,28 @@ float sizescaler ?= 1</code></pre>
 <pre><code>int maxvisiblecount ?= 30
 <a href="#type-table">table</a> <strong>chainspans</strong> ?= ? or {
 	bool hide ?= false
-	materialid material ?= ?
+	<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> ?= ?
 	<em>-- if <strong>material</strong> is omitted</em>
 		<a href="#type-string">string</a> <strong>shader</strong> ?= ?
 		<em>-- if <strong>shader</strong> is not omitted</em>
 			<em>-- create a new material</em>
 			material *
 		<em>-- else</em>
-			<em>-- modify the existing material (if a <a href="#type-materialid">materialid</a> was used, this modifies anything else that uses the same id)</em>
+			<em>-- modify the existing material (if a <a href="#type-UnityEngine.Material">UnityEngine.Material</a> was used, this modifies anything else that uses the same instance)</em>
 			<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a> <strong>shadercolors</strong> ?= ?
 			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
 		<em>-- end</em>
 	<em>-- end</em>
 }
 <a href="#type-table">table</a> <strong>colorblocks</strong> ?= ? or {
-	materialid material ?= ?
+	<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> ?= ?
 	<em>-- if <strong>material</strong> is omitted</em>
 		<a href="#type-string">string</a> <strong>shader</strong> ?= ?
 		<em>-- if <strong>shader</strong> is not omitted</em>
 			<em>-- create a new material</em>
 			material *
 		<em>-- else</em>
-			<em>-- modify the existing material (if a <a href="#type-materialid">materialid</a> was used, this modifies anything else that uses the same id)</em>
+			<em>-- modify the existing material (if a <a href="#type-UnityEngine.Material">UnityEngine.Material</a> was used, this modifies anything else that uses the same id)</em>
 			<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a> <strong>shadercolors</strong> ?= ?
 			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
 		<em>-- end</em>
@@ -644,7 +644,7 @@ float sizescaler ?= 1</code></pre>
 	<a href="#type-bool">bool</a> <strong>float_on_water</strong> = true
 }
 <a href="#type-table">table</a> <strong>greyblocks</strong> ?= ? or {
-	materialid material ?= ?
+	<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> ?= ?
 	<em>-- if <strong>material</strong> is omitted</em>
 		<a href="#type-string">string</a> <strong>shader</strong> ?= ?
 		<em>-- if <strong>shader</strong> is not omitted</em>
@@ -663,7 +663,7 @@ float sizescaler ?= 1</code></pre>
 	<a href="#type-string">string</a> <strong>meshmorphtype</strong> = &quot;intensity&quot; or &quot;intensitysmooth&quot; or &quot;intensitysmoothfall&quot; or &quot;intensitysmoothrise&quot;<em></em>
 }
 <a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-table">table</a><a href="#type-dict">}</a> <strong>powerups</strong> ?= ? or {example = { <em>-- this dictionary is merged into the default dictionary, overwriting any conflicting keys</em>
-	materialid material ?= ?
+	<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> ?= ?
 	<em>-- if <strong>material</strong> is omitted</em>
 		<a href="#type-string">string</a> <strong>shader</strong> ?= ?
 		<em>-- if <strong>shader</strong> is not omitted</em>
@@ -878,12 +878,12 @@ materialcolor color ?= ?
 float intensity = 0.5
 float range ?= ?
 table shadows = nil <em>-- this is the same as <a href="#CreateLight">CreateLight</a>{<strong>shadows</strong>}. omitting it disables shadows.</em></code></pre>
-<h2 id="BuildMaterial"><a href="#type-materialid">materialid</a> BuildMaterial(<a href="#type-material">material</a>)</h2>
-<p>Creates a <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Material.html" class=func>UnityEngine.Material</a></code> object and returns a reference token for it. This allows a single material to be used on multiple objects with less waste, and allows the material to be modified during <code><a href="#Update" class=func>Update</a>()</code> via <code><a href="#UpdateMaterial" class=func>UpdateMaterial</a>{}</code></p>
-<h2 id="CreateMaterial"><a href="#type-materialid">materialid</a> CreateMaterial(<a href="#type-material">material</a>)</h2>
+<h2 id="BuildMaterial"><a href="#type-UnityEngine.Material">UnityEngine.Material</a> BuildMaterial(<a href="#type-material">material</a>)</h2>
+<p>Creates a material object and returns a reference to it. This allows a single material to be used on multiple objects with less waste, and allows the material to be modified during <code><a href="#Update" class=func>Update</a>()</code> via <code><a href="#UpdateMaterial" class=func>UpdateMaterial</a>{}</code> or the object's members. The object's members also give access to advanced settings.</p>
+<h2 id="CreateMaterial"><a href="#type-UnityEngine.Material">UnityEngine.Material</a> CreateMaterial(<a href="#type-material">material</a>)</h2>
 <p>An alias for <code><a href="#BuildMaterial" class=func>BuildMaterial</a>{}</code></p>
 <h2 id="UpdateMaterial">UpdateMaterial(<a href="#type-table">table</a>)</h2>
-<pre><code>materialid material
+<pre><code><a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong>
 {string=float} shadersettings ?= ? <em>-- omitted settings are left at their previous values</em></code></pre>
 <h2 id="UpdateShaderSettings">UpdateShaderSettings(<a href="#type-table">table</a>)</h2>
 <p>An alias for <code><a href="#UpdateMaterial" class=func>UpdateMaterial</a>{}</code></p>
@@ -934,7 +934,7 @@ float[] weights</code></pre>
 
 <h2 id="AddPostEffect">AddPostEffect{}</h2>
 <pre><code>string depth = "background" or "foreground" or "topmost_exclusive" or ("middle" / "foreground_exceptclose") <em>-- Selects camera.</em>
-materialid material = nil <em>-- Only accepts <a href="#BuildMaterial">pre-built</a> materials. Specifying this does not prevent "builtin" from being read, and both will be added to the specified camera.</em>
+<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> = nil <em>-- Only accepts <a href="#BuildMaterial">pre-built</a> materials. Specifying this does not prevent "builtin" from being read, and both will be added to the specified camera.</em>
 table builtin = nil or {
 	string name = nil or (<a href="#AddPostEffect-builtin">see below</a>) <em>-- A valid name is required or builtin will be ignored.</em>
 	<em>-- Other values, depending on the name. <a href="#AddPostEffect-builtin">See below</a> for all the variations.</em>

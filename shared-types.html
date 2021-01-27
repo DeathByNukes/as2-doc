@@ -93,6 +93,13 @@
 				<li><a href="glossary.html#render-queue">render queue</a></li>
 			</ul>
 		</dd>
+		<dt><dfn id="type-UnityEngine.Material">UnityEngine.Material</dfn></dt>
+		<dd>
+			A <a href="https://www.lua.org/manual/5.1/manual.html#2.2">userdata</a> returned by <code><a href="#BuildMaterial" class=func>BuildMaterial</a>{}</code> which represents a built <a href="#type-material">material</a>. These are accepted by many customization functions instead of <a href="#type-material">material</a> settings. The userdata gives complete scripting access to the underlying Unity material object, enabling advanced techniques. See the <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Material.html">Unity documentation</a> for details.
+			<ul class="seealso">
+				<li><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Material.html">Material</a></li>
+			</ul>
+		</dd>
 		<dt><dfn id="type-rotation">rotation</dfn></dt>
 		<dd>
 			A <code><a href="#type-vector3">vector3</a></code> containing Euler rotation angles (degrees rotation around each axis) or a <code>UnityEngine.Quaternion</code>.
@@ -113,7 +120,7 @@
 		<dd>
 			A table:
 			<pre><code><a href="#type-vector3">vector3</a> <strong>pos</strong> = {0,0,0} <em>-- can also use "<strong>position</strong>"</em>
-<a href="#type-rotation">rotation</a> <strong>rot</strong> = {0,0,0} <em>-- can also use "<strong>rotation</strong>". it is a unity "Quaternion.Euler"</em>
+<a href="#type-rotation">rotation</a> <strong>rot</strong> = {0,0,0} <em>-- can also use "<strong>rotation</strong>".</em>
 <a href="#type-scale">scale</a> <strong>scale</strong> = {1,1,1}
 <a href="#type-string">string</a> <strong>lookat</strong> = "end" or "start" or "camera"</code></pre>
 			(Personal note: this is <code>SceneManager.ApplyTransform(LuaTable,GameObject)</code>)
@@ -122,7 +129,7 @@
 		<dd>
 			A table:
 			<pre><code><a href="#type-vector3">vector3</a> <strong>position</strong> = {0,0,0} <em>-- can also use "<strong>pos</strong>"</em>
-<a href="#type-rotation">rotation</a> <strong>rotation</strong> = {0,0,0} <em>-- can also use "<strong>rot</strong>". it is a unity "Quaternion.Euler"</em>
+<a href="#type-rotation">rotation</a> <strong>rotation</strong> = {0,0,0} <em>-- can also use "<strong>rot</strong>".</em>
 <a href="#type-vector3">vector3</a> <strong>scale</strong> = {1,1,1}</code></pre>
 			(Personal note: this is <code>LuaX.ApplyTransform(LuaTable,Transform)</code>)
 		</dd>
@@ -133,23 +140,21 @@
 				<li><a href="glossary.html#mesh">mesh</a></li>
 			</ul>
 		</dd>
-		<dt><dfn id="type-materialid">materialid</dfn></dt>
-		<dd> An <code><a href="#type-int">int</a></code> returned by <code><a href="#BuildMaterial" class=func>BuildMaterial{}</a></code> which identifies a built <a href="#type-material">material</a>.</dd>
 		<dt><dfn id="type-gameobject">gameobject</dfn></dt>
-		<dd>a table representing a <a href="http://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">Unity GameObject</a>:
+		<dd>A table with settings for creating a <a href="http://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">Unity GameObject</a>:
 			<pre><code><a href="#type-string">string</a> <strong>prefabName</strong> = nil <em>-- the name of another object or a built-in object to clone when making this object</em>
 <a href="#type-vector3">vector3</a> <strong>pos</strong> = {0,0,0}
 <a href="#type-scale">scale</a> <strong>scale</strong> ?= {1,1,1}
 <a href="#type-string">string</a> <strong>lookat</strong> ?= "end" or "start" or "camera"
 <a href="#type-transform">transform</a> <strong>transform</strong> ?= nil
 <a href="#type-int">int</a> <strong>layer</strong> = 11
-materialid material = nil
+<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> = nil
 <em>-- if <strong>material</strong> is omitted</em>
-	(<a href="#type-material">material</a>/<a href="#type-materialid">materialid</a>)<a href="#type-array">[]</a> <strong>materials</strong> ?= nil <em>-- the two types can be mixed</em>
+	(<a href="#type-material">material</a>/<a href="#type-UnityEngine.Material">UnityEngine.Material</a>)<a href="#type-array">[]</a> <strong>materials</strong> ?= nil <em>-- the two types can be mixed</em>
 	<em>-- if <strong>materials</strong> is omitted</em>
 		bool prefabKeepExistingMaterial = false
 		<em>-- if not <strong>prefabKeepExistingMaterial</strong></em>
-		<a href="#type-material">material</a> <strong>*</strong> <em>-- all of the variables from <a href="#type-material">material</a> are included directly inside gameobject. if <strong>prefabName</strong> is specified this material still starts from scratch but it is applied in a strange way</em>
+			<a href="#type-material">material</a> <strong>*</strong> <em>-- all of the variables from <a href="#type-material">material</a> are included directly inside gameobject. if <strong>prefabName</strong> is specified this material still starts from scratch but it is applied in a strange way</em>
 		<em>-- end</em>
 	<em>-- end</em>
 <em>-- end</em>
@@ -158,7 +163,7 @@ materialid material = nil
 <a href="#type-bool">bool</a> <strong>shadowreceiver</strong> ?= ?
 <em>-- end</em>
 <a href="#type-table">table</a> <strong>thrusters</strong> = nil or {
-	materialid material = nil
+	<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> = nil
 	<a href="#type-string">string</a> <strong>shader</strong> = "VertexColorUnlitTinted" <em>-- ignored if <strong>material</strong> is set</em>
 	<a href="#type-int">int</a> <strong>renderqueue</strong> = ? <em>-- see <a href="#render-queue">here</a></em>
 	<a href="#type-int">int</a> <strong>layer</strong> = ?
