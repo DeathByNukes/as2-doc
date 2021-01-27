@@ -22,7 +22,7 @@
 		<dt><dfn id="type-float">float</dfn></dt>
 		<dd>a number which can have a decimal.</dd>
 		<dt><dfn id="type-double">double</dfn></dt>
-		<dd>a <code><a href="#type-float">float</a></code> with <a href="http://msdn.microsoft.com/en-us/library/9ahet949.aspx">twice</a> as much <a href="https://en.wikipedia.org/wiki/Floating_point">precision</a>. <a href="http://www.lua.org/pil/2.3.html">lua's numbers have this much precision</a>.</dd>
+		<dd>a <code><a href="#type-float">float</a></code> with <a href="https://msdn.microsoft.com/en-us/library/9ahet949.aspx">twice</a> as much <a href="https://en.wikipedia.org/wiki/Floating_point">precision</a>. <a href="https://www.lua.org/pil/2.3.html">lua's numbers have this much precision</a>.</dd>
 		<dt><dfn id="type-int">int</dfn></dt>
 		<dd>an integer (no decimal)</dd>
 		<dt><dfn id="type-table">table</dfn></dt>
@@ -30,7 +30,7 @@
 		<dt><dfn id="type-array">*[]</dfn></dt>
 		<dd>any type with [] after it is a table of several of that type. Example: <code><a href="#type-vector3">vector3</a><a href="#type-array">[]</a>: {{0,0,0}, {0,0,0}, ...}</code></dd>
 		<dt><dfn id="type-dict">{*=*}</dfn></dt>
-		<dd>a pair of types enclosed in braces like this is <a href="http://www.lua.org/pil/3.6.html">a table that can be filled with arbitrary keys/values</a> of the specified types. (aka dictionary) Example: <code><a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-int">int</a><a href="#type-dict">}</a>: {foo = 1, [&quot;bar!&quot;] = 2, ...}, <a href="#type-dict">{</a><a href="#type-vector3" class=func>vector3</a><a href="#type-dict">=</a><a href="#type-vector3">vector3</a><a href="#type-dict">}</a>: {[{0,0,0}] = {0,0,0}, [{0,0,0}] = {0,0,0}, ...}</code></dd>
+		<dd>a pair of types enclosed in braces like this is <a href="https://www.lua.org/pil/3.6.html">a table that can be filled with arbitrary keys/values</a> of the specified types. (aka dictionary) Example: <code><a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-int">int</a><a href="#type-dict">}</a>: {foo = 1, [&quot;bar!&quot;] = 2, ...}, <a href="#type-dict">{</a><a href="#type-vector3" class=func>vector3</a><a href="#type-dict">=</a><a href="#type-vector3">vector3</a><a href="#type-dict">}</a>: {[{0,0,0}] = {0,0,0}, [{0,0,0}] = {0,0,0}, ...}</code></dd>
 		<dt><dfn id="type-address">address</dfn></dt>
 		<dd>the same thing as a string but if it doesn't start with &quot;http:&quot; in it then the skin path will be added to the beginning of it.</dd>
 		<dt><dfn id="type-color">color</dfn></dt>
@@ -141,7 +141,7 @@
 			</ul>
 		</dd>
 		<dt><dfn id="type-gameobject">gameobject</dfn></dt>
-		<dd>A table with settings for creating a <a href="http://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">Unity GameObject</a>:
+		<dd>A table with settings for creating a <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">Unity GameObject</a>:
 			<pre><code><a href="#type-string">string</a> <strong>prefabName</strong> = nil <em>-- the name of another object or a built-in object to clone when making this object</em>
 <a href="#type-vector3">vector3</a> <strong>pos</strong> = {0,0,0}
 <a href="#type-scale">scale</a> <strong>scale</strong> ?= {1,1,1}
@@ -203,7 +203,7 @@ bool submeshesWhenCombining = false
 		</dd>
 		<dt><dfn id="type-globalname">globalname</dfn></dt>
 		<dd>
-			<p>The <a href="http://docs.unity3d.com/Documentation/ScriptReference/GameObject-ctor.html">internal name</a> of a Unity GameObject being created. I'm not sure if this matters for anything or not. The name you specify passes through a function like this:</p>
+			<p>The <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject-ctor.html">internal name</a> of a Unity GameObject being created. I'm not sure if this matters for anything or not. The name you specify passes through a function like this:</p>
 			<pre class="NppLua"><code><span class="sc11">namesUsedThisRun</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{}</span><span class="sc0">
 </span><span class="sc11">defaultNameIndex</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc4">0</span><span class="sc0">
 </span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">UniqueName</span><span class="sc10">(</span><span class="sc11">desiredName</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">typeName</span><span class="sc10">)</span><span class="sc0">

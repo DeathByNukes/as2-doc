@@ -93,7 +93,7 @@
 		Game developers tend to mix these up and rarely attempt to make a distinction between them. The result is you may see some documentation telling you that something is a vector but it contains something completely different like euler rotation angles. Adding a number to the name indicates how many numbers are in the collection. (3D coordinates are vector3)
 		<ul class="seealso">
 			<li><a href="https://en.wikipedia.org/wiki/Euclidean_vector">Euclidean vector</a></li>
-			<li><a href="http://www.mathsisfun.com/algebra/vectors.html">Vector math intro</a></li>
+			<li><a href="https://www.mathsisfun.com/algebra/vectors.html">Vector math intro</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Vector">Vector (disambiguation)</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Vector_(mathematics_and_physics)">Vector (mathematics and physics)</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Vector_space">Vector space</a></li>
@@ -114,11 +114,11 @@
 		</ul>
 	</dd>
 	<dt id="obj"><dfn>OBJ file</dfn></dt>
-	<dd>A file format that stores <a href="#model">3D models</a>. Though the format is not entirely limited to <a href="#mesh">mesh</a>-based models, <a href="http://forum.unity3d.com/threads/181303-ObjReader-load-obj-files-at-runtime">Audiosurf 2's OBJ file loader</a> only supports meshes. MTL files, which are often paired with OBJ files, are also not supported.
+	<dd>A file format that stores <a href="#model">3D models</a>. Though the format is not entirely limited to <a href="#mesh">mesh</a>-based models, <a href="https://forum.unity3d.com/threads/181303-ObjReader-load-obj-files-at-runtime">Audiosurf 2's OBJ file loader</a> only supports meshes. MTL files, which are often paired with OBJ files, are also not supported.
 <ul class="seealso">
 			<li><a href="https://en.wikipedia.org/wiki/Wavefront_.obj_file">Wavefront .obj file</a></li>
-			<li><a href="http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Import-Export/Wavefront_OBJ">Wavefront OBJ Import/Export</a></li>
-			<li><a href="http://forum.unity3d.com/threads/181303-ObjReader-load-obj-files-at-runtime">ObjReader</a></li>
+			<li><a href="https://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Import-Export/Wavefront_OBJ">Wavefront OBJ Import/Export</a></li>
+			<li><a href="https://forum.unity3d.com/threads/181303-ObjReader-load-obj-files-at-runtime">ObjReader</a></li>
 		</ul>
 	</dd>
 	<dt id="face"><dfn>face</dfn></dt>
@@ -133,7 +133,7 @@
 	<dt id="quad"><dfn>quad</dfn></dt>
 	<dd>A <a href="#face">face</a> with 4 <a href="#vertex">vertices</a>. Internally, they are made out of 2 <a href="#triangle">triangles</a>.</dd>
 	<dt id="vertex"><dfn>vertex</dfn></dt>
-	<dd>A single point in a face. In addition to its <a href="#coordinate">coordinates</a>, a vertex can have various attributes associated with it. Attributes <a href="http://docs.unity3d.com/Documentation/ScriptReference/Mesh.html">supported</a> by Audiosurf's engine, Unity: <a href="#UV">UV</a>, UV2, <a href="#normal">normal</a>, <a href="#vertex-color">vertex color</a>, <a href="#tangent">tangent</a>. The attributes are <a href="#lerp">lerped</a> across the surface of the face.
+	<dd>A single point in a face. In addition to its <a href="#coordinate">coordinates</a>, a vertex can have various attributes associated with it. Attributes <a href="https://docs.unity3d.com/Documentation/ScriptReference/Mesh.html">supported</a> by Audiosurf's engine, Unity: <a href="#UV">UV</a>, UV2, <a href="#normal">normal</a>, <a href="#vertex-color">vertex color</a>, <a href="#tangent">tangent</a>. The attributes are <a href="#lerp">lerped</a> across the surface of the face.
 		<ul class="seealso">
 			<li><a href="https://en.wikipedia.org/wiki/Vertex_(computer_graphics)">Vertex (computer graphics)</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Vertex_(geometry)">Vertex (geometry)</a></li>
@@ -145,7 +145,7 @@
 		<ul class="seealso">
 			<li><a href="https://en.wikipedia.org/wiki/Vertex_normal">Vertex Normal</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Normal_(geometry)">Normal (geometry)</a></li>
-			<li><a href="http://wiki.blender.org/index.php/Doc:2.6/Manual/Modeling/Meshes/Smoothing">Mesh Shading</a></li>
+			<li><a href="https://wiki.blender.org/index.php/Doc:2.6/Manual/Modeling/Meshes/Smoothing">Mesh Shading</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Unit_vector">Unit vector</a></li>
 		</ul>
 	</dd>
@@ -162,14 +162,14 @@
 	<dd>Controls how a <a href="#texture">texture</a> is applied to a <a href="#model">model</a>. Internally, each <a href="#vertex">vertex</a> on a face gets two numbers, U and V (X and Y) associated with it. {0, 0} is the bottom left of the texture and {1, 1} is the top right. Those points in the texture are <a href="#lerp">stretched</a> across the corresponding points on the face.
 		<ul class="seealso">
 			<li><a href="https://en.wikipedia.org/wiki/UV_mapping">UV Mapping</a></li>
-			<li><a href="http://wiki.blender.org/index.php/Doc:2.6/Manual/Textures/Mapping/UV">UV Mapping</a></li>
+			<li><a href="https://wiki.blender.org/index.php/Doc:2.6/Manual/Textures/Mapping/UV">UV Mapping</a></li>
 		</ul>
 	</dd>
 	<dt id="texture"><dfn>texture</dfn></dt>
 	<dd>A typical 2D image that is applied to a 3D surface.
 		<ul class="seealso">
 			<li><a href="https://en.wikipedia.org/wiki/Texture_mapping">Texture Mapping</a></li>
-			<li><a href="http://wiki.blender.org/index.php/Doc:2.6/Manual/Textures">Introduction to Textures</a></li>
+			<li><a href="https://wiki.blender.org/index.php/Doc:2.6/Manual/Textures">Introduction to Textures</a></li>
 		</ul>
 	</dd>
 	<dt id="material"><dfn>material</dfn></dt>
@@ -179,30 +179,30 @@
 		</ul>
 	</dd>
 	<dt id="shader"><dfn>shader</dfn></dt>
-	<dd>A shader is a computer program which takes a <a href="#model">model</a> and <a href="#material">material</a> as its inputs then outputs a 2D image. All the graphics in Audiosurf 2 are drawn by shaders. AS2 shaders are written in the &quot;Cg&quot; programming language. Most shaders written for AS2 need to be compiled by the <a href="http://unity3d.com/">Unity 4 editor</a> (free) before they can be used. <a href="https://en.wikipedia.org/wiki/Graphics_processing_unit">GPUs</a> execute the shader program in <a href="https://en.wikipedia.org/wiki/Parallel_computing">parallel</a> for each <a href="#vertex-shader">vertex</a> and each <a href="#pixel-shader">pixel</a>. Due to its highly parallel nature, <a href="https://en.wikipedia.org/wiki/Shading_language">shader programming</a> is very different from <a href="https://en.wikipedia.org/wiki/General-purpose_programming_language">conventional programming</a>. For instance, it is impossible for a shader program to write to any kind of <a href="https://en.wikipedia.org/wiki/Global_variable">global variable</a>.
+	<dd>A shader is a computer program which takes a <a href="#model">model</a> and <a href="#material">material</a> as its inputs then outputs a 2D image. All the graphics in Audiosurf 2 are drawn by shaders. AS2 shaders are written in the &quot;Cg&quot; programming language. Most shaders written for AS2 need to be compiled by the <a href="https://unity3d.com/">Unity 4 editor</a> (free) before they can be used. <a href="https://en.wikipedia.org/wiki/Graphics_processing_unit">GPUs</a> execute the shader program in <a href="https://en.wikipedia.org/wiki/Parallel_computing">parallel</a> for each <a href="#vertex-shader">vertex</a> and each <a href="#pixel-shader">pixel</a>. Due to its highly parallel nature, <a href="https://en.wikipedia.org/wiki/Shading_language">shader programming</a> is very different from <a href="https://en.wikipedia.org/wiki/General-purpose_programming_language">conventional programming</a>. For instance, it is impossible for a shader program to write to any kind of <a href="https://en.wikipedia.org/wiki/Global_variable">global variable</a>.
 <ul class="seealso">
 			<li><a href="https://docs.unity3d.com/Documentation/Manual/Materials.html">Materials and Shaders</a></li>
 			<li><a href="https://docs.unity3d.com/Documentation/Manual/Shaders.html">Shaders</a></li>
 			<li><a href="https://docs.unity3d.com/Documentation/Components/SL-Reference.html">Shader Reference</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Shader">Shader</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Cg_(programming_language)">Cg (programming language)</a></li>
-			<li><a href="http://http.developer.nvidia.com/CgTutorial/cg_tutorial_chapter01.html">The Cg Tutorial</a></li>
-			<li><a href="http://http.developer.nvidia.com/cg/Cg_language.html">Cg Language Specification</a></li>
+			<li><a href="https://http.developer.nvidia.com/CgTutorial/cg_tutorial_chapter01.html">The Cg Tutorial</a></li>
+			<li><a href="https://http.developer.nvidia.com/cg/Cg_language.html">Cg Language Specification</a></li>
 		</ul>
 	</dd>
 	<dt id="vertex-shader"><dfn>vertex shader</dfn></dt>
 	<dd>A <a href="#shader">shader</a> subroutine that takes raw per-<a href="#vertex">vertex</a> data from the engine and prepares it for rendering. At a minimum this usually involves transforming the vertex coordinates from <a href="#object-space">object space</a> into projection space. (object -&gt; world -&gt; camera -&gt; projection) The vertex shader's control over this process means it can animate and distort the object in some ways. Other shader-specific calculations are performed in the vertex shader when possible in order to conserve processing power since there are usually more pixels than vertices. The output of the vertex shader is <a href="#lerp">interpolated</a> across each <a href="#triangle">triangle</a> and the results of the interpolation are passed to many parallel instances of the <a href="#pixel-shader">pixel shader</a>.
 <ul class="seealso">
-			<li><a href="http://docs.unity3d.com/Documentation/Manual/ShaderTut2.html">Vertex and Fragment Programs</a></li>
+			<li><a href="https://docs.unity3d.com/Documentation/Manual/ShaderTut2.html">Vertex and Fragment Programs</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Vertex_shaders">Vertex shaders</a></li>
 			<li><a href="#vertex">vertex</a></li>
-			<li><a href="http://www.songho.ca/opengl/gl_transform.html">OpenGL Transformation</a></li>
+			<li><a href="https://www.songho.ca/opengl/gl_transform.html">OpenGL Transformation</a></li>
 		</ul>
 	</dd>
 	<dt id="pixel-shader"><dfn>pixel shader</dfn></dt>
 	<dd>A <a href="#shader">shader</a> subroutine that takes the <a href="#lerp">interpolated</a> output of the <a href="#vertex-shader">vertex shader</a> and draws a single pixel. In OpenGL-influenced documents this is also known as a fragment shader.
 		<ul class="seealso">
-			<li><a href="http://docs.unity3d.com/Documentation/Manual/ShaderTut2.html">Vertex and Fragment Programs</a></li>
+			<li><a href="https://docs.unity3d.com/Documentation/Manual/ShaderTut2.html">Vertex and Fragment Programs</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Pixel_shaders">Pixel shaders</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Fragment_(computer_graphics)">Fragment (computer graphics)</a></li>
 		</ul>
@@ -211,7 +211,7 @@
 	<dd>A <a href="#shader">shader</a> subroutine specific to <a href="#Unity">Unity</a>. It serves the same role as a <a href="#pixel-shader">pixel shader</a> but it is redesigned to eliminate the need to manually implement lighting. As such, surface shaders should only be used for shaders that can be influenced by light and shadow. (Skins styled like the Neon skin shouldn't use these.)
 		<ul class="seealso">
 			<li><a href="https://docs.unity3d.com/Documentation/Components/SL-SurfaceShaders.html">Writing Surface Shaders</a></li>
-			<li><a href="http://docs.unity3d.com/Documentation/Components/SL-SurfaceShaderExamples.html">Surface Shader Examples</a></li>
+			<li><a href="https://docs.unity3d.com/Documentation/Components/SL-SurfaceShaderExamples.html">Surface Shader Examples</a></li>
 		</ul>
 	</dd>
 	<dt id="layer"><dfn>layer</dfn></dt>

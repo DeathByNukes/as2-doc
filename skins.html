@@ -27,9 +27,9 @@
 <h1 id="script-execution">Script Execution</h1>
 <p>The skin script is executed during the loading screen when starting a song. A function in the script named <code><a href="#Update" class="func">Update()</a></code>, if present, will be executed every frame during actual gameplay.</p>
 <h2 id="Update">Update(<a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-float">float</a>)</h2>
-<p>This function is executed inside of <a href="http://docs.unity3d.com/Documentation/ScriptReference/MonoBehaviour.LateUpdate.html">Unity's LateUpdate</a> function.<br>
+<p>This function is executed inside of <a href="https://docs.unity3d.com/Documentation/ScriptReference/MonoBehaviour.LateUpdate.html">Unity's LateUpdate</a> function.<br>
 Arguments:</p>
-<pre><code><a href="#type-float">float</a> <strong>dt</strong> <em>-- the current value of <a href="http://docs.unity3d.com/Documentation/ScriptReference/Time-deltaTime.html">Unity's deltaTime</a> value</em>
+<pre><code><a href="#type-float">float</a> <strong>dt</strong> <em>-- the current value of <a href="https://docs.unity3d.com/Documentation/ScriptReference/Time-deltaTime.html">Unity's deltaTime</a> value</em>
 <a href="#type-float">float</a> <strong>tracklocation</strong> <em>-- The fractional index of the track node that the player is currently &quot;on&quot;. (When the player is halfway between nodes 3 and 4, CurrentNode is 3.5)</em>
 <a href="#type-float">float</a> <strong>playerstrafe</strong> <em>-- the player's current offset from the center of the track</em>
 <a href="#type-float">float</a> <strong>currentWakeboarderJumpHeight</strong>
@@ -134,7 +134,7 @@ end</code></pre>
 <p>This gets the full 512 bin audio spectrum that <code><a href="#UpdateSpectrum" class=func>UpdateSpectrum</a></code> and <code><a href="#GetLogSpectrum" class=func>GetLogSpectrum</a></code> read from internally to produce their results.</p>
 <h2 id="GetMillisecondsSinceStartup"><a href="#type-float">float</a> GetMillisecondsSinceStartup()</h2>
 <p>Unity's <a href="https://docs.unity3d.com/ScriptReference/Time-realtimeSinceStartup.html">Time.realtimeSinceStartup</a> * 1000.</p>
-<p>Note that this is the time since Audiosurf 2 started (potentially more than an hour ago) not the time since this particular track started. Can be useful as a seed to <code><a href="http://www.lua.org/manual/5.1/manual.html#pdf-math.randomseed">math.randomseed</a></code> if non-deterministic behavior is desired. (By default it is seeded with the song length.)</p>
+<p>Note that this is the time since Audiosurf 2 started (potentially more than an hour ago) not the time since this particular track started. Can be useful as a seed to <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.randomseed">math.randomseed</a></code> if non-deterministic behavior is desired. (By default it is seeded with the song length.)</p>
 <h2 id="GetHighwayColor"><a href="#type-color">color</a> GetHighwayColor()</h2>
 <p>Gets the highway color at the current point in song playback. The returned table contains both styles of color. (<code>color.r</code> and <code>color[1]</code> are equivalent)</p>
 <h2 id="GetSongCompletionPercentage"><a href="#type-float">float</a> GetSongCompletionPercentage()</h2>
@@ -169,9 +169,9 @@ end</code></pre>
 <h2 id="GetTrafficSpeedRatio"><a href="#type-float">float</a> GetTrafficSpeedRatio()</h2>
 <p>Gets the value set by <code><a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{trafficcompression}</code>. The default is <code>0.65</code>.</p>
 <h2 id="GetQualityLevel"><a href="#type-int">int</a> GetQualityLevel()</h2>
-<p>Returns <code><a href="http://www.lua.org/manual/5.1/manual.html#pdf-math.min" class="func">math.min</a>(3, <a href="#GetQualityLevel4" class="func">GetQualityLevel4</a>())</code></p>
+<p>Returns <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.min" class="func">math.min</a>(3, <a href="#GetQualityLevel4" class="func">GetQualityLevel4</a>())</code></p>
 <h2 id="GetQualityLevel4"><a href="#type-int">int</a> GetQualityLevel4()</h2>
-<p>Returns the <a href="http://docs.unity3d.com/Documentation/ScriptReference/QualitySettings.GetQualityLevel.html">Unity quality level</a> plus 1.</p>
+<p>Returns the <a href="https://docs.unity3d.com/Documentation/ScriptReference/QualitySettings.GetQualityLevel.html">Unity quality level</a> plus 1.</p>
 <h2 id="GetAlbumArtPalette"><a href="#type-color">color</a><a href="#type-array">[]</a> GetAlbumArtPalette{}</h2>
 <pre><code><a href="#type-int">int</a> <strong>mincount</strong> = 3
 <a href="#type-int">int</a> <strong>maxcount</strong> = 5</code></pre>
@@ -185,7 +185,7 @@ end</code></pre>
 	<li><a href="#SetVideoScreenTransform">SetVideoScreenTransform</a></li>
 </ul>
 <h1 id="customization-functions">Customization Functions</h1>
-<p><a href="http://stackoverflow.com/questions/686931/are-curly-brackets-used-in-lua">In case you aren't familiar with Lua syntax</a>, a function name followed by braces is shorthand for calling the function with a single argument which is a table. So, <code>Foo{bar=1}</code> and <code>Foo({bar=1})</code> are equivalent.</p>
+<p><a href="https://stackoverflow.com/questions/686931/are-curly-brackets-used-in-lua">In case you aren't familiar with Lua syntax</a>, a function name followed by braces is shorthand for calling the function with a single argument which is a table. So, <code>Foo{bar=1}</code> and <code>Foo({bar=1})</code> are equivalent.</p>
 <h2 id="SetScene">SetScene{}</h2>
 <pre><code><em>-- <a href="#script-execution">First run</a> only:</em>
 <a href="#type-float">float</a> <strong>maxAllowedTrackHeight</strong> = 10000000000
@@ -226,7 +226,7 @@ bool widewater ?= false <em>-- Water width is 11.25 normally or 16.25 wide. When
 <a href="#type-bool">bool</a> <strong>usedefaultrails</strong> ?= false
 <a href="#type-bool">bool</a> <strong>fogenabled</strong> = false <em>-- enables or disables fog. also sets <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/FogMode.html">UnityEngine.FogMode.Linear</a> when true.</em>
 <a href="#type-color">color</a> <strong>fogcolor</strong> ?= ?
-<a href="#type-float">float</a> <strong>fogdensity</strong> ?= ? <em>-- <a href="http://docs.unity3d.com/Documentation/ScriptReference/RenderSettings-fogDensity.html">unused</a> in this fog mode</em>
+<a href="#type-float">float</a> <strong>fogdensity</strong> ?= ? <em>-- <a href="https://docs.unity3d.com/Documentation/ScriptReference/RenderSettings-fogDensity.html">unused</a> in this fog mode</em>
 <a href="#type-float">float</a> <strong>fogstart</strong> ?= ?
 <a href="#type-float">float</a> <strong>fogend</strong> ?= ?
 <a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>ambientlight</strong> = {51,51,51,255} or "highway" or "highwayinverted" <em>-- accessible in shaders via <a href="https://docs.unity3d.com/Manual/SL-BuiltinStateInPrograms.html">UNITY_LIGHTMODEL_AMBIENT</a></em>
@@ -514,7 +514,7 @@ string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
 	If any of those 4 settings were present, <code><strong>color</strong></code> will be applied. If you mix <code><strong>skyscreen</strong></code> with one of the other 3, that one will also be applied with a null material because of a spaghetti bug.
 </p>
 <h3 id="silver-lining">Silver Lining Skybox</h3>
-<p><a href="http://forum.unity3d.com/threads/107166-SilverLining-for-Unity-3D-volumetric-clouds-sim-quality-procedural-skies">Silver Lining</a> is highly customizable but AS2 doesn't expose most of the interesting options or even most of the basic options. Here's some of the important locked settings:</p>
+<p><a href="https://forum.unity3d.com/threads/107166-SilverLining-for-Unity-3D-volumetric-clouds-sim-quality-procedural-skies">Silver Lining</a> is highly customizable but AS2 doesn't expose most of the interesting options or even most of the basic options. Here's some of the important locked settings:</p>
 <ul>
 	<li>year = 2010</li>
 	<li>day = 1</li>
@@ -734,7 +734,7 @@ vector3[][] crossSectionShapeList = nil
 	<dt>highwayflat</dt>
 	<dd>TODO</dd>
 	<dt>trackposition</dt>
-	<dd>Instead of storing a color, stores the zero-based node index divided by the number of nodes, encoded with <code><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-BuiltinFunctions.html" class=func>EncodeFloatRGBA</a></code>. This is useful in rail <a href="#skyscreen">skyscreen</a> shaders. (I don't understand why he won't just pass this information through UV or <a href="http://docs.unity3d.com/Documentation/ScriptReference/Mesh-uv2.html">UV2</a>.)</dd>
+	<dd>Instead of storing a color, stores the zero-based node index divided by the number of nodes, encoded with <code><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-BuiltinFunctions.html" class=func>EncodeFloatRGBA</a></code>. This is useful in rail <a href="#skyscreen">skyscreen</a> shaders. (I don't understand why he won't just pass this information through UV or <a href="https://docs.unity3d.com/Documentation/ScriptReference/Mesh-uv2.html">UV2</a>.)</dd>
 </dl>
 <h2 id="CreateRepeatedMeshRail">CreateRepeatedMeshRail{}</h2>
 <pre><code><em>-- calls to this function after the <a href="#script-execution">first run</a> are ignored</em>
@@ -826,7 +826,7 @@ vector3[] worldspaceoffsets = nil
 <p>If you use <code><strong>songspeedratio</strong></code>, the numbers in <code><strong>locations</strong></code> are relative to CurrentNode rather than the beginning of the track. (the objects will move along with you) The number specified by <code><strong>songspeedratio</strong></code> scales the locations, allowing you to indirectly specify non-integers.</p>
 <p><code><strong>maxDistanceShown</strong></code> is based on the difference between CurrentNode and the number in <code><strong>locations</strong></code>. The actual per-frame condition for hiding is <code><strong>locations</strong>[i] - CurrentNode &gt; <strong>maxDistanceShown</strong></code> so it won't re-hide objects later. Strangely, this behavior is not affected by <code><strong>songspeedratio</strong></code> in any way. Locations are still relative to the beginning of the track when considering distance. This means you probably want to set <code><strong>maxDistanceShown</strong></code> larger than the highest number in <code><strong>locations</strong></code> when using <code><strong>songspeedratio</strong></code> in order to disable it. Combining the two might be useful for some strange special effects.</p>
 <p><code><strong>afternodereached_numbernodesrendered</strong></code> is  subtracted from CurrentNode and any location less than that value will be hidden. Like <code><strong>maxDistanceShown</strong></code>, this comparison is not affected by <code><strong>songspeedratio</strong></code>. For that frame, an instance hidden in this manner still counts toward the <code><strong>maxShown</strong></code> limit. Future frames will ignore that location and all earlier entries in the array. This can cause strange behavior if the values in <code><strong>locations</strong></code> aren't  sorted from lowest to highest.</p>
-<p>If <code><strong>override_impactpositions</strong></code> and <code><strong>override_velocities</strong></code> are set, the actual per-frame position of the instances in world space will be <code>impactpositions + (x * velocities)</code> where x is the time until reaching the node specified in <code><strong>locations</strong></code>. (<code>CurrentTime - Track[<strong>locations</strong>[i]].seconds</code>) If <code><strong>override_velocities_scaledbytrackspeed</strong></code> is true, x will instead be the current playback node index minus the node index specified in <code><strong>locations</strong></code>, multiplied by 3. (<code>3 * (CurrentNode - <strong>locations</strong>[i])</code>) Overrides nullify the effects of <code><strong>offsets</strong></code>, <code><strong>rotateWithTrack</strong></code>, <code><strong>waterfloat</strong></code>, and <code><strong>songspeedratio</strong></code>. Ensure that those options are switched off for best performance. Overrides were added so the <a href="http://steamcommunity.com/sharedfiles/filedetails/?id=188854551">Audiosphere</a> mod could render its falling meteors.</p>
+<p>If <code><strong>override_impactpositions</strong></code> and <code><strong>override_velocities</strong></code> are set, the actual per-frame position of the instances in world space will be <code>impactpositions + (x * velocities)</code> where x is the time until reaching the node specified in <code><strong>locations</strong></code>. (<code>CurrentTime - Track[<strong>locations</strong>[i]].seconds</code>) If <code><strong>override_velocities_scaledbytrackspeed</strong></code> is true, x will instead be the current playback node index minus the node index specified in <code><strong>locations</strong></code>, multiplied by 3. (<code>3 * (CurrentNode - <strong>locations</strong>[i])</code>) Overrides nullify the effects of <code><strong>offsets</strong></code>, <code><strong>rotateWithTrack</strong></code>, <code><strong>waterfloat</strong></code>, and <code><strong>songspeedratio</strong></code>. Ensure that those options are switched off for best performance. Overrides were added so the <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=188854551">Audiosphere</a> mod could render its falling meteors.</p>
 <p><code><strong>override_velocities</strong></code> also overrides the angle of each instance by specifying a direction for the object to &quot;look&quot; toward. (<code>Quaternion.<a href="https://docs.unity3d.com/Documentation/ScriptReference/Quaternion.LookRotation.html">LookRotation</a>(override_velocities[i], Vector3(0, 1, 0))</code>) This can probably be abused to get rotated objects which don't appear to move by using a very small velocity. (since there isn't a &quot;rotations&quot; setting) Just be careful not to go smaller than <code><a href="#type-float">float</a></code> can support. Don't use completely zero velocities; it will probably spam errors to output_log.txt every frame.</p>
 <p>Overrides, combined with <code><strong>maxDistanceShown</strong></code> and  <code><strong>afternodereached_numbernodesrendered</strong></code>, allow us to place an object at an arbitrary position in the world which appears at a certain time, moves from point A to point B, then disappears.</p>
 <p>Instances hidden by <code><strong>testAndHideIfCollideWithTrack</strong></code> will still count toward the <code><strong>maxShown</strong></code> limit. I was unable to find how <code><strong>collisionLayer</strong></code> is honored but it may behave the same way.</p>
@@ -852,7 +852,7 @@ vector3[] worldspaceoffsets = nil
 <a href="#type-string">string</a> <strong>trackpositioncolorproperty</strong> = nil <em>-- this is the name of a shader color (same as the key names in <a href="#type-material">material</a>.shadercolors) which will be set to the track color of whatever location each object is at</em>
 <a href="#type-int">int</a> <strong>numrendered</strong> = 50</code></pre>
 <h2 id="CreateLight"><a href="#type-int">int</a> CreateLight{}</h2>
-<p>Creates a <a href="http://docs.unity3d.com/Documentation/ScriptReference/Light.html">Unity Light</a>.</p>
+<p>Creates a <a href="https://docs.unity3d.com/Documentation/ScriptReference/Light.html">Unity Light</a>.</p>
 <pre><code><a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;light&quot;</em>
 <a href="#type-float">float</a> <strong>railoffset</strong> = nil <em>-- causes it to be "attached to the highway" if set to a number</em>
 <em>-- if <strong>railoffset</strong> != nil then</em>

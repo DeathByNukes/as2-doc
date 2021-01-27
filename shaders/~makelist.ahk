@@ -130,7 +130,7 @@ LastErrorString(number = "")
 	if number =
 		number := A_LastError
 
-	; The importance of the IGNORE_INSERTS flag: http://blogs.msdn.com/b/oldnewthing/archive/2007/11/28/6564257.aspx
+	; The importance of the IGNORE_INSERTS flag: https://blogs.msdn.com/b/oldnewthing/archive/2007/11/28/6564257.aspx
 	if VarSetCapacity(string, 1024) >= 1024
 	ret := DllCall("FormatMessage"
 		, "UInt", 0x00001200 ; DWORD    dwFlags: FORMAT_MESSAGE_FROM_SYSTEM 0x00001000 | FORMAT_MESSAGE_IGNORE_INSERTS 0x00000200
@@ -154,7 +154,7 @@ MakeHardlink(source, dest)
 ; If the function succeeds, the return value is nonzero.
 TryMakeHardlink(source, dest)
 {
-	return DllCall("CreateHardLink" ; http://msdn.microsoft.com/en-us/library/aa363860(VS.85).aspx
+	return DllCall("CreateHardLink" ; https://msdn.microsoft.com/en-us/library/aa363860(VS.85).aspx
 		, "Str", dest   ; LPCTSTR lpFileName,
 		, "Str", source ; LPCTSTR lpExistingFileName,
 		, "Ptr", 0  )   ; LPSECURITY_ATTRIBUTES lpSecurityAttributes (Reserved; must be NULL.)
