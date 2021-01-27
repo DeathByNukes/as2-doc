@@ -41,19 +41,22 @@
 		<tr><th>Name</th><th>Status</th><th>Notes</th></tr>
 	</thead>
 	<tbody>
-		<tr id="stdlib-_G"                ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-_G"                 class=func>_G</a></code></td>                      <td>✔️</td><td></td></tr>
+		<tr id="stdlib-_G"                ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-_G"                 class=func>_G</a></code></td>                      <td>✔️</td><td>The standard contents of this table are listed <a href="#stdlib">here</a><span title=":)">.</span></td></tr>
 		<tr id="stdlib-_VERSION"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-_VERSION"           class=func>_VERSION</a></code></td>                <td>✔️</td><td><code>"Lua 5.1"</code></td></tr>
 		<tr id="stdlib-assert"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert"             class=func>assert</a></code></td>                  <td>✔️</td><td></td></tr>
 		<tr id="stdlib-collectgarbage"    ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-collectgarbage"     class=func>collectgarbage</a></code></td>          <td>✔️</td><td></td></tr>
-		<tr id="stdlib-dofile"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-dofile"             class=func>dofile</a></code></td>                  <td>⚠️</td><td>Not available in mods. Path is always relative to the main lua file.</td></tr>
+		<tr id="stdlib-dofile"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-dofile"             class=func>dofile</a></code></td>                  <td>⚠️</td><td>Not available in mods. Path is always relative to the main script file.</td></tr>
 		<tr id="stdlib-error"             ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-error"              class=func>error</a></code></td>                   <td>✔️</td><td></td></tr>
+		<tr id="stdlib-gcinfo"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#7.2"                    class=func>gcinfo</a></code> (shim)</td>           <td>✔️</td><td></td></tr>
 		<tr id="stdlib-getfenv"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-getfenv"            class=func>getfenv</a></code></td>                 <td>✔️</td><td></td></tr>
 		<tr id="stdlib-getmetatable"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-getmetatable"       class=func>getmetatable</a></code></td>            <td>✔️</td><td></td></tr>
 		<tr id="stdlib-ipairs"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-ipairs"             class=func>ipairs</a></code></td>                  <td>✔️</td><td></td></tr>
 		<tr id="stdlib-load"              ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-load"               class=func>load</a></code></td>                    <td>✔️</td><td></td></tr>
-		<tr id="stdlib-loadfile"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-loadfile"           class=func>loadfile</a></code></td>                <td>⚠️</td><td>Not available in mods. Path is always relative to the main lua file.</td></tr>
+		<tr id="stdlib-loadfile"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-loadfile"           class=func>loadfile</a></code></td>                <td>⚠️</td><td>Not available in mods. Path is always relative to the main script file.</td></tr>
+		<tr id="stdlib-loadlib"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#7.2"                    class=func>loadlib</a></code> (shim)</td>          <td>❌</td><td></td></tr>
 		<tr id="stdlib-loadstring"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-loadstring"         class=func>loadstring</a></code></td>              <td>✔️</td><td></td></tr>
 		<tr id="stdlib-module"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-module"             class=func>module</a></code></td>                  <td>❌</td><td></td></tr>
+		<tr id="stdlib-newproxy"          ><td><code><a href="https://stackoverflow.com/questions/23592388"                      class=func>newproxy</a></code> (undocumented)</th> <td>✔️</td><td></td></tr>
 		<tr id="stdlib-next"              ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-next"               class=func>next</a></code></td>                    <td>✔️</td><td></td></tr>
 		<tr id="stdlib-pairs"             ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-pairs"              class=func>pairs</a></code></td>                   <td>✔️</td><td></td></tr>
 		<tr id="stdlib-pcall"             ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-pcall"              class=func>pcall</a></code></td>                   <td>✔️</td><td></td></tr>
@@ -92,7 +95,6 @@
 		<tr id="stdlib-debug.setmetatable"><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.setmetatable" class=func>debug.setmetatable</a></code></td>      <td>❌</td><td></td></tr>
 		<tr id="stdlib-debug.setupvalue"  ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.setupvalue"   class=func>debug.setupvalue</a></code></td>        <td>❌</td><td></td></tr>
 		<tr id="stdlib-debug.traceback"   ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.traceback"    class=func>debug.traceback</a></code></td>         <td>✔️</td><td></td></tr>
-		<tr id="stdlib-gcinfo"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#7.2"                    class=func>gcinfo</a></code> (shim)</td>           <td>✔️</td><td></td></tr>
 		<tr id="stdlib-io"                ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io"                 class=func>io</a></code></td>                      <td>❌</td><td></td></tr>
 		<tr id="stdlib-io.close"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.close"           class=func>io.close</a></code></td>                <td>❌</td><td></td></tr>
 		<tr id="stdlib-io.flush"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.flush"           class=func>io.flush</a></code></td>                <td>❌</td><td></td></tr>
@@ -115,7 +117,6 @@
 		<tr id="stdlib-file:seek"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-file:seek"          class=func>file:seek</a></code></td>               <td>❌</td><td></td></tr>
 		<tr id="stdlib-file:setvbuf"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-file:setvbuf"       class=func>file:setvbuf</a></code></td>            <td>❌</td><td></td></tr>
 		<tr id="stdlib-file:write"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-file:write"         class=func>file:write</a></code></td>              <td>❌</td><td></td></tr>
-		<tr id="stdlib-loadlib"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#7.2"                    class=func>loadlib</a></code> (shim)</td>          <td>❌</td><td></td></tr>
 		<tr id="stdlib-math"              ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math"               class=func>math</a></code></td>                    <td>✔️</td><td></td></tr>
 		<tr id="stdlib-math.abs"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.abs"           class=func>math.abs</a></code></td>                <td>✔️</td><td></td></tr>
 		<tr id="stdlib-math.acos"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.acos"          class=func>math.acos</a></code></td>               <td>✔️</td><td></td></tr>
@@ -148,7 +149,6 @@
 		<tr id="stdlib-math.sqrt"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.sqrt"          class=func>math.sqrt</a></code></td>               <td>✔️</td><td></td></tr>
 		<tr id="stdlib-math.tan"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.tan"           class=func>math.tan</a></code></td>                <td>✔️</td><td></td></tr>
 		<tr id="stdlib-math.tanh"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.tanh"          class=func>math.tanh</a></code></td>               <td>✔️</td><td></td></tr>
-		<tr id="stdlib-newproxy"          ><td><code><a href="https://stackoverflow.com/questions/23592388"                      class=func>newproxy</a></code> (undocumented)</th> <td>✔️</td><td></td></tr>
 		<tr id="stdlib-os"                ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os"                 class=func>os</a></code></td>                      <td>✔️</td><td></td></tr>
 		<tr id="stdlib-os.clock"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.clock"           class=func>os.clock</a></code></td>                <td>✔️</td><td></td></tr>
 		<tr id="stdlib-os.date"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.date"            class=func>os.date</a></code></td>                 <td>✔️</td><td></td></tr>
