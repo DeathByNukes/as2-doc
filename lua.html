@@ -7,6 +7,18 @@
 <script src="as2-doc.js" type="text/javascript"></script>
 <!-- InstanceBeginEditable name="head" -->
 <title>Lua Scripts</title>
+<style type="text/css">
+	table.availability th {
+		text-align: left;
+	}
+	table.availability tbody tr td:nth-child(2) {
+		/* status indicators */
+		text-align: center;
+	}
+	table.availability code {
+		background-color: transparent;
+	}
+</style>
 <!-- InstanceEndEditable -->
 </head>
 <body>
@@ -17,10 +29,178 @@
 <h1 id="contents">Contents</h1>
 <script type="text/javascript">writeNavigation();</script>
 <!-- InstanceBeginEditable name="content" -->
+<h1 id="environment">Lua Environment</h1>
+<p>Audiosurf 2 scripts are written in the <a href="https://www.lua.org/manual/5.1/">Lua 5.1</a> programming language. Because <a href="https://steamcommunity.com/app/235800/workshop/">workshop</a> scripts are downloaded from strangers, Lua is "sandboxed": dangerous features like <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.execute" class=func>os.execute</a></code> and <a href="https://www.lua.org/manual/5.1/luac.html">precompiled</a> scripts are removed to protect players from malware. Audiosurf 2 is built using the <a href="https://unity3d.com/">Unity</a> game engine and, at the time of writing, is using Unity version <a href="https://unity3d.com/get-unity/download/archive">2017.4.37</a>. Unity games are mostly written in the <a href="https://en.wikipedia.org/wiki/C_Sharp_(programming_language)">C#</a> programming language and Audiosurf 2 uses a <a href="https://github.com/DeathByNukes/MonoBoxedLua/tree/255cc8b56dd9532abcc83f904bdb75da9d579811">fork</a> of the <a href="https://code.google.com/archive/p/luainterface/">LuaInterface</a> library to integrate Lua into Unity's <a href="https://en.wikipedia.org/wiki/Mono_(software)">Mono</a>-based environment. One of the results of this setup is that many internal classes and objects can be directly passed to Lua code as <a href="https://www.lua.org/manual/5.1/manual.html#2.2">userdata</a> without writing a wrapper.</p>
+<ul class=seealso>
+	<li><a href="https://www.lua.org/manual/5.1/">Lua 5.1 Reference Manual</a></li>
+</ul>
+<h1 id="stdlib">Standard Library</h1>
+<p>Here is the current availability of the Lua 5.1 standard functions and variables:</p>
+<table class=availability>
+	<thead>
+		<tr><th>Name</th><th>Status</th><th>Notes</th></tr>
+	</thead>
+	<tbody>
+		<tr id="stdlib-_G"                ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-_G"                 class=func>_G</a></code></td>                      <td>✔️</td><td></td></tr>
+		<tr id="stdlib-_VERSION"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-_VERSION"           class=func>_VERSION</a></code></td>                <td>✔️</td><td><code>"Lua 5.1"</code></td></tr>
+		<tr id="stdlib-assert"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert"             class=func>assert</a></code></td>                  <td>✔️</td><td></td></tr>
+		<tr id="stdlib-collectgarbage"    ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-collectgarbage"     class=func>collectgarbage</a></code></td>          <td>✔️</td><td></td></tr>
+		<tr id="stdlib-dofile"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-dofile"             class=func>dofile</a></code></td>                  <td>⚠️</td><td>Not available in mods. Path is always relative to the main lua file.</td></tr>
+		<tr id="stdlib-error"             ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-error"              class=func>error</a></code></td>                   <td>✔️</td><td></td></tr>
+		<tr id="stdlib-getfenv"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-getfenv"            class=func>getfenv</a></code></td>                 <td>✔️</td><td></td></tr>
+		<tr id="stdlib-getmetatable"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-getmetatable"       class=func>getmetatable</a></code></td>            <td>✔️</td><td></td></tr>
+		<tr id="stdlib-ipairs"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-ipairs"             class=func>ipairs</a></code></td>                  <td>✔️</td><td></td></tr>
+		<tr id="stdlib-load"              ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-load"               class=func>load</a></code></td>                    <td>✔️</td><td></td></tr>
+		<tr id="stdlib-loadfile"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-loadfile"           class=func>loadfile</a></code></td>                <td>⚠️</td><td>Not available in mods. Path is always relative to the main lua file.</td></tr>
+		<tr id="stdlib-loadstring"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-loadstring"         class=func>loadstring</a></code></td>              <td>✔️</td><td></td></tr>
+		<tr id="stdlib-module"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-module"             class=func>module</a></code></td>                  <td>❌</td><td></td></tr>
+		<tr id="stdlib-next"              ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-next"               class=func>next</a></code></td>                    <td>✔️</td><td></td></tr>
+		<tr id="stdlib-pairs"             ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-pairs"              class=func>pairs</a></code></td>                   <td>✔️</td><td></td></tr>
+		<tr id="stdlib-pcall"             ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-pcall"              class=func>pcall</a></code></td>                   <td>✔️</td><td></td></tr>
+		<tr id="stdlib-print"             ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-print"              class=func>print</a></code></td>                   <td>⚠️</td><td><a href="skins.html#print">Skin</a> and <a href="mods.html#print">mod</a> environments replace it with inconsistent implementations.</td></tr>
+		<tr id="stdlib-rawequal"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-rawequal"           class=func>rawequal</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-rawget"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-rawget"             class=func>rawget</a></code></td>                  <td>✔️</td><td></td></tr>
+		<tr id="stdlib-rawset"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-rawset"             class=func>rawset</a></code></td>                  <td>✔️</td><td></td></tr>
+		<tr id="stdlib-require"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-require"            class=func>require</a></code></td>                 <td>❌</td><td></td></tr>
+		<tr id="stdlib-select"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-select"             class=func>select</a></code></td>                  <td>✔️</td><td></td></tr>
+		<tr id="stdlib-setfenv"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-setfenv"            class=func>setfenv</a></code></td>                 <td>✔️</td><td></td></tr>
+		<tr id="stdlib-setmetatable"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-setmetatable"       class=func>setmetatable</a></code></td>            <td>✔️</td><td></td></tr>
+		<tr id="stdlib-tonumber"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-tonumber"           class=func>tonumber</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-tostring"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-tostring"           class=func>tostring</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-type"              ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-type"               class=func>type</a></code></td>                    <td>✔️</td><td></td></tr>
+		<tr id="stdlib-unpack"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-unpack"             class=func>unpack</a></code></td>                  <td>✔️</td><td></td></tr>
+		<tr id="stdlib-xpcall"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-xpcall"             class=func>xpcall</a></code></td>                  <td>✔️</td><td></td></tr>
+		<tr id="stdlib-coroutine"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-coroutine"          class=func>coroutine</a></code></td>               <td>✔️</td><td></td></tr>
+		<tr id="stdlib-coroutine.create"  ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-coroutine.create"   class=func>coroutine.create</a></code></td>        <td>✔️</td><td></td></tr>
+		<tr id="stdlib-coroutine.resume"  ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-coroutine.resume"   class=func>coroutine.resume</a></code></td>        <td>✔️</td><td></td></tr>
+		<tr id="stdlib-coroutine.running" ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-coroutine.running"  class=func>coroutine.running</a></code></td>       <td>✔️</td><td></td></tr>
+		<tr id="stdlib-coroutine.status"  ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-coroutine.status"   class=func>coroutine.status</a></code></td>        <td>✔️</td><td></td></tr>
+		<tr id="stdlib-coroutine.wrap"    ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-coroutine.wrap"     class=func>coroutine.wrap</a></code></td>          <td>✔️</td><td></td></tr>
+		<tr id="stdlib-coroutine.yield"   ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-coroutine.yield"    class=func>coroutine.yield</a></code></td>         <td>✔️</td><td></td></tr>
+		<tr id="stdlib-debug"             ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug"              class=func>debug</a></code></td>                   <td>✔️</td><td></td></tr>
+		<tr id="stdlib-debug.debug"       ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.debug"        class=func>debug.debug</a></code></td>             <td>❌</td><td></td></tr>
+		<tr id="stdlib-debug.getfenv"     ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.getfenv"      class=func>debug.getfenv</a></code></td>           <td>❌</td><td></td></tr>
+		<tr id="stdlib-debug.gethook"     ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.gethook"      class=func>debug.gethook</a></code></td>           <td>❌</td><td></td></tr>
+		<tr id="stdlib-debug.getinfo"     ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.getinfo"      class=func>debug.getinfo</a></code></td>           <td>✔️</td><td></td></tr>
+		<tr id="stdlib-debug.getlocal"    ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.getlocal"     class=func>debug.getlocal</a></code></td>          <td>❌</td><td></td></tr>
+		<tr id="stdlib-debug.getmetatable"><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.getmetatable" class=func>debug.getmetatable</a></code></td>      <td>❌</td><td></td></tr>
+		<tr id="stdlib-debug.getregistry" ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.getregistry"  class=func>debug.getregistry</a></code></td>       <td>❌</td><td></td></tr>
+		<tr id="stdlib-debug.getupvalue"  ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.getupvalue"   class=func>debug.getupvalue</a></code></td>        <td>❌</td><td></td></tr>
+		<tr id="stdlib-debug.setfenv"     ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.setfenv"      class=func>debug.setfenv</a></code></td>           <td>❌</td><td></td></tr>
+		<tr id="stdlib-debug.sethook"     ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.sethook"      class=func>debug.sethook</a></code></td>           <td>❌</td><td></td></tr>
+		<tr id="stdlib-debug.setlocal"    ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.setlocal"     class=func>debug.setlocal</a></code></td>          <td>❌</td><td></td></tr>
+		<tr id="stdlib-debug.setmetatable"><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.setmetatable" class=func>debug.setmetatable</a></code></td>      <td>❌</td><td></td></tr>
+		<tr id="stdlib-debug.setupvalue"  ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.setupvalue"   class=func>debug.setupvalue</a></code></td>        <td>❌</td><td></td></tr>
+		<tr id="stdlib-debug.traceback"   ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-debug.traceback"    class=func>debug.traceback</a></code></td>         <td>✔️</td><td></td></tr>
+		<tr id="stdlib-gcinfo"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#7.2"                    class=func>gcinfo</a></code> (shim)</td>           <td>✔️</td><td></td></tr>
+		<tr id="stdlib-io"                ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io"                 class=func>io</a></code></td>                      <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.close"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.close"           class=func>io.close</a></code></td>                <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.flush"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.flush"           class=func>io.flush</a></code></td>                <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.input"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.input"           class=func>io.input</a></code></td>                <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.lines"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.lines"           class=func>io.lines</a></code></td>                <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.open"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.open"            class=func>io.open</a></code></td>                 <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.output"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.output"          class=func>io.output</a></code></td>               <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.popen"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.popen"           class=func>io.popen</a></code></td>                <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.read"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.read"            class=func>io.read</a></code></td>                 <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.stderr"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.stderr"          class=func>io.stderr</a></code></td>               <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.stdin"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.stdin"           class=func>io.stdin</a></code></td>                <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.stdout"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.stdout"          class=func>io.stdout</a></code></td>               <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.tmpfile"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.tmpfile"         class=func>io.tmpfile</a></code></td>              <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.type"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.type"            class=func>io.type</a></code></td>                 <td>❌</td><td></td></tr>
+		<tr id="stdlib-io.write"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.write"           class=func>io.write</a></code></td>                <td>❌</td><td></td></tr>
+		<tr id="stdlib-file:close"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-file:close"         class=func>file:close</a></code></td>              <td>❌</td><td></td></tr>
+		<tr id="stdlib-file:flush"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-file:flush"         class=func>file:flush</a></code></td>              <td>❌</td><td></td></tr>
+		<tr id="stdlib-file:lines"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-file:lines"         class=func>file:lines</a></code></td>              <td>❌</td><td></td></tr>
+		<tr id="stdlib-file:read"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-file:read"          class=func>file:read</a></code></td>               <td>❌</td><td></td></tr>
+		<tr id="stdlib-file:seek"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-file:seek"          class=func>file:seek</a></code></td>               <td>❌</td><td></td></tr>
+		<tr id="stdlib-file:setvbuf"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-file:setvbuf"       class=func>file:setvbuf</a></code></td>            <td>❌</td><td></td></tr>
+		<tr id="stdlib-file:write"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-file:write"         class=func>file:write</a></code></td>              <td>❌</td><td></td></tr>
+		<tr id="stdlib-loadlib"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#7.2"                    class=func>loadlib</a></code> (shim)</td>          <td>❌</td><td></td></tr>
+		<tr id="stdlib-math"              ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math"               class=func>math</a></code></td>                    <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.abs"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.abs"           class=func>math.abs</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.acos"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.acos"          class=func>math.acos</a></code></td>               <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.asin"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.asin"          class=func>math.asin</a></code></td>               <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.atan"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.atan"          class=func>math.atan</a></code></td>               <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.atan2"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.atan2"         class=func>math.atan2</a></code></td>              <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.ceil"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.ceil"          class=func>math.ceil</a></code></td>               <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.cos"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.cos"           class=func>math.cos</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.cosh"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.cosh"          class=func>math.cosh</a></code></td>               <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.deg"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.deg"           class=func>math.deg</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.exp"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.exp"           class=func>math.exp</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.floor"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.floor"         class=func>math.floor</a></code></td>              <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.fmod"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.fmod"          class=func>math.fmod</a></code></td>               <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.frexp"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.frexp"         class=func>math.frexp</a></code></td>              <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.huge"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.huge"          class=func>math.huge</a></code></td>               <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.ldexp"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.ldexp"         class=func>math.ldexp</a></code></td>              <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.log"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.log"           class=func>math.log</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.log10"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.log10"         class=func>math.log10</a></code></td>              <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.max"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.max"           class=func>math.max</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.min"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.min"           class=func>math.min</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.mod"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#7.2"                    class=func>math.mod</a></code> (shim)</th>         <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.modf"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.modf"          class=func>math.modf</a></code></td>               <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.pi"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.pi"            class=func>math.pi</a></code></td>                 <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.pow"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.pow"           class=func>math.pow</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.rad"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.rad"           class=func>math.rad</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.random"       ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.random"        class=func>math.random</a></code></td>             <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.randomseed"   ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.randomseed"    class=func>math.randomseed</a></code></td>         <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.sin"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.sin"           class=func>math.sin</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.sinh"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.sinh"          class=func>math.sinh</a></code></td>               <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.sqrt"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.sqrt"          class=func>math.sqrt</a></code></td>               <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.tan"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.tan"           class=func>math.tan</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-math.tanh"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.tanh"          class=func>math.tanh</a></code></td>               <td>✔️</td><td></td></tr>
+		<tr id="stdlib-newproxy"          ><td><code><a href="https://stackoverflow.com/questions/23592388"                      class=func>newproxy</a></code> (undocumented)</th> <td>✔️</td><td></td></tr>
+		<tr id="stdlib-os"                ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os"                 class=func>os</a></code></td>                      <td>✔️</td><td></td></tr>
+		<tr id="stdlib-os.clock"          ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.clock"           class=func>os.clock</a></code></td>                <td>✔️</td><td></td></tr>
+		<tr id="stdlib-os.date"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.date"            class=func>os.date</a></code></td>                 <td>✔️</td><td></td></tr>
+		<tr id="stdlib-os.difftime"       ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.difftime"        class=func>os.difftime</a></code></td>             <td>✔️</td><td></td></tr>
+		<tr id="stdlib-os.execute"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.execute"         class=func>os.execute</a></code></td>              <td>❌</td><td></td></tr>
+		<tr id="stdlib-os.exit"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.exit"            class=func>os.exit</a></code></td>                 <td>❌</td><td></td></tr>
+		<tr id="stdlib-os.getenv"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.getenv"          class=func>os.getenv</a></code></td>               <td>❌</td><td></td></tr>
+		<tr id="stdlib-os.remove"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.remove"          class=func>os.remove</a></code></td>               <td>❌</td><td></td></tr>
+		<tr id="stdlib-os.rename"         ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.rename"          class=func>os.rename</a></code></td>               <td>❌</td><td></td></tr>
+		<tr id="stdlib-os.setlocale"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.setlocale"       class=func>os.setlocale</a></code></td>            <td>❌</td><td></td></tr>
+		<tr id="stdlib-os.time"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.time"            class=func>os.time</a></code></td>                 <td>✔️</td><td></td></tr>
+		<tr id="stdlib-os.tmpname"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.tmpname"         class=func>os.tmpname</a></code></td>              <td>❌</td><td></td></tr>
+		<tr id="stdlib-package"           ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-package"            class=func>package</a></code></td>                 <td>❌</td><td></td></tr>
+		<tr id="stdlib-package.cpath"     ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-package.cpath"      class=func>package.cpath</a></code></td>           <td>❌</td><td></td></tr>
+		<tr id="stdlib-package.loaded"    ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-package.loaded"     class=func>package.loaded</a></code></td>          <td>❌</td><td></td></tr>
+		<tr id="stdlib-package.loaders"   ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-package.loaders"    class=func>package.loaders</a></code></td>         <td>❌</td><td></td></tr>
+		<tr id="stdlib-package.loadlib"   ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-package.loadlib"    class=func>package.loadlib</a></code></td>         <td>❌</td><td></td></tr>
+		<tr id="stdlib-package.path"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-package.path"       class=func>package.path</a></code></td>            <td>❌</td><td></td></tr>
+		<tr id="stdlib-package.preload"   ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-package.preload"    class=func>package.preload</a></code></td>         <td>❌</td><td></td></tr>
+		<tr id="stdlib-package.seeall"    ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-package.seeall"     class=func>package.seeall</a></code></td>          <td>❌</td><td></td></tr>
+		<tr id="stdlib-string"            ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string"             class=func>string</a></code></td>                  <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.byte"       ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.byte"        class=func>string.byte</a></code></td>             <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.char"       ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.char"        class=func>string.char</a></code></td>             <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.dump"       ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.dump"        class=func>string.dump</a></code></td>             <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.find"       ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.find"        class=func>string.find</a></code></td>             <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.format"     ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.format"      class=func>string.format</a></code></td>           <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.gfind"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#7.2"                    class=func>string.gfind</a></code> (shim)</th>     <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.gmatch"     ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.gmatch"      class=func>string.gmatch</a></code></td>           <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.gsub"       ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.gsub"        class=func>string.gsub</a></code></td>             <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.len"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.len"         class=func>string.len</a></code></td>              <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.lower"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.lower"       class=func>string.lower</a></code></td>            <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.match"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.match"       class=func>string.match</a></code></td>            <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.rep"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.rep"         class=func>string.rep</a></code></td>              <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.reverse"    ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.reverse"     class=func>string.reverse</a></code></td>          <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.sub"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.sub"         class=func>string.sub</a></code></td>              <td>✔️</td><td></td></tr>
+		<tr id="stdlib-string.upper"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-string.upper"       class=func>string.upper</a></code></td>            <td>✔️</td><td></td></tr>
+		<tr id="stdlib-table"             ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-table"              class=func>table</a></code></td>                   <td>✔️</td><td></td></tr>
+		<tr id="stdlib-table.concat"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-table.concat"       class=func>table.concat</a></code></td>            <td>✔️</td><td></td></tr>
+		<tr id="stdlib-table.foreach"     ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#7.2"                    class=func>table.foreach</a></code> (shim)</th>    <td>✔️</td><td></td></tr>
+		<tr id="stdlib-table.foreachi"    ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#7.2"                    class=func>table.foreachi</a></code> (shim)</th>   <td>✔️</td><td></td></tr>
+		<tr id="stdlib-table.getn"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#7.2"                    class=func>table.getn</a></code> (shim)</th>       <td>✔️</td><td></td></tr>
+		<tr id="stdlib-table.insert"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-table.insert"       class=func>table.insert</a></code></td>            <td>✔️</td><td></td></tr>
+		<tr id="stdlib-table.maxn"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-table.maxn"         class=func>table.maxn</a></code></td>              <td>✔️</td><td></td></tr>
+		<tr id="stdlib-table.remove"      ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-table.remove"       class=func>table.remove</a></code></td>            <td>✔️</td><td></td></tr>
+		<tr id="stdlib-table.setn"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#7.2"                    class=func>table.setn</a></code> (deprecated)</th> <td>✔️</td><td></td></tr>
+		<tr id="stdlib-table.sort"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-table.sort"         class=func>table.sort</a></code></td>              <td>✔️</td><td></td></tr>
+	</tbody>
+</table>
 <h1 id="header">Header</h1>
 <p>These scripts run first inside Skin and Mod Lua environments:</p>
 <h2 id="header-sandbox">Sandbox</h2>
-<p>This block can be disabled by the command line flag <code>+disablemodsecuritysandbox</code>. That flag seems to have been neglected when the security system was upgraded, as this is the only part of the game that checks it.</p>
+<p>This chunk can be disabled by the command line flag <code>+disablemodsecuritysandbox</code>. That flag seems to have been neglected when the security system was upgraded, as this is the only part of the game that checks it.</p>
 <pre class=LuaCode><code>
 assert(nil == package)
 assert(nil == io)
