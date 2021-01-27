@@ -18,74 +18,167 @@
 <script type="text/javascript">writeNavigation();</script>
 <!-- InstanceBeginEditable name="content" -->
 <h1 id="header">Header</h1>
-<p>All AS2 Lua scripts have a built-in script added to the top of them:</p>
-<pre class="NppLua"><code><span class="sc11">luanet</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
-</span><span class="sc11">package</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
-</span><span class="sc15">os.execute</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
-</span><span class="sc15">os.remove</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
-</span><span class="sc15">os.rename</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
-</span><span class="sc15">os.setlocale</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
-</span><span class="sc15">os.exit</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
-</span><span class="sc2">--prevent future packages from being loaded
-</span><span class="sc13">require</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
-</span><span class="sc13">dofile</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
-</span><span class="sc11">load</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
-</span><span class="sc13">loadfile</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
-</span><span class="sc13">os</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
-</span><span class="sc13">io</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0">
+<p>These scripts run first inside Skin and Mod Lua environments:</p>
+<h2 id="header-sandbox">Sandbox</h2>
+<p>This block can be disabled by the command line flag <code>+disablemodsecuritysandbox</code>. That flag seems to have been neglected when the security system was upgraded, as this is the only part of the game that checks it.</p>
+<pre class=LuaCode><code>
+assert(nil == package)
+assert(nil == io)
+assert(nil == require)
+assert(nil == module)
 
-</span><span class="sc5">do</span><span class="sc0">
-	</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">auto</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">assign</span><span class="sc0">
+assert(nil == os.execute)
+assert(nil == os.exit)
+assert(nil == os.getenv)
+assert(nil == os.remove)
+assert(nil == os.rename)
+assert(nil == os.setlocale)
+assert(nil == os.tmpname)
 
-	</span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">auto</span><span class="sc10">(</span><span class="sc11">tab</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">key</span><span class="sc10">)</span><span class="sc0">
-		</span><span class="sc5">return</span><span class="sc0"> </span><span class="sc13">setmetatable</span><span class="sc10">({},</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
-			</span><span class="sc11">__index</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">auto</span><span class="sc10">,</span><span class="sc0">
-			</span><span class="sc11">__newindex</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">assign</span><span class="sc10">,</span><span class="sc0">
-			</span><span class="sc11">parent</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">tab</span><span class="sc10">,</span><span class="sc0">
-			</span><span class="sc11">key</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">key</span><span class="sc0">
-		</span><span class="sc10">})</span><span class="sc0">
-	</span><span class="sc5">end</span><span class="sc0">
+assert(nil == luanet)
+assert(nil == load_assembly)
 
-	</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">meta</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc11">__index</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">auto</span><span class="sc10">}</span><span class="sc0">
+--dofile = nil
+--loadfile = nil</code></pre>
+<h2 id="header-lib">Library</h2>
+<p></p>
+<pre class=LuaCode><code>
 
-	</span><span class="sc2">-- The if statement below prevents the table from being</span><span class="sc0">
-	</span><span class="sc2">-- created if the value assigned is nil. This is, I think,</span><span class="sc0">
-	</span><span class="sc2">-- technically correct but it might be desirable to use</span><span class="sc0">
-	</span><span class="sc2">-- assignment to nil to force a table into existence.</span><span class="sc0">
 
-	</span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">assign</span><span class="sc10">(</span><span class="sc11">tab</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">key</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">val</span><span class="sc10">)</span><span class="sc0">
-		</span><span class="sc2">-- if val ~= nil then</span><span class="sc0">
-		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">oldmt</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc13">getmetatable</span><span class="sc10">(</span><span class="sc11">tab</span><span class="sc10">)</span><span class="sc0">
-		</span><span class="sc11">oldmt.parent</span><span class="sc10">[</span><span class="sc11">oldmt.key</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">tab</span><span class="sc0">
-		</span><span class="sc13">setmetatable</span><span class="sc10">(</span><span class="sc11">tab</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">meta</span><span class="sc10">)</span><span class="sc0">
-		</span><span class="sc11">tab</span><span class="sc10">[</span><span class="sc11">key</span><span class="sc10">]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">val</span><span class="sc0">
-		</span><span class="sc2">-- end</span><span class="sc0">
-	</span><span class="sc5">end</span><span class="sc0">
+-- each DoString is a different Lua scope, no need for a giant do...end
+local auto, assign
 
-	</span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">AutomagicTable</span><span class="sc10">()</span><span class="sc0">
-		</span><span class="sc5">return</span><span class="sc0"> </span><span class="sc13">setmetatable</span><span class="sc10">({},</span><span class="sc0"> </span><span class="sc11">meta</span><span class="sc10">)</span><span class="sc0">
-	</span><span class="sc5">end</span><span class="sc0">
+function auto(tab, key)
+    return setmetatable({}, {
+            __index = auto,
+            __newindex = assign,
+            parent = tab,
+            key = key
+    })
+end
 
-	</span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">fif</span><span class="sc10">(</span><span class="sc11">test</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">if_true</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">if_false</span><span class="sc10">)</span><span class="sc0">
-		</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">test</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0"> </span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">if_true</span><span class="sc0"> </span><span class="sc5">else</span><span class="sc0"> </span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">if_false</span><span class="sc0"> </span><span class="sc5">end</span><span class="sc0">
-	</span><span class="sc5">end</span><span class="sc0">
+local meta = {__index = auto}
 
-	</span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">deepcopy</span><span class="sc10">(</span><span class="sc11">orig</span><span class="sc10">)</span><span class="sc0">
-		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">orig_type</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc13">type</span><span class="sc10">(</span><span class="sc11">orig</span><span class="sc10">)</span><span class="sc0">
-		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">copy</span><span class="sc0">
-		</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">orig_type</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc7">'table'</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
-			</span><span class="sc11">copy</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{}</span><span class="sc0">
-			</span><span class="sc5">for</span><span class="sc0"> </span><span class="sc11">orig_key</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">orig_value</span><span class="sc0"> </span><span class="sc5">in</span><span class="sc0"> </span><span class="sc13">next</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">orig</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0"> </span><span class="sc5">do</span><span class="sc0">
-				</span><span class="sc11">copy</span><span class="sc10">[</span><span class="sc11">deepcopy</span><span class="sc10">(</span><span class="sc11">orig_key</span><span class="sc10">)]</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">deepcopy</span><span class="sc10">(</span><span class="sc11">orig_value</span><span class="sc10">)</span><span class="sc0">
-			</span><span class="sc5">end</span><span class="sc0">
-			</span><span class="sc13">setmetatable</span><span class="sc10">(</span><span class="sc11">copy</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">deepcopy</span><span class="sc10">(</span><span class="sc13">getmetatable</span><span class="sc10">(</span><span class="sc11">orig</span><span class="sc10">)))</span><span class="sc0">
-		</span><span class="sc5">else</span><span class="sc0"> </span><span class="sc2">-- number, string, boolean, etc</span><span class="sc0">
-			</span><span class="sc11">copy</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">orig</span><span class="sc0">
-		</span><span class="sc5">end</span><span class="sc0">
-		</span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">copy</span><span class="sc0">
-	</span><span class="sc5">end</span><span class="sc0">
-</span><span class="sc5">end</span></code></pre>
+-- The if statement below prevents the table from being
+-- created if the value assigned is nil. This is, I think,
+-- technically correct but it might be desirable to use
+-- assignment to nil to force a table into existence.
+
+function assign(tab, key, val)
+    -- if val ~= nil then
+    local oldmt = getmetatable(tab)
+    oldmt.parent[oldmt.key] = tab
+    setmetatable(tab, meta)
+    tab[key] = val
+    -- end
+end
+
+function AutomagicTable()
+    return setmetatable({}, meta)
+end
+
+function fif(test, if_true, if_false)
+    if test then return if_true else return if_false end
+end
+
+function deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+        end
+        setmetatable(copy, deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
+
+-- start coroutine helpers
+-- This table is indexed by coroutine and simply contains the time at which the coroutine
+-- should be woken up.
+local WAITING_ON_TIME = WAITING_ON_TIME or {}
+
+-- Keep track of how long the game has been running.
+local CURRENT_TIME = CURRENT_TIME or 0
+
+function waitSeconds(seconds)
+    -- Grab a reference to the current running coroutine.
+    local co = coroutine.running()
+
+    -- If co is nil, that means we're on the main process, which isn't a coroutine and can't yield
+    assert(co ~= nil, 'The main thread cannot wait!')
+
+    -- Store the coroutine and its wakeup time in the WAITING_ON_TIME table
+    local wakeupTime = CURRENT_TIME + seconds
+    WAITING_ON_TIME[co] = wakeupTime
+
+    -- And suspend the process
+    return coroutine.yield(co)
+end
+
+function wakeUpWaitingThreads(deltaTime)
+    -- This function should be called once per game logic update with the amount of time
+    -- that has passed since it was last called
+    CURRENT_TIME = CURRENT_TIME + deltaTime
+
+    -- First, grab a list of the threads that need to be woken up. They'll need to be removed
+    -- from the WAITING_ON_TIME table which we don't want to try and do while we're iterating
+    -- through that table, hence the list.
+    local threadsToWake = {}
+    for co, wakeupTime in pairs(WAITING_ON_TIME) do
+        if wakeupTime < CURRENT_TIME then
+            table.insert(threadsToWake, co)
+        end
+    end
+
+    -- Now wake them all up.
+    for _, co in ipairs(threadsToWake) do
+        WAITING_ON_TIME[co] = nil -- Setting a field to nil removes it from the table
+        coroutine.resume(co)
+    end
+end
+
+function runProcess(func)
+    -- This function is just a quick wrapper to start a coroutine.
+    local co = coroutine.create(func)
+    return coroutine.resume(co)
+end
+
+local WAITING_ON_SIGNAL = WAITING_ON_SIGNAL or {}
+
+function waitSignal(signalName)
+    -- Same check as in waitSeconds; the main thread cannot wait
+    local co = coroutine.running()
+    assert(co ~= nil, 'The main thread cannot wait!')
+
+    if WAITING_ON_SIGNAL[signalStr] == nil then
+        -- If there wasn't already a list for this signal, start a new one.
+        WAITING_ON_SIGNAL[signalName] = { co }
+    else
+        table.insert(WAITING_ON_SIGNAL[signalName], co)
+    end
+
+    return coroutine.yield()
+end
+
+function signal(signalName)
+    local threads = WAITING_ON_SIGNAL[signalName]
+    if threads == nil then return end
+
+    WAITING_ON_SIGNAL[signalName] = nil
+    for _, co in ipairs(threads) do
+        coroutine.resume(co)
+    end
+end
+--end coroutine helpers
+</code></pre>
 <p>AutomagicTable matches the code found here: <a href="http://lua-users.org/wiki/AutomagicTables">http://lua-users.org/wiki/AutomagicTables</a></p>
+<h2 id="header-seed">Random Seed</h2>
+<p>A Lua script line is generated that calls <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.randomseed" class=func>math.randomseed</a>(n)</code> where <code>n</code> is the total length of the song, in seconds, with no decimal. (This is appropriate because <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.randomseed" class=func>math.randomseed</a></code> discards the fraction anyways.)</p>
 <!-- InstanceEndEditable -->
 </body>
 <!-- InstanceEnd --></html>
