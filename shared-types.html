@@ -28,22 +28,42 @@
 		<dt><dfn id="type-table">table</dfn></dt>
 		<dd>lua table</dd>
 		<dt><dfn id="type-array">*[]</dfn></dt>
-		<dd>any type with [] after it is a table of several of that type. Example: <code><a href="#type-vector3">vector3</a><a href="#type-array">[]</a>: {{0,0,0}, {0,0,0}, ...}</code></dd>
+		<dd>
+			any type with [] after it is a table of several of that type. Example: <code><a href="#type-vector3">vector3</a><a href="#type-array">[]</a>: {{0,0,0}, {0,0,0}, ...}</code><br>
+			These types also sometimes accept a <a href="lua.html#environment">CLI</a> <a href="lua.html#LuaInterface-example-advanced">array</a>:
+			<table>
+				<thead>
+					<tr><th>Type</th><th>CLI Type</th><th>Where</th></tr>
+				</thead>
+				<tbody>
+					<tr><td><code><a href="#type-vector2">vector2</a><a href="#type-array">[]</a></code></td><td><code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Vector2" class=type>UnityEngine.Vector2</a></code></td><td>All usages.</td></tr>
+					<tr><td><code><a href="#type-vector3">vector3</a><a href="#type-array">[]</a></code></td><td><code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Vector3" class=type>UnityEngine.Vector3</a></code></td><td><code><a href="skins.html#CreateRail" class=func>CreateRail</a>{<strong>crossSectionShapeList</strong>[*]}</code> and <code><a href="skins.html#SetWake" class=func>SetWake</a>{<strong>offsets</strong>}</code></td></tr>
+				</tbody>
+			</table>
+		</dd>
 		<dt><dfn id="type-dict">{*=*}</dfn></dt>
 		<dd>a pair of types enclosed in braces like this is <a href="https://www.lua.org/pil/3.6.html">a table that can be filled with arbitrary keys/values</a> of the specified types. (aka dictionary) Example: <code><a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-int">int</a><a href="#type-dict">}</a>: {foo = 1, [&quot;bar!&quot;] = 2, ...}, <a href="#type-dict">{</a><a href="#type-vector3" class=func>vector3</a><a href="#type-dict">=</a><a href="#type-vector3">vector3</a><a href="#type-dict">}</a>: {[{0,0,0}] = {0,0,0}, [{0,0,0}] = {0,0,0}, ...}</code></dd>
 		<dt><dfn id="type-address">address</dfn></dt>
-		<dd>the same thing as a string but if it doesn't start with &quot;http:&quot; in it then the skin path will be added to the beginning of it.</dd>
+		<dd>the same thing as a string but if it doesn't start with &quot;http:&quot; in it then the skin/mod path will be added to the beginning of it.</dd>
 		<dt><dfn id="type-color">color</dfn></dt>
-		<dd>a lua table of 4 numbers red/green/blue/alpha formatted as <code>{0,0,0,0}</code> or <code>{r=0,g=0,b=0,a=0}</code>. Alpha can be nil/omitted and defaults to 100%. If the first 3 numbers are 1.0 or less, the numbers are all treated as <code><a href="#type-double">double</a>s</code> in the range 0.0-1.0. Otherwise they are treated as <code><a href="#type-int">int</a>s</code> in the range 0-255.</dd>
+		<dd>a lua table of 4 numbers red/green/blue/alpha formatted as <code>{0,0,0,0} or {r=0,g=0,b=0,a=0}</code> or a <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Color" class=type>UnityEngine.Color</a></code> or <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Color32" class=type>UnityEngine.Color32</a></code>. Alpha can be nil/omitted and defaults to 100%. If the first 3 numbers are 1.0 or less, the numbers are all treated as <code><a href="#type-double">double</a>s</code> in the range 0.0-1.0. Otherwise they are treated as <code><a href="#type-int">int</a>s</code> in the range 0-255.</dd>
+		<dt><dfn id="type-vector4">vector4</dfn></dt>
+		<dd>a table of 4 floats: <code>{0,0,0,0} or {x=0,y=0,z=0,w=0}</code> or a <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Vector4" class=type>UnityEngine.Vector4</a></code> or <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Vector3" class=type>UnityEngine.Vector3</a></code>. Fields other than the first one can be left unspecified to use a default value instead (usually zero).
+			<ul class="seealso">
+				<li><a href="glossary.html#vector">vector</a></li>
+				<li><a href="glossary.html#coordinate">coordinate</a></li>
+			</ul>
+		</dd>
 		<dt><dfn id="type-vector3">vector3</dfn></dt>
-		<dd>a table of 3 floats: <code>{0,0,0} or {x=0,y=0,z=0}</code>
+		<dd>a table of 3 floats: <code>{0,0,0} or {x=0,y=0,z=0}</code> or a <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Vector3" class=type>UnityEngine.Vector3</a></code>
 			<ul class="seealso">
 				<li><a href="glossary.html#vector">vector</a></li>
 				<li><a href="glossary.html#coordinate">coordinate</a></li>
 			</ul>
 		</dd>
 		<dt><dfn id="type-vector2">vector2</dfn></dt>
-		<dd>a table of 2 floats: <code>{0,0} or {x=0,y=0} or {u=0,v=0}</code>
+		<dd>
+			a table of 2 floats: <code>{0,0} or {x=0,y=0} or {u=0,v=0}</code> or a <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Vector2" class=type>UnityEngine.Vector2</a></code>.
 			<ul class="seealso">
 				<li><a href="glossary.html#vector">vector</a></li>
 			</ul>
@@ -69,9 +89,9 @@
 			</ul>
 			<p>Any <code>materialcolor</code>/<code>colorsource</code> string beginning with <code>blockcolor_</code> will be recognized as a block color setting. If it fails to parse the rest of the string as an integer it will be interpreted as <code>blockcolor_0</code>. Special values:</p>
 			<ul>
-				<li>Highway Color: The value set by <code><a href="mods.html#GameplaySettings">GameplaySettings</a>{blocktype_highway}</code>, or 6 by default.</li>
-				<li>Highway Inverted: The value set by <code><a href="mods.html#GameplaySettings">GameplaySettings</a>{blocktype_highwayinverted}</code>, or 7 by default.</li>
-				<li>&quot;Gray&quot; (white): The value set by <code><a href="mods.html#GameplaySettings">GameplaySettings</a>{blocktype_grey}</code>, or 5 by default. Also any number less than 0 or out of range.</li>
+				<li>Highway Color: The value set by <code><a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{blocktype_highway}</code>, or 6 by default.</li>
+				<li>Highway Inverted: The value set by <code><a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{blocktype_highwayinverted}</code>, or 7 by default.</li>
+				<li>&quot;Gray&quot; (white): The value set by <code><a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{blocktype_grey}</code>, or 5 by default. Also any number less than 0 or out of range.</li>
 			</ul>
 		</dd>
 		<dt><dfn id="type-shadercolors">shadercolors</dfn></dt>
@@ -111,7 +131,7 @@
 		</dd>
 		<dt><dfn id="type-rotation">rotation</dfn></dt>
 		<dd>
-			A <code><a href="#type-vector3">vector3</a></code> containing Euler rotation angles (degrees rotation around each axis) or a <code>UnityEngine.Quaternion</code>.
+			A <code><a href="#type-vector3">vector3</a></code> containing Euler rotation angles (degrees rotation around each axis) or a <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Quaternion" class=type>UnityEngine.Quaternion</a></code>.
 			<ul class="seealso">
 				<li><a href="https://en.wikipedia.org/wiki/Euler_angles">Euler angles</a></li>
 				<li><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Quaternion.Euler.html" title="This is what is used internally.">Quaternion.Euler</a></li>
