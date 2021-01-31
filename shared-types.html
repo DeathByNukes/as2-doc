@@ -74,13 +74,20 @@
 				<li>&quot;Gray&quot; (white): The value set by <code><a href="mods.html#GameplaySettings">GameplaySettings</a>{blocktype_grey}</code>, or 5 by default. Also any number less than 0 or out of range.</li>
 			</ul>
 		</dd>
+		<dt><dfn id="type-shadercolors">shadercolors</dfn></dt>
+		<dd>
+			A <code><a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a></code> dictionary but some key names are special:
+			<pre><code>materialcolor _EmissionColor ?= ? <em>If this key is present, the "_EMISSION" keyword will be <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.EnableKeyword.html">enabled</a> on the material.</em>
+<a href="#type-materialcolor">materialcolor</a> <strong>*</strong></code></pre>
+			(Personal note: this is <code>SceneManager.SetShaderColors(LuaTable,GameObject,Material)</code>)
+		</dd>
 		<dt><dfn id="type-material">material</dfn></dt>
 		<dd>a table:
 			<pre><code><a href="#type-string">string</a> <strong>shader</strong> ?= nil <em>-- ignored if material already exists and is being updated, mandatory otherwise. it will try stripping spaces from the name when the lookup for a built-in shader fails</em>
 <a href="#type-bool">bool</a> <strong>diffuseinair</strong> ?= false
 <a href="#type-int">int</a> <strong>renderqueue</strong> ?= ?
 <a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-float">float</a>/<a href="#type-vector3">vector3</a><a href="#type-dict">}</a> <strong>shadersettings</strong> ?= ? <em>-- vector3s are sent as vector4s with the 4th value always 1.0</em>
-<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a> <strong>shadercolors</strong> ?= ?
+<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
 <a href="#type-string">string</a> <strong>texturewrap</strong> = "repeat" or "clamp"
 <a href="#type-bool">bool</a> <strong>usemipmaps</strong> = true
 <a href="#type-string">string</a> <strong>texturefilter</strong> = ("bilinear" / "Bilinear") or ("trilinear" / "Trilinear") or ("Point" / "point")

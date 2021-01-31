@@ -616,7 +616,7 @@ float sizescaler ?= 1</code></pre>
 			material *
 		<em>-- else</em>
 			<em>-- modify the existing material (if a <a href="#type-UnityEngine.Material">UnityEngine.Material</a> was used, this modifies anything else that uses the same instance)</em>
-			<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a> <strong>shadercolors</strong> ?= ?
+			<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
 			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
 		<em>-- end</em>
 	<em>-- end</em>
@@ -630,7 +630,7 @@ float sizescaler ?= 1</code></pre>
 			material *
 		<em>-- else</em>
 			<em>-- modify the existing material (if a <a href="#type-UnityEngine.Material">UnityEngine.Material</a> was used, this modifies anything else that uses the same id)</em>
-			<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a> <strong>shadercolors</strong> ?= ?
+			<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
 			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
 		<em>-- end</em>
 	<em>-- end</em>
@@ -652,7 +652,7 @@ float sizescaler ?= 1</code></pre>
 			material *
 		<em>-- else</em>
 			<em>-- modify the existing material</em>
-			<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a> <strong>shadercolors</strong> ?= ?
+			<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
 			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
 		<em>-- end</em>
 	<em>-- end</em>
@@ -717,7 +717,7 @@ vector3[][] crossSectionShapeList = nil
 <em>-- if not <strong>allowfullmaterialoptions</strong> then</em>
 <em>-- <strong>color</strong> or White is applied to _Color</em>
 <a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-float">float</a><a href="#type-dict">}</a> <strong>shadersettings</strong> = nil
-<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a> <strong>shadercolors</strong> = nil <em>-- setting _Color here will work</em>
+<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> = nil <em>-- setting _Color here will work</em>
 <a href="#type-address">address</a> <strong>texture</strong> = nil
 <em>-- end</em></code></pre>
 <h3 id="colorMode">colorMode</h3>
