@@ -17,16 +17,28 @@
 	<dl class="codeDefs">
 		<dt><dfn id="type-bool">bool</dfn></dt>
 		<dd>lua boolean</dd>
+
+
 		<dt><dfn id="type-string">string</dfn></dt>
 		<dd>lua string or nil</dd>
+
+
 		<dt><dfn id="type-float">float</dfn></dt>
 		<dd>a number which can have a decimal.</dd>
+
+
 		<dt><dfn id="type-double">double</dfn></dt>
 		<dd>a <code><a href="#type-float">float</a></code> with <a href="https://msdn.microsoft.com/en-us/library/9ahet949.aspx">twice</a> as much <a href="https://en.wikipedia.org/wiki/Floating_point">precision</a>. <a href="https://www.lua.org/pil/2.3.html">lua's numbers have this much precision</a>.</dd>
+
+
 		<dt><dfn id="type-int">int</dfn></dt>
 		<dd>an integer (no decimal)</dd>
+
+
 		<dt><dfn id="type-table">table</dfn></dt>
 		<dd>lua table</dd>
+
+
 		<dt><dfn id="type-array">*[]</dfn></dt>
 		<dd>
 			any type with [] after it is a table of several of that type. Example: <code><a href="#type-vector3">vector3</a><a href="#type-array">[]</a>: {{0,0,0}, {0,0,0}, ...}</code><br>
@@ -41,12 +53,20 @@
 				</tbody>
 			</table>
 		</dd>
+
+
 		<dt><dfn id="type-dict">{*=*}</dfn></dt>
 		<dd>a pair of types enclosed in braces like this is <a href="https://www.lua.org/pil/3.6.html">a table that can be filled with arbitrary keys/values</a> of the specified types. (aka dictionary) Example: <code><a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-int">int</a><a href="#type-dict">}</a>: {foo = 1, [&quot;bar!&quot;] = 2, ...}, <a href="#type-dict">{</a><a href="#type-vector3" class=func>vector3</a><a href="#type-dict">=</a><a href="#type-vector3">vector3</a><a href="#type-dict">}</a>: {[{0,0,0}] = {0,0,0}, [{0,0,0}] = {0,0,0}, ...}</code></dd>
+
+
 		<dt><dfn id="type-address">address</dfn></dt>
 		<dd>the same thing as a string but if it doesn't start with &quot;http:&quot; in it then the skin/mod path will be added to the beginning of it.</dd>
+
+
 		<dt><dfn id="type-color">color</dfn></dt>
 		<dd>a lua table of 4 numbers red/green/blue/alpha formatted as <code>{0,0,0,0} or {r=0,g=0,b=0,a=0}</code> or a <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Color" class=type>UnityEngine.Color</a></code> or <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Color32" class=type>UnityEngine.Color32</a></code>. Alpha can be nil/omitted and defaults to 100%. If the first 3 numbers are 1.0 or less, the numbers are all treated as <code><a href="#type-double">double</a>s</code> in the range 0.0-1.0. Otherwise they are treated as <code><a href="#type-int">int</a>s</code> in the range 0-255.</dd>
+
+
 		<dt><dfn id="type-vector4">vector4</dfn></dt>
 		<dd>a table of 4 floats: <code>{0,0,0,0} or {x=0,y=0,z=0,w=0}</code> or a <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Vector4" class=type>UnityEngine.Vector4</a></code> or <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Vector3" class=type>UnityEngine.Vector3</a></code>. Fields other than the first one can be left unspecified to use a default value instead (usually zero).
 			<ul class="seealso">
@@ -54,6 +74,8 @@
 				<li><a href="glossary.html#coordinate">coordinate</a></li>
 			</ul>
 		</dd>
+
+
 		<dt><dfn id="type-vector3">vector3</dfn></dt>
 		<dd>a table of 3 floats: <code>{0,0,0} or {x=0,y=0,z=0}</code> or a <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Vector3" class=type>UnityEngine.Vector3</a></code>
 			<ul class="seealso">
@@ -61,6 +83,8 @@
 				<li><a href="glossary.html#coordinate">coordinate</a></li>
 			</ul>
 		</dd>
+
+
 		<dt><dfn id="type-vector2">vector2</dfn></dt>
 		<dd>
 			a table of 2 floats: <code>{0,0} or {x=0,y=0} or {u=0,v=0}</code> or a <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Vector2" class=type>UnityEngine.Vector2</a></code>.
@@ -68,6 +92,8 @@
 				<li><a href="glossary.html#vector">vector</a></li>
 			</ul>
 		</dd>
+
+
 		<dt><dfn id="type-materialcolor">materialcolor</dfn></dt>
 		<dd>can be 3 things:
 			<ul>
@@ -94,6 +120,8 @@
 				<li>&quot;Gray&quot; (white): The value set by <code><a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{blocktype_grey}</code>, or 5 by default. Also any number less than 0 or out of range.</li>
 			</ul>
 		</dd>
+
+
 		<dt><dfn id="type-shadercolors">shadercolors</dfn></dt>
 		<dd>
 			A <code><a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-materialcolor">materialcolor</a><a href="#type-dict">}</a></code> dictionary but some key names are special:
@@ -101,6 +129,8 @@
 <a href="#type-materialcolor">materialcolor</a> <strong>*</strong></code></pre>
 			(Personal note: this is <code>SceneManager.SetShaderColors(LuaTable,GameObject,Material)</code>)
 		</dd>
+
+
 		<dt><dfn id="type-material">material</dfn></dt>
 		<dd>a table:
 			<pre><code><a href="#type-string">string</a> <strong>shader</strong> ?= nil <em>-- ignored if material already exists and is being updated, mandatory otherwise. it will try stripping spaces from the name when the lookup for a built-in shader fails</em>
@@ -120,6 +150,8 @@
 				<li><a href="glossary.html#render-queue">render queue</a></li>
 			</ul>
 		</dd>
+
+
 		<dt><dfn id="type-UnityEngine.Material">UnityEngine.Material</dfn></dt>
 		<dd>
 			A <a href="lua.html#LuaInterface">LuaInterface</a> <a href="https://www.lua.org/manual/5.1/manual.html#2.2">userdata</a> returned by <code><a href="skins.html#BuildMaterial" class=func>BuildMaterial</a>{}</code> which represents a built <a href="#type-material">material</a>. These are accepted by many customization functions instead of <a href="#type-material">material</a> settings. The userdata gives complete scripting access to the underlying Unity material object, enabling advanced techniques. See the <a href="lua.html#LuaInterface">LuaInterface</a> and <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Material.html">Unity</a> documentation for details.
@@ -129,6 +161,8 @@
 				<li><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Material.html">Material</a></li>
 			</ul>
 		</dd>
+
+
 		<dt><dfn id="type-rotation">rotation</dfn></dt>
 		<dd>
 			A <code><a href="#type-vector3">vector3</a></code> containing Euler rotation angles (degrees rotation around each axis) or a <code><a href="lua.html#LuaInterface-whitelist-UnityEngine.Quaternion" class=type>UnityEngine.Quaternion</a></code>.
@@ -137,6 +171,8 @@
 				<li><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Quaternion.Euler.html" title="This is what is used internally.">Quaternion.Euler</a></li>
 			</ul>
 		</dd>
+
+
 		<dt><dfn id="type-scale">scale</dfn></dt>
 		<dd>
 			A <code><a href="#type-vector3">vector3</a></code> or a table:
@@ -145,6 +181,8 @@
 <a href="#type-string">string</a> <strong>scaletype</strong> = "intensity" <em>-- unused</em></code></pre>
 			(Personal note: this is <code>SceneManager.SetScale(object,GameObject)</code>)
 		</dd>
+
+
 		<dt><dfn id="type-transform">transform</dfn></dt>
 		<dd>
 			A table:
@@ -154,6 +192,8 @@
 <a href="#type-string">string</a> <strong>lookat</strong> = "end" or "start" or "camera"</code></pre>
 			(Personal note: this is <code>SceneManager.ApplyTransform(LuaTable,GameObject)</code>)
 		</dd>
+
+
 		<dt><dfn id="type-transform2">transform2</dfn></dt>
 		<dd>
 			A table:
@@ -162,6 +202,8 @@
 <a href="#type-vector3">vector3</a> <strong>scale</strong> = {1,1,1}</code></pre>
 			(Personal note: this is <code>LuaX.ApplyTransform(LuaTable,Transform)</code>)
 		</dd>
+
+
 		<dt><dfn id="type-mesh">mesh</dfn></dt>
 		<dd> An <code><a href="#type-int">int</a></code> returned by <code><a href="#BuildMesh" class=func>BuildMesh{}</a></code> which identifies a built mesh. It can be used in most places where you would normally supply an <a href="glossary.html#obj">OBJ</a> filename. Cannot be used with mesh morphing. (BuildMesh is powerful enough that you could implement mesh morphing manually if needed)
 			<ul class="seealso">
@@ -169,6 +211,8 @@
 				<li><a href="glossary.html#mesh">mesh</a></li>
 			</ul>
 		</dd>
+
+
 		<dt><dfn id="type-gameobject">gameobject</dfn></dt>
 		<dd>A table with settings for creating a <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">Unity GameObject</a>:
 			<pre><code><a href="#type-string">string</a> <strong>prefabName</strong> = nil <em>-- the name of another object or a built-in object to clone when making this object</em>
@@ -230,6 +274,8 @@ bool submeshesWhenCombining = false
 				<li><a href="glossary.html#extrude">extrude</a></li>
 			</ul>
 		</dd>
+
+
 		<dt><dfn id="type-globalname">globalname</dfn></dt>
 		<dd>
 			<p>The <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject-ctor.html">internal name</a> of a Unity GameObject being created. I'm not sure if this matters for anything or not. The name you specify passes through a function like this:</p>

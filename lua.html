@@ -25,6 +25,10 @@
 <h1 id="contents">Contents</h1>
 <script type="text/javascript">writeNavigation();</script>
 <!-- InstanceBeginEditable name="content" -->
+
+
+
+
 <h1 id="environment">Lua Environment</h1>
 <p>Audiosurf 2 scripts are written in the <a href="https://www.lua.org/manual/5.1/">Lua 5.1</a> programming language. Because <a href="https://steamcommunity.com/app/235800/workshop/">workshop</a> scripts are downloaded from strangers, Lua is "sandboxed": dangerous features like <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.execute" class=func>os.execute</a></code> and <a href="https://www.lua.org/manual/5.1/luac.html">precompiled</a> scripts are removed to protect players from malware. Audiosurf 2 is built using the <a href="https://unity3d.com/">Unity</a> game engine and, at the time of writing, is using Unity version <a href="https://unity3d.com/get-unity/download/archive">2017.4.37</a>. The Unity engine is a <a href="https://en.wikipedia.org/wiki/Mono_(software)">Mono</a>-based environment (<a href="https://en.wikipedia.org/wiki/Common_Language_Infrastructure">CLI</a>/<a href="https://en.wikipedia.org/wiki/Common_Language_Runtime">CLR</a>) and so most code for it is written in the <a href="https://en.wikipedia.org/wiki/C_Sharp_(programming_language)">C#</a> programming language. Audiosurf 2 uses a library based on <a href="https://code.google.com/archive/p/luainterface/">LuaInterface</a> to integrate Lua into this environment.</p>
 <p>LuaInterface is an old library designed to allow Lua scripts to work with the <a href="https://en.wikipedia.org/wiki/.NET_Framework">.NET Framework</a> (the first <a href="https://en.wikipedia.org/wiki/Common_Language_Infrastructure">CLI</a> implementation). The most popular current fork of LuaInterface is probably <a href="http://nlua.org/">NLua</a>, but <a href="https://github.com/DeathByNukes/MonoBoxedLua/tree/255cc8b56dd9532abcc83f904bdb75da9d579811">the fork</a> used by Audiosurf 2 is based on a <a href="https://github.com/stevedonovan/MonoLuaInterface">MonoLuaInterface</a> fork named <a href="https://bitbucket.org/sparklinlabs/monoboxedlua">MonoBoxedLua</a>.</p>
@@ -32,6 +36,10 @@
 <ul class=seealso>
 	<li><a href="https://www.lua.org/manual/5.1/">Lua 5.1 Reference Manual</a></li>
 </ul>
+
+
+
+
 <h1 id="stdlib">Standard Library</h1>
 <p>Here is the current availability of the Lua 5.1 standard functions and variables:</p>
 <table class=availability>
@@ -195,8 +203,14 @@
 		<tr id="stdlib-table.sort"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-table.sort"         class=func>table.sort</a></code></td>              <td>✔️</td><td></td></tr>
 	</tbody>
 </table>
+
+
+
+
 <h1 id="LuaInterface">LuaInterface</h1>
 <p> At the moment only a few <a href="#environment">CLI</a> types are directly exposed to scripts but, depending on what you are trying to do, they can provide critical functionality. If you happen to be familiar with C# code, it might be easiest for you to learn about it by browsing the unit tests <a href="https://github.com/DeathByNukes/MonoBoxedLua/tree/255cc8b56dd9532abcc83f904bdb75da9d579811/LuaInterfaceTest">here</a>.</p>
+
+
 <h2 id="LuaInterface-luanet">Standard Library</h2>
 <table class=availability>
 	<thead>
@@ -214,6 +228,8 @@
 		<tr id="LuaInterface-luanet-make_object"          ><td><code><a href="https://github.com/stevedonovan/MonoLuaInterface#lua-api"	class=func>make_object</a></code></td>           <td>❌</td><td></td></tr>
 	</tbody>
 </table>
+
+
 <h2 id="LuaInterface-whitelist">Type Whitelist</h2>
 <p>Audiosurf 2 has manually whitelisted some <a href="#environment">CLI</a> types so that they can be imported with <code><a href="#LuaInterface-luanet-import_type" class=func>import_type</a>(full_name)</code>:</p>
 <table>
@@ -241,13 +257,18 @@
 <p>Lua function calls <a href="https://www.lua.org/manual/5.1/manual.html#2.5.8">don't require parentheses when there is only one argument and that argument is a table or string definition</a>. The idiom is to use <code><a href="#LuaInterface-luanet-import_type" class=func>import_type</a></code> like this:</p>
 <pre class=LuaCode><code>Name = <a href="#LuaInterface-luanet-import_type" class=func>import_type</a> "Namespace.Name"</code></pre>
 <p>There is no way to avoid LuaInterface auto conversions when working with the numeric types; even if you are passing the output of one CLI function directly to the arguments of another, it will still be converted to a Lua number (double) and back along the way. Their instance methods are effectively inaccessible. Importing those types might still be useful if you need to create CLI arrays of them or use their static members.</p>
+
+
 <h2 id="LuaInterface-instances">Working with CLI Instances and Types</h2>
 <p>The most common use case in Audiosurf 2 will be working with <a href="#environment">CLI</a> object instances returned by functions like <code><a href="skins.html#BuildMaterial" class=func>BuildMaterial</a>{}</code>, which returns an instance of the <code><a href="skins.html#type-UnityEngine.Material" class=type>UnityEngine.Material</a></code> class. CLI objects and classes can contain <strong>fields</strong>, <strong>properties</strong>, and <strong>methods</strong>. (There are other things but they aren't relevant to Audiosurf 2.) <strong>Fields</strong> are like Lua variables but they can only contain specific types. <strong>Properties</strong> look like fields and generally act like them, but reading and writing their value calls internal "get" and "set" functions rather than reading and writing to a variable. Some can also be read-only. <strong>Methods</strong> should be familiar to experienced Lua users; they are functions attached to an object and you call them in the format <code>instance:method()</code> as shorthand for passing the object as the function's first argument.</p>
 <ul class=seealso>
 	<li><a href="https://www.lua.org/pil/16.html">PIL 16 - Object-Oriented Programming</a></li>
 </ul>
 <p>The Lua object produced by <code><a href="#LuaInterface-luanet-import_type" class=func>import_type</a></code>, sometimes called a <code>ProxyType</code>, allows you to access the <strong>static</strong> members of a type (<code>Type.StaticMember</code>), construct new instances of a type (<code>Type(arguments)</code>), and construct CLI arrays of that type (<code>Type[number]</code>). Static members work like instance members, but they are global and you do not use colon (<code>:</code>) syntax to call <strong>static methods</strong>. This is different from the <code><a href="https://docs.microsoft.com/en-us/dotnet/api/system.type?view=netframework-2.0" class=type>System.Type</a></code> object, which is used to programmatically view the metadata and members of a type; to get that you can call <code>example:<a href="https://docs.microsoft.com/en-us/dotnet/api/system.object.gettype?view=netframework-2.0" class=func>GetType</a>()</code> on instances or <code><a href="#LuaInterface-luanet-ctype" class=func>ctype</a>(Example)</code> on types. (Advanced users: Accessing members via reflection has been <a href="https://github.com/DeathByNukes/MonoBoxedLua/blob/255cc8b56dd9532abcc83f904bdb75da9d579811/LuaInterface/ObjectTranslator.cs#L541">disabled</a>; anything in the <code>System.Reflection</code> namespace gets converted to a string rather than a userdata.)</p>
+
+
 <h2 id="LuaInterface-example">Examples</h2>
+
 <h3 id="LuaInterface-example-material">Materials</h2>
 <pre class=LuaCode><code>local mat = <a href="skins.html#BuildMaterial" class=func>BuildMaterial</a>{
 	shader = "<a href="shaders.html#shader-VertexColorUnlitTintedAddSmooth">VertexColorUnlitTintedAddSmooth</a>",
@@ -273,6 +294,7 @@ local w, h = tex.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptRe
 <em>-- The pixels of normal textures are marked "<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/ImageConversion.LoadImage.html">non-readable</a>" but the &lt;ALBUMART&gt; texture settings generate a new unrestricted Texture2D every time you use them.</em>
 tex:<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture2D.SetPixel.html" class=func>SetPixel</a>(0, h - 1, dark_blue) <em>-- Turn the top left pixel dark blue.</em>
 tex:<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture2D.Apply.html" class=func>Apply</a>()</code></pre>
+
 <h3 id="LuaInterface-example-advanced">Advanced</h2>
 <pre class=LuaCode><code>Color = <a href="#LuaInterface-luanet-import_type" class=func>import_type</a> "UnityEngine.Color"
 Object = <a href="#LuaInterface-luanet-import_type" class=func>import_type</a> "System.Object"
@@ -338,8 +360,14 @@ a.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-r
 
 <em>-- Accessing the array twice creates different objects.</em>
 <a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(not Object.<a href="https://docs.microsoft.com/en-us/dotnet/api/system.object.referenceequals?view=netframework-2.0" class=func>ReferenceEquals</a>(colors[0], colors[0]))</code></pre>
+
+
+
+
 <h1 id="header">Header</h1>
 <p>These scripts run first inside skin and mod Lua environments:</p>
+
+
 <h2 id="header-sandbox">Sandbox</h2>
 <p>This chunk can be disabled by the command line flag <code>+disablemodsecuritysandbox</code>. That flag seems to have been neglected when the security system was upgraded, as this is the only part of the game that checks it.</p>
 <pre class=LuaCode><code>
@@ -361,8 +389,9 @@ assert(nil == load_assembly)
 
 --dofile = nil
 --loadfile = nil</code></pre>
+
+
 <h2 id="header-lib">Library</h2>
-<p></p>
 <pre class=LuaCode><code>
 
 
@@ -498,6 +527,8 @@ end
 --end coroutine helpers
 </code></pre>
 <p>AutomagicTable matches the code found here: <a href="http://lua-users.org/wiki/AutomagicTables">http://lua-users.org/wiki/AutomagicTables</a></p>
+
+
 <h2 id="header-seed">Random Seed</h2>
 <p>A Lua script line is generated that calls <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.randomseed" class=func>math.randomseed</a>(n)</code> where <code>n</code> is the total length of the song, in seconds, with no decimal. (This is appropriate because <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.randomseed" class=func>math.randomseed</a></code> discards the fraction anyways.)</p>
 <!-- InstanceEndEditable -->

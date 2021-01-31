@@ -25,12 +25,20 @@
 <h1 id="contents">Contents</h1>
 <script type="text/javascript">writeNavigation();</script>
 <!-- InstanceBeginEditable name="content" -->
+
+
+
+
 <h1 id="overview">Overview</h1>
 <p>This is a list of various &quot;special&quot; values that can be used in some of the Lua API functions.</p>
 <ul class="seealso">
 	<li><a href="https://en.wikipedia.org/wiki/Magic_number_(programming)">Magic number (programming)</a></li>
 	<li><a href="https://en.wikipedia.org/wiki/Literal_(computer_programming)">Literal (computer programming)</a></li>
 </ul>
+
+
+
+
 <h1 id="layers">Layers</h1>
 <p>Layers determine which camera an object will be rendered on, and can also sometimes be given other special functions.</p>
 <p>According to Dylan there are 3 cameras: background, foreground, and close. They are drawn to the framebuffer in that order, and the <a href="https://en.wikipedia.org/wiki/Z-buffering">depth buffer</a> is cleared before the next one, so objects on the later cameras will always cover up objects on the previous camera no matter where they are in the world. If you have the <a href="skins.html#SetScene">standard glow effect</a> enabled, all objects drawn to the background camera will be part of the glow effect.</p>
@@ -109,6 +117,8 @@
 	<dt id="layer-31"><dfn>31</dfn> <em>??? (?)</em></dt>
 	<dd>The pause screen uses this layer.</dd>
 </dl>
+
+
 <h2 id="layer-table">Layers Table</h2>
 <table class="layers-table">
 	<thead>
@@ -121,6 +131,10 @@
 		<tr><th class="wide">Post</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>O</td><td>?</td></tr>
 	</tbody>
 </table>
+
+
+
+
 <h1 id="render-queue">Render Queue</h1>
 <ul class="seealso">
 	<li><a href="glossary.html#render-queue">render queue</a></li>
@@ -140,6 +154,10 @@
 	<li value="3999">Surfboard (neon, sandstorm, classic), Vehicle thrusters (classic)</li>
 	<li value="4000"><strong>Overlay</strong></li>
 </ol>
+
+
+
+
 <h1 id="special-textures">Special Textures</h1>
 <ul class="seealso">
 	<li><a href="glossary.html#texture">texture</a></li>

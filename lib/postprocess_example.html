@@ -13,8 +13,14 @@
 <p>This is a part of my <a href="index.html">Audiosurf 2 scripting library</a>.</p>
 <h1 id="contents">Contents</h1>
 <script type="text/javascript">writeNavigation();</script>
+
+
+
+
 <h1 id="ManualPostEffect">Manual Post-Processing Example</h1>
 <p>With custom shaders it has always been possible to use special vertex shaders to position geometry directly in screen space without using <code><a href="../skins.html#AddPostEffect" class=func>AddPostEffect</a></code>. This can be used to draw a full-screen quad and we can sample the screen using <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-GrabPass.html">GrabPass</a>. It can also be used with <code><a href="../skins.html#BuildMesh" class=func>BuildMesh</a></code> for custom HUD elements, which <a href="https://twitter.com/DeathByNukes/status/472845861987176448/photo/1">I have used for debugging my skins</a>. Here is the essence of what I have been doing for post-processing:</p>
+
+
 <h2 id=shader>RevealAlpha.shader</h2>
 <pre class=ShaderLabCode><code>﻿Shader "RevealAlpha" {
 Properties {
@@ -70,6 +76,8 @@ SubShader {
 }
 }
 </code></pre>
+
+
 <h2 id=lua>postprocess.lua</h2>
 <pre class=LuaCode><code>CreateObject{
 	railoffset = 0, -- follow the player so it is never culled for being out of the camera's view
@@ -82,6 +90,8 @@ SubShader {
 		layer = 13, -- foreground camera
 	}
 }</code></pre>
+
+
 <h2 id=obj>quad.obj</h2>
 <style type="text/css">.ObjFileCode:before { content: "Wavefront OBJ"; }</style>
 <pre class="GenericCode ObjFileCode"><code># Blender v2.64 (sub 0) OBJ File: 'quad.blend'
@@ -99,6 +109,8 @@ usemtl
 s off
 f 2/1 1/2 3/3 4/4
 </code></pre>
+
+
 <h2 id=obj_right>quad_right_half.obj</h2>
 <style type="text/css">.ObjFileCode:before { content: "Wavefront OBJ"; }</style>
 <pre class="GenericCode ObjFileCode"><code># Blender v2.64 (sub 0) OBJ File: 'quad.blend'

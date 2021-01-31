@@ -24,8 +24,14 @@
 <h1 id="types">Types</h1>
 <script type="text/javascript">writeTypes();</script>
 <!-- InstanceBeginEditable name="content" -->
+
+
+
+
 <h1 id="script-execution">Script Execution</h1>
 <p>The skin script is executed during the loading screen when starting a song. A function in the script named <code><a href="#Update" class="func">Update()</a></code>, if present, will be executed every frame during actual gameplay.</p>
+
+
 <h2 id="Update">Update(<a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-float">float</a>)</h2>
 <p>This function is executed inside of <a href="https://docs.unity3d.com/Documentation/ScriptReference/MonoBehaviour.LateUpdate.html">Unity's LateUpdate</a> function.<br>
 Arguments:</p>
@@ -34,15 +40,27 @@ Arguments:</p>
 <a href="#type-float">float</a> <strong>playerstrafe</strong> <em>-- the player's current offset from the center of the track</em>
 <a href="#type-float">float</a> <strong>currentWakeboarderJumpHeight</strong>
 float intensity <em>-- the same as <a href="#GetIntensity">GetIntensity</a>()</em></code></pre>
+
+
+
+
 <h1 id="script-functions">Script Functions</h1>
+
+
 <h2 id="print">print(<a href="#type-string">string</a>)</h2>
 <p>Outputs the specified string to "Audiosurf2_Data\output_log.txt".</p>
 <pre class="NppLua"><code><span class="sc13">print</span><span class="sc10">(</span><span class="sc6">"Track width: "</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc11">trackWidth</span><span class="sc10">)</span></code></pre>
 <script type="text/javascript">writeScriptFunctions();</script>
+
+
 <h2 id="PlayerCanJump"><a href="#type-bool">bool</a> PlayerCanJump()</h2>
 <p>The current mod allows jumping. (wakeboard mod etc)</p>
+
+
 <h2 id="Profile">Profile(<a href="#type-string">string</a>)</h2>
 <p><a href="#print">Prints</a> the amount of time elapsed since the last time this function was called. The argument should be the name of your skin.</p>
+
+
 <h2 id="GetTrack"><a href="#type-table">table</a><a href="#type-array">[]</a> GetTrack()</h2>
 <pre><code><a href="#type-table">table</a> <strong>pos</strong> {
 	<a href="#type-float">float</a> <strong>x</strong>
@@ -66,18 +84,25 @@ bool funkyrot <em>-- if this is in a corkscrew or loop</em>
 float antiairtime <em>-- "anti jump seconds"</em>
 float trafficstrength
 float antitrafficstrength</code></pre>
+
+
 <h2 id="GetIntensity"><a href="#type-float">float</a> GetIntensity()</h2>
 <p>The current normalized <a href="glossary.html#intensity">intensity</a>.</p>
 <ul class="seealso">
 	<li><a href="#Update">Update</a></li>
 </ul>
+
+
 <h2 id="GetSpectrum"><a href="#type-float">float</a><a href="#type-array">[16]</a> GetSpectrum()</h2>
 <p>An alias of <code><a href="#UpdateSpectrum" class=func>UpdateSpectrum</a>(<strong>nil</strong>)</code></p>
+
+
 <h2 id="UpdateSpectrum"><a href="#type-float">float</a><a href="#type-array">[16]</a>/<a href="#type-table">table</a> UpdateSpectrum(<a href="#type-table">table</a>)</h2>
 <p>Gets the music frequency spectrum of the current point in song playback. If you pass a <code><a href="#type-table">table</a></code> as the argument, it will <a href="https://www.lua.org/manual/5.1/manual.html#pdf-rawset">set</a> the spectrum values into that table instead of creating a new table. (Reusing the same table every frame improves performance.)</p>
 <ul class="seealso">
 	<li><a href="#Update">Update</a></li>
 </ul>
+
 <h3 id="UpdateSpectrum-internal">What it Does</h3>
 <ol>
 	<li>The <a href="https://github.com/mborgerding/kissfft">Kiss FFT</a> library is used to do a <a href="https://en.wikipedia.org/wiki/Fast_Fourier_transform">Fast Fourier Transform</a> of the current point in the song. I can't tell what it does here because it's compiled C++.</li>
@@ -85,6 +110,7 @@ float antitrafficstrength</code></pre>
 	<li>The bins are broken up into groups of 32 and the average of each group is calculated, resulting in 16 bins.</li>
 </ol>
 <p>The magnitude seems to be in the range 0 to 2. From what I've read, this way of producing a smaller spectrum is technically different from what you would get if you directly calculated a 16 bin spectrum. A smaller FFT would use information from a smaller time span and so change more rapidly.</p>
+
 <h3 id="UpdateSpectrum-math">How to Interpret It</h3>
 <pre class=LuaCode><code>spectrum = UpdateSpectrum(spectrum)
 for i=1,#spectrum do
@@ -102,6 +128,7 @@ end</code></pre>
 <ul class="seealso">
 	<li><a href="https://stackoverflow.com/questions/4675457/how-to-generate-the-audio-spectrum-using-fft-in-c">How to generate the audio spectrum using fft in C++?</a></li>
 </ul>
+
 <h3 id="UpdateSpectrum-glitch">Glitch</h3>
 <p>Currently, the beginning and end sections of gameplay when audio isn't playing are glitched. In the beginning the spectrum returns unpredictable random values as if it is reinterpreting arbitrary memory. In the end, the values either freeze at their last position or produce more noise. Here is how you can deal with that if it causes you problems:</p>
 <pre class=LuaCode><code>track = GetTrack() <em>-- Your skin probably already does this. Avoid doing it more than once because it's expensive.</em>
@@ -128,17 +155,29 @@ function Update()
 	end
 	<em>-- Do things with the spectrum here.</em>
 end</code></pre>
+
+
 <h2 id="GetLogSpectrum"><a href="#type-float">float</a><a href="#type-array">[16]</a> GetLogSpectrum()</h2>
 <p>I have only skimmed the code but it looks like this is a variant of <code><a href="#GetSpectrum" class=func>GetSpectrum</a></code> that splits up the 512 bin spectrum logarithmically rather than linearly before averaging them down to 16. (&quot;horizontal&quot; log scale) The numeric scale of the individual bins (&quot;vertical&quot; scale) is the same as the regular spectrum. It seems to have been forgotten about when <code><a href="#UpdateSpectrum" class=func>UpdateSpectrum</a></code> was added.</p>
+
+
 <h2 id="UpdateSpectrum512"><a href="#type-float">float</a><a href="#type-array">[512]</a>/<a href="#type-table">table</a> UpdateSpectrum512(<a href="#type-table">table</a>)</h2>
 <p>This gets the full 512 bin audio spectrum that <code><a href="#UpdateSpectrum" class=func>UpdateSpectrum</a></code> and <code><a href="#GetLogSpectrum" class=func>GetLogSpectrum</a></code> read from internally to produce their results.</p>
+
+
 <h2 id="GetMillisecondsSinceStartup"><a href="#type-float">float</a> GetMillisecondsSinceStartup()</h2>
 <p>Unity's <a href="https://docs.unity3d.com/ScriptReference/Time-realtimeSinceStartup.html">Time.realtimeSinceStartup</a> * 1000.</p>
 <p>Note that this is the time since Audiosurf 2 started (potentially more than an hour ago) not the time since this particular track started. Can be useful as a seed to <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.randomseed">math.randomseed</a></code> if non-deterministic behavior is desired. (By default it is seeded with the song length.)</p>
+
+
 <h2 id="GetHighwayColor"><a href="#type-color">color</a> GetHighwayColor()</h2>
 <p>Gets the highway color at the current point in song playback. The returned table contains both styles of color. (<code>color.r</code> and <code>color[1]</code> are equivalent)</p>
+
+
 <h2 id="GetSongCompletionPercentage"><a href="#type-float">float</a> GetSongCompletionPercentage()</h2>
 <p>The current point in song playback. The returned number ranges from 0.0 to 1.0.</p>
+
+
 <h2 id="GetSkinProperties"><a href="#type-dict">{</a><a href="#type-string">string</a><a href="#type-dict">=</a>*<a href="#type-dict">}</a> GetSkinProperties()</h2>
 <p>Output:</p>
 <pre><code><a href="#type-bool">bool</a> <strong>*</strong>
@@ -147,12 +186,14 @@ end</code></pre>
 <a href="#type-dict">{</a>*<a href="#type-dict">=</a>*<a href="#type-dict">}</a> <strong>*</strong> <em>-- Keys and values can be a mixture of <a href="#type-bool">bool</a>, <a href="#type-double">double</a>, and <a href="#type-string">string</a>.</em>
 <a href="#type-int">int</a> <strong>colorcount</strong> <em>-- Set by <a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{<strong>colorcount</strong>}, defaults to 1.</em></code></pre>
 <p>Mods can add whatever values they want to the table as long they are one of the basic Lua types. The values can also be Lua tables with keys and values of any of the basic types. Functions and deeper nested tables are not supported, but mods could include them as strings and the skin could convert the strings into Lua code via <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-loadstring" class=func>loadstring</a>()</code>. Mods can add and overwrite skin properties at any time; skins can call the function again during <code><a href="#Update" class=func>Update</a></code> to see the changes. (The automatic system used internally to transfer the values from mods to skins also supports <a href="https://www.lua.org/manual/5.1/manual.html#lua_pushlightuserdata">light userdata</a>, but I don't think Audiosurf 2 ever produces that type and it can't be created by scripts.)</p>
+
 <h3 id="GetSkinProperties-standard">Standard Properties</h3>
 <p>These are the properties set by built-in mods and the ones based on them:</p>
 <pre><code><a href="#type-double">double</a> <strong>trackwidth</strong>
 <a href="#type-bool">bool</a> <strong>prefersteep</strong>
 <a href="#type-double">double</a><a href="#type-array">[]</a> <strong>lanedividers</strong>
 <a href="#type-double">double</a><a href="#type-array">[]</a> <strong>shoulderlines</strong></code></pre>
+
 <h3 id="GetSkinProperties-extended">Extended Properties</h3>
 <p>Here are extra properties I have been voluntarily supporting in my skins:</p>
 <pre><code><a href="#type-double">double</a> <strong>disableWater</strong> <em>-- set a nonzero number to disable water</em>
@@ -164,14 +205,24 @@ end</code></pre>
 <ul class="seealso">
 	<li><a href="mods.html#SetSkinProperties">SetSkinProperties</a></li>
 </ul>
+
+
 <h2 id="GetModeName"><a href="#type-string">string</a> GetModeName()</h2>
 <p>Gets the folder name of the current mod, converted to lowercase.</p>
+
+
 <h2 id="GetTrafficSpeedRatio"><a href="#type-float">float</a> GetTrafficSpeedRatio()</h2>
 <p>Gets the value set by <code><a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{trafficcompression}</code>. The default is <code>0.65</code>.</p>
+
+
 <h2 id="GetQualityLevel"><a href="#type-int">int</a> GetQualityLevel()</h2>
 <p>Returns <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-math.min" class="func">math.min</a>(3, <a href="#GetQualityLevel4" class="func">GetQualityLevel4</a>())</code></p>
+
+
 <h2 id="GetQualityLevel4"><a href="#type-int">int</a> GetQualityLevel4()</h2>
 <p>Returns the <a href="https://docs.unity3d.com/Documentation/ScriptReference/QualitySettings.GetQualityLevel.html">Unity quality level</a> plus 1.</p>
+
+
 <h2 id="GetAlbumArtPalette"><a href="#type-color">color</a><a href="#type-array">[]</a> GetAlbumArtPalette{}</h2>
 <pre><code><a href="#type-int">int</a> <strong>mincount</strong> = 3
 <a href="#type-int">int</a> <strong>maxcount</strong> = 5</code></pre>
@@ -179,13 +230,21 @@ end</code></pre>
 <p>Reads the <code><a href="magic-literals.html#special-textures">&lt;ALBUMART&gt;</a></code> texture with a tool named Color Thief and produces colors that presumably came from that image. If there is no album art it generates <code>mincount</code> random colors. (Each color is just 3 random floats between 0.0 and 1.0 inclusive. There is no attempt to avoid greys or produce a tasteful palette.)</p>
 <p>According to Dylan: It picks out prominent colors from the album art image. Less colorful images return less colors and if you force it to return more with a high <code>mincount</code> the colors will have less variation.</p>
 <p><code>mincount</code> and <code>maxcount</code> used to be bugged but it is fixed now.</p>
+
+
 <h2 id="IsVideoscreenUsed"><a href="#type-bool">bool</a> IsVideoscreenUsed()</h2>
 <p>True if the current song is a video.</p>
 <ul class="seealso">
 	<li><a href="#SetVideoScreenTransform">SetVideoScreenTransform</a></li>
 </ul>
+
+
+
+
 <h1 id="customization-functions">Customization Functions</h1>
 <p><a href="https://stackoverflow.com/questions/686931/are-curly-brackets-used-in-lua">In case you aren't familiar with Lua syntax</a>, a function name followed by braces is shorthand for calling the function with a single argument which is a table. So, <code>Foo{bar=1}</code> and <code>Foo({bar=1})</code> are equivalent.</p>
+
+
 <h2 id="SetScene">SetScene{}</h2>
 <pre><code><em>-- <a href="#script-execution">First run</a> only:</em>
 <a href="#type-float">float</a> <strong>maxAllowedTrackHeight</strong> = 10000000000
@@ -232,6 +291,7 @@ bool widewater ?= false <em>-- Water width is 11.25 normally or 16.25 wide. When
 <a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>ambientlight</strong> = {51,51,51,255} or "highway" or "highwayinverted" <em>-- accessible in shaders via <a href="https://docs.unity3d.com/Manual/SL-BuiltinStateInPrograms.html">UNITY_LIGHTMODEL_AMBIENT</a></em>
 <a href="#type-bool">bool</a> <strong>useblackgrid</strong> ?= true
 <a href="#type-string">string</a> <strong>pullermodel</strong> ?= ? <em>-- The wakeboard mode "boats" that connect to <strong>towropes</strong> and <a href="#SetWake">SetWake</a>.</em></code></pre>
+
 <h3 id="SetScene-water">Water</h3>
 <p>Skins have only limited control over the water effect:</p>
 <ul>
@@ -269,10 +329,15 @@ return register0.x == 0 ? body : half4(color.xyz, 0.01);</pre>
 </li>
 </ul>
 
+
 <h2 id="SetTrackColors">SetTrackColors(<a href="#type-color">color</a><a href="#type-array">[]</a>)</h2>
 <p>Set the sequence of colors that get turned into the "highway colors" gradient. The first color is the low intensity color.</p>
+
+
 <h2 id="SetBlockColors">SetBlockColors(<a href="#type-color">color</a><a href="#type-array">[]</a>)</h2>
 <p>Block colors used by puzzle gamemodes.</p>
+
+
 <h2 id="SetShieldColors">SetShieldColors(<a href="#type-color">color</a><a href="#type-array">[3]</a>)</h2>
 <p>One of the Audioshield things present in Audiosurf 2. I haven't checked if these colors get used by anything.</p>
 <p>Only the first 3 colors in the array will be used. If you supply less than 3 values, the missing values will be 50% grey. Pass a <code>nil</code> array to set default colors: </p>
@@ -283,12 +348,19 @@ SetShieldColors{
 	{255, 52, 0},
 	{103, 53, 176},
 }</code></pre>
+
+
 <h2 id="SetSparkColors">SetSparkColors(<a href="#type-color">color</a><a href="#type-array">[3]</a>)</h2>
 <p>Exactly the same as <code><a href="#SetShieldColors" class=func>SetShieldColors</a></code>, including the default values, but sets the "spark colors".</p>
+
+
 <h2 id="SetOrbColors">SetOrbColors(<a href="#type-color">color</a><a href="#type-array">[3]</a>)</h2>
 <p>Exactly the same as <code><a href="#SetShieldColors" class=func>SetShieldColors</a></code>, including the default values, but sets the "orb colors".</p>
+
+
 <h2 id="LoadSounds">LoadSounds(<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a>)</h2>
 <p>Adds or replaces a named sound effect, which can be invoked by Audiosurf 2 or <a href="mods.html#PlaySound">mods</a>. Names are case-insensitive.</p>
+
 <h3 id="LoadSounds-builtin">Built-in Sounds</h3>
 <ul>
 	<li>crowdroar</li>
@@ -314,6 +386,7 @@ SetShieldColors{
 	<li>trickdone</li>
 	<li>trickfail</li>
 </ul>
+
 <h3 id="LoadSounds-used">Sounds Used by Game Functions</h3>
 <ul>
 	<li>crowdroar</li>
@@ -337,11 +410,15 @@ SetShieldColors{
 	<li>trickdone</li>
 	<li>trickfail</li>
 </ul>
+
+
 <h2 id="SetVideoScreenTransform">SetVideoScreenTransform(<a href="#type-transform">transform</a>)</h2>
 <p>Change the position of the video screen, if one exists.</p>
 <ul class="seealso">
 	<li><a href="#IsVideoscreenUsed">IsVideoscreenUsed</a></li>
 </ul>
+
+
 <h2 id="SetPlayer">SetPlayer{}</h2>
 <pre><code><a href="#type-float">float</a> <strong>fov</strong> = 90
 bool cameraortho = false <em>-- orthographic cameras</em>
@@ -427,6 +504,8 @@ string cameradynamics = null or "high" <em>-- "use extra dynamic camera", adjust
 	}
 }
 <em>-- End of first run only</em></code></pre>
+
+
 <h2 id="SetBackgroundColor">SetBackgroundColor(<a href="#type-color">color</a>)</h2>
 <pre class=LuaCode><code>SetBackgroundColor{0, 127, 255} <em>-- #007FFF</em></code></pre>
 <p>Sets the background color of the "<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Camera-main.html">main camera</a>", which will permanently change the camera mode to clear whatever was drawn by previous cameras. I don't know which camera is the main camera.</p>
@@ -434,6 +513,8 @@ string cameradynamics = null or "high" <em>-- "use extra dynamic camera", adjust
 	<li><a href="#SetSkybox">SetSkybox{}</a></li>
 	<li><a href="magic-literals.html#layers">Layers</a></li>
 </ul>
+
+
 <h2 id="SetSkybox">SetSkybox{}</h2>
 <pre><code><em>-- Some things in this list have the same name because that name can contain any one of the listed types.</em>
 <a href="#type-materialcolor">materialcolor</a> <strong>color</strong> ?= ? <em>-- Can be used with <strong>skysphere</strong>, <a href="#type-string">string</a> <strong>sky</strong>, and <strong>custom</strong>.</em>
@@ -477,6 +558,7 @@ string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
 <ul class="seealso">
 	<li><a href="#SetBackgroundColor">SetBackgroundColor{}</a></li>
 </ul>
+
 <h3 id="SetSkybox-conditions">Conditions</h3>
 <p>If your table does not satisfy at least one of these conditions, <code>SetSkybox</code> will exit early without applying most changes.</p>
 <ul>
@@ -501,6 +583,7 @@ string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
 	</li>
 </ul>
 <p>The "last time" memory is only updated by successful runs, and all of its variables start at zero/nil. Unspecified values will be remembered as if their defaults were specified.</p>
+
 <h3 id="SetSkybox-combinations">Combining Settings</h3>
 <p>If <code><strong>sky</strong></code> is a <code><a href="#type-table">table</a></code> its settings will be applied and will not block any other settings. If it is not a table, <a href="#silver-lining">Silver Lining</a> will be disabled.</p>
 <p>
@@ -513,6 +596,7 @@ string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
 	</ol>
 	If any of those 4 settings were present, <code><strong>color</strong></code> will be applied. If you mix <code><strong>skyscreen</strong></code> with one of the other 3, that one will also be applied with a null material because of a spaghetti bug.
 </p>
+
 <h3 id="silver-lining">Silver Lining Skybox</h3>
 <p><a href="https://forum.unity3d.com/threads/107166-SilverLining-for-Unity-3D-volumetric-clouds-sim-quality-procedural-skies">Silver Lining</a> is highly customizable but AS2 doesn't expose most of the interesting options or even most of the basic options. Here's some of the important locked settings:</p>
 <ul>
@@ -526,6 +610,7 @@ string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
 <ul class="seealso">
 	<li><a href="#UpdateProceduralSky">UpdateProceduralSky{}</a></li>
 </ul>
+
 <h3 id="SetSkybox-skysphere"><code><strong>skysphere</strong></code> Skybox</h3>
 <pre class=LuaCode><code>SetSkybox{
 	color = {1,1,1},
@@ -541,6 +626,7 @@ string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
 	<li><a href="https://duckduckgo.com/?q=free+panorama+sky">Web Search: free panorama sky</a></li>
 	<li><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/StandardShaderMaterialParameterEmission.html">Emission</a></li>
 </ul>
+
 <h3 id="SetSkybox-custom"><code><strong>custom</strong></code> Skybox</h3>
 <pre class=LuaCode><code>SetSkybox{
 	color = {1,1,1},
@@ -561,6 +647,7 @@ string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
 	<li><a href="https://www.cgskies.com/resources_tutorial_transform.php">Panorama Transformations</a></li>
 	<li><a href="https://duckduckgo.com/?q=free+skybox+texture">Web Search: free skybox texture</a></li>
 </ul>
+
 <h3 id="SetSkybox-skyscreen"><code><strong>skyscreen</strong></code> Skybox</h3>
 <p>This is for using procedural skybox shaders. Like a post-processing effect it simply draws your material as a full-screen <a href="glossary.html#quad">quad</a> but does so <a href="glossary.html#render-queue">before</a> the rest of the scene is drawn instead of after it. Shaders made for this purpose change what they draw based on the camera angle.</p>
 <ul class="seealso">
@@ -569,10 +656,14 @@ string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
 	<li><a href="#AddPostEffect">AddPostEffect{}</a></li>
 	<li><a href="https://docs.unity3d.com/Manual/shader-skybox-procedural.html">Procedural skybox</a></li>
 </ul>
+
+
 <h2 id="UpdateProceduralSky">UpdateProceduralSky{}</h2>
 <pre><code><a href="#type-float">float</a> <strong>latitude</strong> ?= 42
 <a href="#type-float">float</a> <strong>longitude</strong> ?= 185.6</code></pre>
 <p>Updates parts of the <a href="#silver-lining">Silver Lining</a> skybox without having to deal with <a href="#SetSkybox">SetSkybox</a>.</p>
+
+
 <h2 id="SetRings">SetRings{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>texture</strong> = nil <em>-- bug: only supports built-in shaders</em>
 <a href="#type-string">string</a> <strong>shader</strong> = nil
@@ -586,6 +677,8 @@ vector3 offset = {0,0,0}
 <a href="#type-string">string</a> <strong>airtexture</strong> = nil
 <a href="#type-string">string</a> <strong>airshader</strong> = nil
 <a href="#type-float">float</a> <strong>airsize</strong> = 0</code></pre>
+
+
 <h2 id="SetWake">SetWake{}</h2>
 <pre><code><a href="#type-material">material</a> <strong>*</strong> <em>-- all of the variables from <a href="#type-material">material</a> are included directly inside SetWake{}</em>
 <a href="#type-float">float</a> <strong>height</strong> = 0.0
@@ -596,14 +689,20 @@ vector3 offset = {0,0,0}
 vector3[] offsets ?= {{7.5, 0, 0}, {-7.5, 0, 0}}
 <a href="#type-bool">bool</a> <strong>extraspray</strong> = false</code></pre>
 <p>Renderqueue is forced to be <a href="magic-literals.html#render-queue">3998</a> and _Color is forced to be white.</p>
+
+
 <h2 id="SetPuzzleGraphics">SetPuzzleGraphics{}</h2>
 <pre><code><a href="#type-material">material</a> <strong>puzzlematerial</strong> = nil
 <a href="#type-material">material</a> <strong>puzzlematchmaterial</strong> = nil
 <a href="#type-material">material</a> <strong>puzzleflyupmaterial</strong> = nil
 <a href="#type-bool">bool</a> <strong>usesublayerclone</strong> ?= true</code></pre>
+
+
 <h2 id="SetBlockFlashes">SetBlockFlashes{}</h2>
 <pre><code>address texture ?= ? <em>-- clamped and mipmaps off</em>
 float sizescaler ?= 1</code></pre>
+
+
 <h2 id="SetBlocks">SetBlocks{}</h2>
 <pre><code>int maxvisiblecount ?= 30
 <a href="#type-table">table</a> <strong>chainspans</strong> ?= ? or {
@@ -678,8 +777,12 @@ float sizescaler ?= 1</code></pre>
 	<a href="#type-address">address</a>/<a href="#type-mesh">mesh</a> <strong>mesh</strong> = nil
 	<a href="#type-vector3">vector3</a> <strong>scale</strong> ?= {1,1,1}
 }, ...}</code></pre>
+
+
 <h2 id="OverrideTrackColorForDynamicBlockColors">OverrideTrackColorForDynamicBlockColors(<a href="#type-color">color</a>)</h2>
 <p>Overrides the color of "highway color" and "inverse highway color" blocks defined by <code><a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{ blocktype_highway, blocktype_highwayinverted }</code> If called in <code><a href="#Update">Update</a>()</code>, changes will take effect on the next frame.</p>
+
+
 <h2 id="CreateRail">CreateRail{}</h2>
 <pre><code><a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;rail&quot;</em>
 <a href="#type-vector2">vector2</a> <strong>positionOffset</strong> = {0,0} <em>-- added to every coordinate in crossSectionShape</em>
@@ -720,6 +823,7 @@ vector3[][] crossSectionShapeList = nil
 <a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> = nil <em>-- setting _Color here will work</em>
 <a href="#type-address">address</a> <strong>texture</strong> = nil
 <em>-- end</em></code></pre>
+
 <h3 id="colorMode">colorMode</h3>
 <p>Controls the vertex colors of the rail.</p>
 <dl>
@@ -736,6 +840,8 @@ vector3[][] crossSectionShapeList = nil
 	<dt>trackposition</dt>
 	<dd>Instead of storing a color, stores the zero-based node index divided by the number of nodes, encoded with <code><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-BuiltinFunctions.html" class=func>EncodeFloatRGBA</a></code>. This is useful in rail <a href="#skyscreen">skyscreen</a> shaders. (I don't understand why he won't just pass this information through UV or <a href="https://docs.unity3d.com/Documentation/ScriptReference/Mesh-uv2.html">UV2</a>.)</dd>
 </dl>
+
+
 <h2 id="CreateRepeatedMeshRail">CreateRepeatedMeshRail{}</h2>
 <pre><code><em>-- calls to this function after the <a href="#script-execution">first run</a> are ignored</em>
 <a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;RepeatedMeshRail&quot;</em>
@@ -748,6 +854,8 @@ vector3[][] crossSectionShapeList = nil
 <a href="#type-bool">bool</a> <strong>buildlive</strong> = false
 <a href="#type-int">int</a> <strong>maxmeshesperbatch</strong> = 999999
 <a href="#type-bool">bool</a> <strong>calculatenormals</strong> = false</code></pre>
+
+
 <h2 id="CreateObject">CreateObject{}</h2>
 <pre><code><a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;ro&quot;</em>
 <a href="#type-string">string</a> <strong>name</strong> = nil <em>-- the <a href="glossary.html#prototype">prototype</a> name</em>
@@ -767,10 +875,16 @@ vector3[][] crossSectionShapeList = nil
 	<li><a href="glossary.html#layer">layer</a></li>
 	<li><a href="glossary.html#extrude">extrude</a></li>
 </ul>
+
+
 <h2 id="CreateRailedObject">CreateRailedObject{}</h2>
 <p>An alias for <a href="#CreateObject">CreateObject{}</a>.</p>
+
+
 <h2 id="CreatePrototype">CreatePrototype{}</h2>
 <p>An alias for <a href="#CreateObject">CreateObject{}</a>.</p>
+
+
 <h2 id="RepeatObject">RepeatObject{}</h2>
 <pre><code>string prefabName = nil <em>-- Required. This refers to <a href="#CreateObject">CreateObject</a>{name} or a built-in object asset.</em>
 int[] nodes = (throw NullReferenceException) <em>-- Zero-based track node indexes. (0 is the first node.)</em>
@@ -790,6 +904,8 @@ int renderBehindDistance = 10 <em>-- Wait until an object's node is this many no
 <p>At startup it creates the specified number of <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Object.Instantiate.html">instances</a> of the specified object, leaves their transform at the original object's position, and assigns them to imaginary node <code>-1</code>. Whenever the current node minus <code>renderBehindDistance</code> is greater than an object's assigned node, it will get reassigned to the next unused node index in <code>nodes</code> and transformed accordingly. When it reaches the end of <code>nodes</code> it will stop making changes and the objects will continue to exist in their current locations.</p>
 <p><code>prefabName</code> is first checked against the list of prototypes, which can be named objects created by CreateObject, or built-in prototypes. If no prototype is found, it will do <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Resources.Load.html" class=func>Resources.Load</a>(prefabName)</code> and then immediately unsafe-cast the result to <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/GameObject.html" class=type> UnityEngine.GameObject</a></code>. I am not sure if this can be exploited to instantiate other kinds of resources.</p>
 <p>When working with the <code><a href="#GetTrack" class=func>GetTrack</a>()</code> array to choose nodes, you will need to subtract the Lua array indexes by one to convert it to the zero-based indexes expected by this function. An entry in <code>nodes</code> that is too large (<code>node[i] >= #<a href="#GetTrack" class=func>GetTrack</a>()</code>) will cause the rest of the array to be ignored. Negative indexes will throw IndexOutOfRangeException at the point where it attempts to assign an object to that node. If any of the other arrays are smaller than <code>nodes</code>, that array will be replaced with the default.</p>
+
+
 <h2 id="BatchRenderEveryFrame">BatchRenderEveryFrame{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>prefabName</strong> <em>-- mandatory</em>
 <a href="#type-int">int</a><a href="#type-array">[]</a> <strong>locations</strong> <em>-- mandatory. ints lower than 1 will be treated as 1</em>
@@ -830,6 +946,8 @@ vector3[] worldspaceoffsets = nil
 <p><code><strong>override_velocities</strong></code> also overrides the angle of each instance by specifying a direction for the object to &quot;look&quot; toward. (<code>Quaternion.<a href="https://docs.unity3d.com/Documentation/ScriptReference/Quaternion.LookRotation.html">LookRotation</a>(override_velocities[i], Vector3(0, 1, 0))</code>) This can probably be abused to get rotated objects which don't appear to move by using a very small velocity. (since there isn't a &quot;rotations&quot; setting) Just be careful not to go smaller than <code><a href="#type-float">float</a></code> can support. Don't use completely zero velocities; it will probably spam errors to output_log.txt every frame.</p>
 <p>Overrides, combined with <code><strong>maxDistanceShown</strong></code> and  <code><strong>afternodereached_numbernodesrendered</strong></code>, allow us to place an object at an arbitrary position in the world which appears at a certain time, moves from point A to point B, then disappears.</p>
 <p>Instances hidden by <code><strong>testAndHideIfCollideWithTrack</strong></code> will still count toward the <code><strong>maxShown</strong></code> limit. I was unable to find how <code><strong>collisionLayer</strong></code> is honored but it may behave the same way.</p>
+
+
 <h2 id="CreateSpriteBatch">CreateSpriteBatch{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>prefabName</strong> <em>-- mandatory</em>
 <a href="#type-int">int</a><a href="#type-array">[]</a> <strong>locations</strong> <em>-- mandatory. ints lower than 1 will be treated as 1</em>
@@ -837,6 +955,8 @@ vector3[] worldspaceoffsets = nil
 <a href="#type-vector3">vector3</a><a href="#type-array">[]</a>/<a href="#type-vector3">vector3</a> <strong>scales</strong> = nil <em>-- <a href="#type-vector3">vector3</a><a href="#type-array">[]</a> version must be as long as <strong>locations</strong></em>
 <a href="#type-color">color</a><a href="#type-array">[]</a> <strong>colors</strong> = nil
 <a href="#type-float">float</a><a href="#type-array">[]</a> <strong>repeaterSpacings</strong> = nil</code></pre>
+
+
 <h2 id="AddForest">AddForest{}</h2>
 <pre><code><a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;forest&quot;</em>
 <a href="#type-gameobject">gameobject</a><a href="#type-array">[]</a> <strong>trees</strong> = nil
@@ -851,6 +971,8 @@ vector3[] worldspaceoffsets = nil
 <a href="#type-bool">bool</a> <strong>collisiontest</strong> = true
 <a href="#type-string">string</a> <strong>trackpositioncolorproperty</strong> = nil <em>-- this is the name of a shader color (same as the key names in <a href="#type-material">material</a>.shadercolors) which will be set to the track color of whatever location each object is at</em>
 <a href="#type-int">int</a> <strong>numrendered</strong> = 50</code></pre>
+
+
 <h2 id="CreateLight"><a href="#type-int">int</a> CreateLight{}</h2>
 <p>Creates a <a href="https://docs.unity3d.com/Documentation/ScriptReference/Light.html">Unity Light</a>.</p>
 <pre><code><a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;light&quot;</em>
@@ -871,6 +993,8 @@ vector3[] worldspaceoffsets = nil
 	<a href="#type-float">float</a> <strong>softness</strong> = ?
 	<a href="#type-float">float</a> <strong>softnessfade</strong> = ?
 }</code></pre>
+
+
 <h2 id="UpdateLight">UpdateLight{}</h2>
 <pre><code>int light
 transform transform ?= ?
@@ -878,10 +1002,15 @@ materialcolor color ?= ?
 float intensity = 0.5
 float range ?= ?
 table shadows = nil <em>-- this is the same as <a href="#CreateLight">CreateLight</a>{<strong>shadows</strong>}. omitting it disables shadows.</em></code></pre>
+
+
 <h2 id="BuildMaterial"><a href="#type-UnityEngine.Material">UnityEngine.Material</a> BuildMaterial(<a href="#type-material">material</a>)</h2>
 <p>Creates a material object and returns a reference to it. This allows a single material to be used on multiple objects with less waste, and allows the material to be modified during <code><a href="#Update" class=func>Update</a>()</code> via <code><a href="#UpdateMaterial" class=func>UpdateMaterial</a>{}</code> or the object's members. The object's members also give access to advanced settings.</p>
+
+
 <h2 id="CreateMaterial"><a href="#type-UnityEngine.Material">UnityEngine.Material</a> CreateMaterial(<a href="#type-material">material</a>)</h2>
 <p>An alias for <code><a href="#BuildMaterial" class=func>BuildMaterial</a>{}</code></p>
+
 
 <h2 id="UpdateMaterial">UpdateMaterial(<a href="#type-table">table</a>)</h2>
 <pre><code><a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong>
@@ -900,8 +1029,10 @@ vector2 texturescale ?= ? <em>-- Same as <strong>texturesettings.scale</strong>.
 	<li><a href="#BuildMaterial">BuildMaterial</a></li>
 </ul>
 
+
 <h2 id="UpdateShaderSettings">UpdateShaderSettings(<a href="#type-table">table</a>)</h2>
 <p>An alias for <code><a href="#UpdateMaterial" class=func>UpdateMaterial</a>{}</code></p>
+
 
 <h2 id="BuildMesh"><a href="#type-mesh">mesh</a> BuildMesh{}</h2>
 <p>Can be one of the following tables:</p>
@@ -938,15 +1069,21 @@ bool recalculateNormalsEveryFrame = false</code></pre>
 </span><span class="sc10">}</span></pre>
 <p>See the documentation of the other functions for confirmation. One important exception is that mesh objects cannot be used for mesh morphing. It is possible to imitate mesh morphing via <strong>procedural animations</strong>. (see below)</p>
 <p>BuildMesh has 3 uses:</p>
+
 <h3 id="BuildMesh-loading">Loading a model with custom settings</h3>
 <p>When using the version of BuildMesh that takes an address, </p>
+
 <h3 id="BuildMesh-procedural-generation">Procedural model generation</h3>
 <p>&nbsp;</p>
+
 <h3 id="BuildMesh-procedural-animation">Procedural animation</h3>
 <p>&nbsp;</p>
+
+
 <h2 id="UpdateMeshMorphWeights">UpdateMeshMorphWeights{}</h2>
 <pre><code>mesh mesh
 float[] weights</code></pre>
+
 
 <h2 id="AddPostEffect">AddPostEffect{}</h2>
 <pre><code>string depth = "background" or "foreground" or "topmost_exclusive" or ("middle" / "foreground_exceptclose") <em>-- Selects camera.</em>
@@ -966,6 +1103,7 @@ table builtin = nil or {
 	<li><a href="magic-literals.html#layers">Layers</a></li>
 	<li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/PostProcessingWritingEffects.html">Unity post-processing effects</a></li>
 </ul>
+
 <h3 id="AddPostEffect-material"><code>material</code> Post Effects</h3>
 <p>This adds a material to a multi-material effect named <code>PostEffects</code>. The material's shader receives the camera view through the main texture (<code>_MainTex</code>) and it is drawn as a <a href="glossary.html#quad">quad</a> covering the camera.</p>
 <p>If the effect has 1 material, it does <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Graphics.Blit.html" class=func>Graphics.Blit</a>(<span title=source>src</span>, <span title=destination>dest</span>, material)</code>. If someone wants this code path but wants to do multiple <code>material</code> effects, they might be able to use a single material with a custom multi-pass shader, using <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-UsePass.html">UsePass</a> and <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-GrabPass.html">GrabPass</a> as needed.</p>
@@ -983,6 +1121,7 @@ table builtin = nil or {
 	<li>RenderTexture Colors: <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderTextureReadWrite.html">Linear</a></li>
 	<li>Camera background color: <code>{0,0,0,0}</code></li>
 </ul>
+
 <h3 id="AddPostEffect-builtin"><code>builtin</code> Post Effects</h3>
 <p>This allows scripts to utilize some Unity post effects that have been integrated into Audiosurf 2. If <code>material</code> and <code>builtin</code> effects are mixed on the same camera, <code>PostEffects</code> is always the first component to be added. Post effects <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/PostProcessingWritingEffects.html">should</a> render in the order they are added to the camera.</p>
 <h4 id="AddPostEffect-builtin-AmplifyColor">Amplify Color</h4>
@@ -1032,6 +1171,7 @@ address dirt = nil <em>-- <a href="https://github.com/sonicether/SE-Natural-Bloo
 <p>It also takes some fog settings from <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderSettings.html">RenderSettings</a></code> (<code>fogMode</code>, <code>fogDensity</code>, <code>fogStartDistance</code>, <code>fogEndDistance</code>), so <code><a href="#SetScene" class=func>SetScene</a>{fogenabled,fogcolor,fogdensity,fogstart,fogend}</code> will change this effect.</p>
 <pre><code>string name = "GlobalFog"
 float height = -400 <em>-- "Fog top Y coordinate"</em></code></pre>
+
 <h3 id="AddPostEffect-manual">Manual Effects</h3>
 <p>With custom shaders it has always been possible to use special vertex shaders to position geometry directly in screen space without using <code>AddPostEffect</code> and sample the screen using <a href="https://docs.unity3d.com/2017.3/Documentation/Manual/SL-GrabPass.html">GrabPass</a>. An example is available <a href="lib/postprocess_example.html">here</a>.</p>
 <!-- InstanceEndEditable -->

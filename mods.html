@@ -23,8 +23,14 @@
 <h1 id="types">Types</h1>
 <script type="text/javascript">writeTypes();</script>
 <!-- InstanceBeginEditable name="content" -->
+
+
+
+
 <h1 id="script-execution">Script Execution</h1>
 <p>The mod script is executed during the loading screen when starting a song. A function in the script named <code><a href="#Update" class="func">Update()</a></code>, if present, will be executed every frame during actual gameplay.</p>
+
+
 <h2 id="Update">Update(<a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-float">float</a>, <a href="#type-table">table</a>, <a href="#type-float">float</a>)</h2>
 <p>This function is executed inside of <a href="https://docs.unity3d.com/Documentation/ScriptReference/MonoBehaviour.LateUpdate.html">Unity's LateUpdate</a> function.<br>
 Arguments:</p>
@@ -33,6 +39,8 @@ Arguments:</p>
 <a href="#type-float">float</a> <strong>playerstrafe</strong> <em>-- the player's current offset from the center of the track</em>
 <a href="#type-table">table</a> <strong>input</strong> <em>-- the same table returned by <a href="#GetInput" class="func">GetInput()</a></em>
 <a href="#type-float">float</a> <strong>currentWakeboarderJumpHeight</strong></code></pre>
+
+
 <h2 id="OnTrackCreated">OnTrackCreated(table)</h2>
 <p>This function is executed [].<br>
 Arguments:</p>
@@ -41,14 +49,26 @@ Arguments:</p>
 <a href="#type-float">float</a> <strong>playerstrafe</strong> <em>-- the player's current offset from the center of the track</em>
 <a href="#type-table">table</a> <strong>input</strong> <em>-- the same table returned by <a href="#GetInput" class="func">GetInput()</a></em>
 <a href="#type-float">float</a> <strong>currentWakeboarderJumpHeight</strong></code></pre>
+
+
+
+
 <h1 id="script-functions">Script Functions</h1>
 <p>TODO</p>
+
+
 <h2 id="AutomagicTable"><a href="#type-table">table</a> AutomagicTable()</h2>
 <p>Creates an &quot;automagic table&quot;. Attempting to access a sub-table inside the table automatically generates that table.</p>
 <pre class="NppLua"><span class="sc11">a</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">AutomagicTable</span><span class="sc10">()</span><span class="sc0">
 </span><span class="sc11">a.b.c.d</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"a.b and a.b.c are automatically created"</span></pre>
 <p>It is the exact same thing as this: <a href="http://lua-users.org/wiki/AutomagicTables">http://lua-users.org/wiki/AutomagicTables</a></p>
+
+
+
+
 <h1 id="customization-functions">Customization Functions</h1>
+
+
 <h2 id="GameplaySettings">GameplaySettings{}</h2>
 <pre><code><a href="#type-float">float</a> <strong>jumpheightscaler</strong> = 1
 <a href="#type-float">float</a> <strong>gravity</strong> = -0.45
@@ -123,13 +143,19 @@ Arguments:</p>
 <a href="#type-float">float</a> <strong>maxstrafe</strong> ?= -- this is directly assigned to many internal settings, which each have different defaults (maxStrafe 15, maxStrafeJump 9, maxStrafeMouse 2.2, maxStrafeMouseJump 2.2, nonMouseMaxStrafe 15, nonMouseMaxStrafeJump 9)
 <a href="#type-bool">bool</a> <strong>usesnowboardphysics</strong> ?= false
 <a href="#type-int">int</a> <strong>freqtrafficbins</strong> = 0 -- numbers greater than 256 are treated as 256</code></pre>
+
+
 <h2 id="SetRenderViewports">SetRenderViewports(<a href="#type-table">table</a><a href="#type-array">[]</a>)</h2>
 <pre><code><a href="#type-vector3">vector3</a> <strong>pos</strong> = {0,0,0}
 <a href="#type-rotation">rotation</a> <strong>rot</strong> = {0,0,0}
 <a href="#type-vector3">vector3</a> <strong>scale</strong> = {0,0,0}</code></pre>
+
+
 <h2 id="print">print(*)</h2>
 <p>Takes any lua object/table, converts it to a string, and outputs it to &quot;Audiosurf2_Data\output_log.txt&quot;.</p>
 <p>This print is different from the <code><a href="skins.html#print" class="func">print(string)</a></code> in skin scripts. (it's better)</p>
+
+
 <h2 id="navigation"><a href="#type-table">table</a> GetPuzzle()</h2>
 <p>returned table:</p>
 <pre><code><a href="#type-int">int</a> <strong>matchedcellscount</strong>
@@ -139,6 +165,8 @@ Arguments:</p>
 	<a href="#type-int">int</a> <strong>matchsize</strong>
 	<a href="#type-bool">bool</a><a href="#type-array">[]</a> <strong>matchcols</strong>
 }, ...}, ...}</code></pre>
+
+
 <h2 id="GetTrack"><a href="#type-table">table</a><a href="#type-array">[]</a> GetTrack()</h2>
 <pre><code><a href="#type-float">float</a> <strong>maxair</strong>
 <a href="#type-float">float</a> <strong>maxAir</strong> <em>-- same thing</em>
@@ -165,9 +193,13 @@ bool funkyrot <em>-- if this is in a corkscrew or loop</em>
 float antiairtime <em>-- "anti jump seconds"</em>
 float trafficstrength
 float antitrafficstrength</code></pre>
+
+
 <h2 id="BatchRenderEveryFrame">BatchRenderEveryFrame{}</h2>
 <p>Identical to skins' <code><a href="skins.html#BatchRenderEveryFrame" class="func">BatchRenderEveryFrame{}</a></code> but includes an extra setting:</p>
 <pre><code><a href="#type-string">string</a> <strong>uniqueName</strong> = nil</code></pre>
+
+
 <h2 id="BatchRender">BatchRender{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>prefabName</strong> <em>-- mandatory</em>
 <a href="#type-int">int</a><a href="#type-array">[]</a> <strong>locations</strong> <em>-- mandatory</em>
@@ -175,14 +207,22 @@ float antitrafficstrength</code></pre>
 <a href="#type-bool">bool</a> <strong>rotateWithTrack</strong> = true
 <a href="#type-int">int</a> <strong>maxShown</strong> = 50
 <a href="#type-int">int</a> <strong>maxDistanceShown</strong> = 1000</code></pre>
+
+
 <h2 id="UpdateBatchRenderer">UpdateBatchRenderer{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>uniqueName</strong> <em>-- mandatory. matches a name in BatchRenderEveryFrame{}</em>
 <a href="#type-int">int</a><a href="#type-array">[]</a> <strong>hideLocations</strong> = nil
 <a href="#type-int">int</a><a href="#type-array">[]</a> <strong>showLocations</strong> = nil</code></pre>
 <p>An instance hidden in this manner still counts toward the <code><strong>maxShown</strong></code> limit.</p>
+
+
 <h2 id="GetCurrentTrackLocation"><a href="#type-float">float</a> GetCurrentTrackLocation()</h2>
+
+
 <h2 id="GetCurrentTrackWorldPosition"><a href="#type-vector3">vector3</a> GetCurrentTrackWorldPosition()</h2>
 <p>The vector3 is a combination of both styles. (<code>vector3[1]</code> and <code>vector3.x</code> are equivalent)</p>
+
+
 <h2 id="CreateClone">CreateClone{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>prefabName</strong> = "AvatarBot" <em>-- can be "vehicle" or the name of an object</em>
 <em>-- if <strong>prefabName</strong> == "vehicle"</em>
@@ -193,6 +233,8 @@ float antitrafficstrength</code></pre>
 <em>-- end</em>
 <a href="#type-transform2">transform2</a> <strong>transform</strong> = nil
 <a href="#type-string">string</a> <strong>name</strong> = "clonename1" <em>-- auto increments</em></code></pre>
+
+
 <h2 id="SendCommand">SendCommand{}</h2>
 <p>one of the 3 below tables</p>
 <dl>
@@ -265,6 +307,8 @@ UnlockedElite
 UpdatedTrackColors
 WakeboarderCrossedOptimalJumpSpot</code></pre></dd>
 </dl>
+
+
 <h2 id="GetInput"><a href="#type-table">table</a> GetInput()</h2>
 <pre><code><a href="#type-table">table</a> <strong>mouse</strong> {
 	<a href="#type-float">float</a> <strong>x</strong>
@@ -290,20 +334,30 @@ WakeboarderCrossedOptimalJumpSpot</code></pre></dd>
 	<a href="#type-bool">bool</a> <strong>button4</strong>
 	<a href="#type-table">table</a> <strong>mouse</strong> <em>-- the contents are identical to the main mouse table</em>
 }, ...}</code></pre>
+
+
 <h2 id="SetLocalScore">SetLocalScore{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>name</strong> = "nameless"
 <a href="#type-int">int</a> <strong>score</strong> = 0
 <a href="#type-string">string</a> <strong>displayScore</strong> = nil</code></pre>
+
+
 <h2 id="SetGlobalScore">SetGlobalScore{}</h2>
 <pre><code><a href="#type-int">int</a> <strong>score</strong> = 0
 <a href="#type-bool">bool</a> <strong>showdelta</strong> = true</code></pre>
+
+
 <h2 id="PlayBuiltInSound">PlayBuiltInSound{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>soundType</strong> = "none" or "grunt"
 <a href="#type-string">string</a> <strong>avatar</strong> = "AvatarMcFly" or "AvatarIphoneLady" or "AvatarBear" or "AvatarRobot"</code></pre>
 <p>For types other than <code>grunt</code>, this is identical to <code><a href="#PlaySound" class=func>PlaySound</a>{name=soundType}</code>.</p>
+
+
 <h2 id="GetJumpHeights"><a href="#type-float">float</a><a href="#type-array">[]</a> GetJumpHeights{}</h2>
 <p>input table or launchNode can be nil to use the current node</p>
 <pre><code><a href="#type-int">int</a> <strong>launchNode</strong> = nil</code></pre>
+
+
 <h2 id="SetPuzzle">SetPuzzle{}</h2>
 <pre><code><a href="#type-float">float</a> <strong>trackoffset</strong> ?= ?
 <a href="#type-table">table</a><a href="#type-array">[]</a> <strong>newblocks</strong> ?= ? or {{
@@ -320,8 +374,12 @@ WakeboarderCrossedOptimalJumpSpot</code></pre></dd>
 	<a href="#type-float">float</a> <strong>matchtimerthreshold</strong> ?= 1.5
 	<a href="#type-float">float</a> <strong>collectnow_usingmultiplier</strong> = nil
 }</code></pre>
+
+
 <h2 id="HideBuiltinPlayerObjects">HideBuiltinPlayerObjects()</h2>
 <p>Takes no parameters and returns nothing. Hides the surfer, vehicle, and rooster <a href="skins.html#SetPlayer">set by the skin</a>.</p>
+
+
 <h2 id="SetCamera">SetCamera{}</h2>
 <pre><code><a href="#type-vector3">vector3</a> <strong>pos</strong> = nil
 <em>-- if <strong>pos</strong> is set</em>
@@ -339,8 +397,12 @@ WakeboarderCrossedOptimalJumpSpot</code></pre></dd>
 	<a href="#type-float">float</a> <strong>strafiness</strong> = 0
 }
 <em>-- end</em></code></pre>
+
+
 <h2 id="HideTraffic">HideTraffic(<a href="#type-int">int</a><a href="#type-array">[]</a>)</h2>
 <p>Numbers less than 1 will be treated as 1.</p>
+
+
 <h2 id="SetSkinProperties">SetSkinProperties(<a href="#type-dict">{</a><a href="#type-string">string</a><a href="#type-dict">=</a>*<a href="#type-dict">}</a>)</h2>
 <pre><code><a href="#type-bool">bool</a> <strong>*</strong> ?= nil
 <a href="#type-double">double</a> <strong>*</strong> ?= nil
@@ -348,6 +410,8 @@ WakeboarderCrossedOptimalJumpSpot</code></pre></dd>
 <a href="#type-dict">{</a>*<a href="#type-dict">=</a>*<a href="#type-dict">}</a> <strong>*</strong> ?= nil <em>-- Keys and values can be a mixture of <a href="#type-bool">bool</a>, <a href="#type-double">double</a>, and <a href="#type-string">string</a>. A nil key will cause an exception to be thrown.</em></code></pre>
 <p>Sets the values the skin will see when calling <code><a href="skins.html#GetSkinProperties" class="func">GetSkinProperties</a>()</code>. Please read the <code><a href="skins.html#GetSkinProperties" class="func">GetSkinProperties</a></code> documentation for the full details.</p>
 <p><code><strong>colorcount</strong></code> is a reserved property name and it will always be silently overwritten with current <code><a href="#GameplaySettings" class=func>GameplaySettings</a>{<strong>colorcount</strong>}</code> setting.</p>
+
+
 <h2 id="PlaySound">PlaySound{}</h2>
 <pre><code><a href="#type-string">string</a> <strong>name</strong>
 <a href="#type-float">float</a> <strong>volume</strong> = 1
@@ -358,27 +422,45 @@ WakeboarderCrossedOptimalJumpSpot</code></pre></dd>
 	<li><a href="#LoadSounds">LoadSounds</a></li>
 	<li><a href="#PlayBuiltInSound">PlayBuiltInSound</a></li>
 </ul>
+
+
 <h2 id="LoadSounds">LoadSounds(<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a>)</h2>
 <p>Identical to skins' <code><a href="skins.html#LoadSounds" class="func">LoadSounds{}</a></code>.</p>
+
+
 <h2 id="GetQualityLevel"><a href="#type-int">int</a> GetQualityLevel()</h2>
 <p>Same as skins' <code><a href="skins.html#GetQualityLevel" class="func">GetQualityLevel()</a></code></p>
+
+
 <h2 id="SetScoreboardNote">SetScoreboardNote{}</h2>
 <pre><code><a href="#type-float">float</a> <strong>secondsvisible</strong> = 0
 <a href="#type-color">color</a> <strong>color</strong> = {195,195,195,255}
 <a href="#type-string">string</a> <strong>text</strong> = ""</code></pre>
+
+
 <h2 id="DoJump">DoJump()</h2>
 <p>Takes no parameters and returns nothing.</p>
+
+
 <h2 id="ChangeTraffic">ChangeTraffic(<a href="#type-table">table</a><a href="#type-array">[]</a>)</h2>
 <pre><code><a href="#type-int">int</a> <strong>index</strong>
 <a href="#type-string">string</a> <strong>powerupname</strong> ?= ?
 <a href="#type-int">int</a> <strong>type</strong> ?= ?
 <a href="#type-vector3">vector3</a> <strong>v3offset</strong> ?= ?</code></pre>
+
+
 <h2 id="SetBlockColors">SetBlockColors(<a href="#type-color">color</a><a href="#type-array">[]</a>)</h2>
 <p>Skins  override this if they supply as many or more colors than you.</p>
+
+
 <h2 id="GetBlockColors"><a href="#type-color">color</a><a href="#type-array">[]</a> GetBlockColors()</h2>
 <p>Colors are <code>{<strong>r</strong>=0-1, <strong>g</strong>=0-1, <strong>b</strong>=0-1, <strong>a</strong>=0-1}</code> format.</p>
+
+
 <h2 id="CreateObject">CreateObject{}</h2>
 <p>Identical to skins' <code><a href="skins.html#CreateObject" class="func">CreateObject{}</a></code></p>
+
+
 <h2 id="SetBlocks">SetBlocks</h2>
 <p>Identical to skins' <code><a href="skins.html#SetBlocks" class="func">SetBlocks{}</a></code></p>
 <!-- InstanceEndEditable -->
