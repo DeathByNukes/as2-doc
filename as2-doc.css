@@ -26,6 +26,8 @@ a[href^="#"]:hover {
 code a[href|="#type"],
 code .func,
 code .type,
+code .prop,
+code .field,
 h1 a[href|="#type"],
 h2 a[href|="#type"],
 dfn[id|="type"],
@@ -36,6 +38,8 @@ dfn[id|="type"],
 code a[href|="#type"]:hover,
 code a.func:hover,
 code a.type:hover,
+code a.prop:hover,
+code a.field:hover,
 h1 a[href|="#type"]:hover,
 h2 a[href|="#type"]:hover {
 	color: #007FFF;
@@ -61,12 +65,32 @@ pre {
 	font-style: normal;
 	font-weight: normal;
 }
-pre code {
+pre > code {
 	display: inline-block;
+	/**/ width: min-content; /**/
+	min-width: 100%;
+	box-sizing: border-box;
+	/** / border-right: 1px dashed black; /**/
 }
 code, pre, .codeDefs dfn, th, td {
 	background-color: #eeeeee;
 }
+table code {
+	background-color: transparent;
+}
+/**
+body { width: 50em; }
+pre code-not {
+	white-space: normal;
+	display: inline-block;
+	vertical-align: top;
+	/*background-color: rgba(255,255,255,0.5);* /
+	max-width: 80%;
+	min-width: 10em;
+	width: min-content;
+}
+/**/
+
 tr:hover td {
 	background-color: transparent;
 }
@@ -74,6 +98,7 @@ table {
 	border-collapse: separate;
 	border-spacing: 2px 0;
 	border: none;
+	text-align: left;
 }
 tr, th, td {
 	border: none;

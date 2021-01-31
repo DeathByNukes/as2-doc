@@ -8,15 +8,9 @@
 <!-- InstanceBeginEditable name="head" -->
 <title>Lua Scripts</title>
 <style type="text/css">
-	table.availability th {
-		text-align: left;
-	}
 	table.availability tbody tr td:nth-child(2) {
 		/* status indicators */
 		text-align: center;
-	}
-	table.availability code {
-		background-color: transparent;
 	}
 </style>
 <!-- InstanceEndEditable -->
@@ -25,12 +19,16 @@
 <h1 id="about">About</h1>
 <address>Author: <a href="index.html#contact">DeathByNukes</a></address>
 <p>This is a part of my <a href="index.html">Audiosurf 2 scripting documentation</a>.</p>
-<!-- InstanceBeginEditable name="pre-content" --><!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="pre-content" -->
+<p>This documentation is up to date as of January 2021.</p>
+<!-- InstanceEndEditable -->
 <h1 id="contents">Contents</h1>
 <script type="text/javascript">writeNavigation();</script>
 <!-- InstanceBeginEditable name="content" -->
 <h1 id="environment">Lua Environment</h1>
-<p>Audiosurf 2 scripts are written in the <a href="https://www.lua.org/manual/5.1/">Lua 5.1</a> programming language. Because <a href="https://steamcommunity.com/app/235800/workshop/">workshop</a> scripts are downloaded from strangers, Lua is "sandboxed": dangerous features like <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.execute" class=func>os.execute</a></code> and <a href="https://www.lua.org/manual/5.1/luac.html">precompiled</a> scripts are removed to protect players from malware. Audiosurf 2 is built using the <a href="https://unity3d.com/">Unity</a> game engine and, at the time of writing, is using Unity version <a href="https://unity3d.com/get-unity/download/archive">2017.4.37</a>. Unity games are mostly written in the <a href="https://en.wikipedia.org/wiki/C_Sharp_(programming_language)">C#</a> programming language and Audiosurf 2 uses a <a href="https://github.com/DeathByNukes/MonoBoxedLua/tree/255cc8b56dd9532abcc83f904bdb75da9d579811">fork</a> of the <a href="https://code.google.com/archive/p/luainterface/">LuaInterface</a> library to integrate Lua into Unity's <a href="https://en.wikipedia.org/wiki/Mono_(software)">Mono</a>-based environment. One of the results of this setup is that many internal classes and objects can be directly passed to Lua code as <a href="https://www.lua.org/manual/5.1/manual.html#2.2">userdata</a> without writing a wrapper.</p>
+<p>Audiosurf 2 scripts are written in the <a href="https://www.lua.org/manual/5.1/">Lua 5.1</a> programming language. Because <a href="https://steamcommunity.com/app/235800/workshop/">workshop</a> scripts are downloaded from strangers, Lua is "sandboxed": dangerous features like <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-os.execute" class=func>os.execute</a></code> and <a href="https://www.lua.org/manual/5.1/luac.html">precompiled</a> scripts are removed to protect players from malware. Audiosurf 2 is built using the <a href="https://unity3d.com/">Unity</a> game engine and, at the time of writing, is using Unity version <a href="https://unity3d.com/get-unity/download/archive">2017.4.37</a>. The Unity engine is a <a href="https://en.wikipedia.org/wiki/Mono_(software)">Mono</a>-based environment (<a href="https://en.wikipedia.org/wiki/Common_Language_Infrastructure">CLI</a>/<a href="https://en.wikipedia.org/wiki/Common_Language_Runtime">CLR</a>) and so most code for it is written in the <a href="https://en.wikipedia.org/wiki/C_Sharp_(programming_language)">C#</a> programming language. Audiosurf 2 uses a library based on <a href="https://code.google.com/archive/p/luainterface/">LuaInterface</a> to integrate Lua into this environment.</p>
+<p>LuaInterface is an old library designed to allow Lua scripts to work with the <a href="https://en.wikipedia.org/wiki/.NET_Framework">.NET Framework</a> (the first <a href="https://en.wikipedia.org/wiki/Common_Language_Infrastructure">CLI</a> implementation). The most popular current fork of LuaInterface is probably <a href="http://nlua.org/">NLua</a>, but <a href="https://github.com/DeathByNukes/MonoBoxedLua/tree/255cc8b56dd9532abcc83f904bdb75da9d579811">the fork</a> used by Audiosurf 2 is based on a <a href="https://github.com/stevedonovan/MonoLuaInterface">MonoLuaInterface</a> fork named <a href="https://bitbucket.org/sparklinlabs/monoboxedlua">MonoBoxedLua</a>.</p>
+<p>One of the results of this setup is that many internal classes and objects can be directly passed from Audiosurf 2 to Lua code as <a href="https://www.lua.org/manual/5.1/manual.html#2.2">userdata</a> without writing a wrapper. I happen to know that in the past this wasn't done because of security concerns, but that was resolved sometime around 2017.</p>
 <ul class=seealso>
 	<li><a href="https://www.lua.org/manual/5.1/">Lua 5.1 Reference Manual</a></li>
 </ul>
@@ -197,8 +195,151 @@
 		<tr id="stdlib-table.sort"        ><td><code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-table.sort"         class=func>table.sort</a></code></td>              <td>✔️</td><td></td></tr>
 	</tbody>
 </table>
+<h1 id="LuaInterface">LuaInterface</h1>
+<p> At the moment only a few <a href="#environment">CLI</a> types are directly exposed to scripts but, depending on what you are trying to do, they can provide critical functionality. If you happen to be familiar with C# code, it might be easiest for you to learn about it by browsing the unit tests <a href="https://github.com/DeathByNukes/MonoBoxedLua/tree/255cc8b56dd9532abcc83f904bdb75da9d579811/LuaInterfaceTest">here</a>.</p>
+<h2 id="LuaInterface-luanet">Standard Library</h2>
+<table class=availability>
+	<thead>
+		<tr><th>Name</th><th>Status</th><th>Notes</th></tr>
+	</thead>
+	<tbody>
+		<tr id="LuaInterface-luanet-luanet"               ><td><code><a href="https://github.com/stevedonovan/MonoLuaInterface#lua-api"	class=func>luanet</a></code></td>                <td>⚠️</td><td>The <code>luanet</code> table doesn't exist but its contents (below) are global variables instead.</td></tr>
+		<tr id="LuaInterface-luanet-ctype"                ><td><code><a href="https://github.com/stevedonovan/MonoLuaInterface#lua-api"	class=func>ctype</a></code></td>                 <td>✔️</td><td></td></tr>
+		<tr id="LuaInterface-luanet-enum"                 ><td><code><a href="https://github.com/stevedonovan/MonoLuaInterface#lua-api"	class=func>enum</a></code></td>                  <td>✔️</td><td></td></tr>
+		<tr id="LuaInterface-luanet-free_object"          ><td><code><a href="https://github.com/stevedonovan/MonoLuaInterface#lua-api"	class=func>free_object</a></code></td>           <td>❌</td><td></td></tr>
+		<tr id="LuaInterface-luanet-get_constructor_bysig"><td><code><a href="https://github.com/stevedonovan/MonoLuaInterface#lua-api"	class=func>get_constructor_bysig</a></code></td> <td>✔️</td><td></td></tr>
+		<tr id="LuaInterface-luanet-get_method_bysig"     ><td><code><a href="https://github.com/stevedonovan/MonoLuaInterface#lua-api"	class=func>get_method_bysig</a></code></td>      <td>✔️</td><td></td></tr>
+		<tr id="LuaInterface-luanet-import_type"          ><td><code><a href="https://github.com/stevedonovan/MonoLuaInterface#lua-api"	class=func>import_type</a></code></td>           <td>⚠️</td><td>Exists, but no assemblies are loaded. Some <a href="#LuaInterface-whitelist">whitelisted types</a> can be imported though.</td></tr>
+		<tr id="LuaInterface-luanet-load_assembly"        ><td><code><a href="https://github.com/stevedonovan/MonoLuaInterface#lua-api"	class=func>load_assembly</a></code></td>         <td>❌</td><td></td></tr>
+		<tr id="LuaInterface-luanet-make_object"          ><td><code><a href="https://github.com/stevedonovan/MonoLuaInterface#lua-api"	class=func>make_object</a></code></td>           <td>❌</td><td></td></tr>
+	</tbody>
+</table>
+<h2 id="LuaInterface-whitelist">Type Whitelist</h2>
+<p>Audiosurf 2 has manually whitelisted some <a href="#environment">CLI</a> types so that they can be imported with <code><a href="#LuaInterface-luanet-import_type" class=func>import_type</a>(full_name)</code>:</p>
+<table>
+	<thead>
+		<tr><th>Full Name</th><th>Common Name</th><th>Semantics</th><th>Lua Conversion</th></tr>
+	</thead>
+	<tbody>
+		<tr><td><code><a href="https://docs.microsoft.com/en-us/dotnet/api/system.char?view=netframework-2.0"     class=type>System.Char</a></code></td>            <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/char"                          class=type>char</a></code></td>           <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct"                                       class=type>struct</a></code></td>       <td><code>number</code></td>   </tr>
+		<tr><td><code><a href="https://docs.microsoft.com/en-us/dotnet/api/system.datetime?view=netframework-2.0" class=type>System.DateTime</a></code></td>        <td><code><span                                                                                                                   class=type>DateTime</span></code></td>    <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct"                                       class=type>struct</a></code></td>       <td><code>userdata</code></td> </tr>
+		<tr><td><code><a href="https://docs.microsoft.com/en-us/dotnet/api/system.double?view=netframework-2.0"   class=type>System.Double</a></code></td>          <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types"  class=type>double</a></code></td>         <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct"                                       class=type>struct</a></code></td>       <td><code>number</code></td>   </tr>
+		<tr><td><code><a href="https://docs.microsoft.com/en-us/dotnet/api/system.int32?view=netframework-2.0"    class=type>System.Int32</a></code></td>           <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types"        class=type>int</a></code></td>            <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct"                                       class=type>struct</a></code></td>       <td><code>number</code></td>   </tr>
+		<tr><td><code><a href="https://docs.microsoft.com/en-us/dotnet/api/system.math?view=netframework-2.0"     class=type>System.Math</a></code></td>            <td><code><span                                                                                                                   class=type>Math</span></code></td>        <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/static-classes-and-static-class-members" class=type>static class</a></code></td> <td>n/a</td>                   </tr>
+		<tr><td><code><a href="https://docs.microsoft.com/en-us/dotnet/api/system.object?view=netframework-2.0"   class=type>System.Object</a></code></td>          <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/reference-types"               class=type>object</a></code></td>         <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/class"                                             class=type>class</a></code></td>        <td><code>userdata</code></td> </tr>
+		<tr><td><code><a href="https://docs.microsoft.com/en-us/dotnet/api/system.single?view=netframework-2.0"   class=type>System.Single</a></code></td>          <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types"  class=type>float</a></code></td>          <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct"                                       class=type>struct</a></code></td>       <td><code>number</code></td>   </tr>
+		<tr><td><code><a href="https://docs.microsoft.com/en-us/dotnet/api/system.timespan?view=netframework-2.0" class=type>System.TimeSpan</a></code></td>        <td><code><span                                                                                                                   class=type>TimeSpan</span></code></td>    <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct"                                       class=type>struct</a></code></td>       <td><code>userdata</code></td> </tr>
+		<tr><td><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color32.html"        class=type>UnityEngine.Color32</a></code></td>    <td><code><span                                                                                                                   class=type>Color32</span></code></td>     <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct"                                       class=type>struct</a></code></td>       <td><code>userdata</code></td> </tr>
+		<tr><td><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color.html"          class=type>UnityEngine.Color</a></code></td>      <td><code><span                                                                                                                   class=type>Color</span></code></td>       <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct"                                       class=type>struct</a></code></td>       <td><code>userdata</code></td> </tr>
+		<tr><td><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Mathf.html"          class=type>UnityEngine.Mathf</a></code></td>      <td><code><span                                                                                                                   class=type>Mathf</span></code></td>       <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/static-classes-and-static-class-members" class=type>static class</a></code></td> <td>n/a</td>                   </tr>
+		<tr><td><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Quaternion.html"     class=type>UnityEngine.Quaternion</a></code></td> <td><code><span                                                                                                                   class=type>Quaternion</span></code></td>  <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct"                                       class=type>struct</a></code></td>       <td><code>userdata</code></td> </tr>
+		<tr><td><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Vector2.html"        class=type>UnityEngine.Vector2</a></code></td>    <td><code><span                                                                                                                   class=type>Vector2</span></code></td>     <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct"                                       class=type>struct</a></code></td>       <td><code>userdata</code></td> </tr>
+		<tr><td><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Vector3.html"        class=type>UnityEngine.Vector3</a></code></td>    <td><code><span                                                                                                                   class=type>Vector3</span></code></td>     <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct"                                       class=type>struct</a></code></td>       <td><code>userdata</code></td> </tr>
+		<tr><td><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Vector4.html"        class=type>UnityEngine.Vector4</a></code></td>    <td><code><span                                                                                                                   class=type>Vector4</span></code></td>     <td><code><a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct"                                       class=type>struct</a></code></td>       <td><code>userdata</code></td> </tr>
+	</tbody>
+</table>
+<p>Lua function calls <a href="https://www.lua.org/manual/5.1/manual.html#2.5.8">don't require parentheses when there is only one argument and that argument is a table or string definition</a>. The idiom is to use <code><a href="#LuaInterface-luanet-import_type" class=func>import_type</a></code> like this:</p>
+<pre class=LuaCode><code>Name = <a href="#LuaInterface-luanet-import_type" class=func>import_type</a> "Namespace.Name"</code></pre>
+<p>There is no way to avoid LuaInterface auto conversions when working with the numeric types; even if you are passing the output of one CLI function directly to the arguments of another, it will still be converted to a Lua number (double) and back along the way. Their instance methods are effectively inaccessible. Importing those types might still be useful if you need to create CLI arrays of them or use their static members.</p>
+<h2 id="LuaInterface-instances">Working with CLI Instances and Types</h2>
+<p>The most common use case in Audiosurf 2 will be working with <a href="#environment">CLI</a> object instances returned by functions like <code><a href="skins.html#BuildMaterial" class=func>BuildMaterial</a>{}</code>, which returns an instance of the <code><a href="skins.html#type-UnityEngine.Material" class=type>UnityEngine.Material</a></code> class. CLI objects and classes can contain <strong>fields</strong>, <strong>properties</strong>, and <strong>methods</strong>. (There are other things but they aren't relevant to Audiosurf 2.) <strong>Fields</strong> are like Lua variables but they can only contain specific types. <strong>Properties</strong> look like fields and generally act like them, but reading and writing their value calls internal "get" and "set" functions rather than reading and writing to a variable. Some can also be read-only. <strong>Methods</strong> should be familiar to experienced Lua users; they are functions attached to an object and you call them in the format <code>instance:method()</code> as shorthand for passing the object as the function's first argument.</p>
+<ul class=seealso>
+	<li><a href="https://www.lua.org/pil/16.html">PIL 16 - Object-Oriented Programming</a></li>
+</ul>
+<p>The Lua object produced by <code><a href="#LuaInterface-luanet-import_type" class=func>import_type</a></code>, sometimes called a <code>ProxyType</code>, allows you to access the <strong>static</strong> members of a type (<code>Type.StaticMember</code>), construct new instances of a type (<code>Type(arguments)</code>), and construct CLI arrays of that type (<code>Type[number]</code>). Static members work like instance members, but they are global and you do not use colon (<code>:</code>) syntax to call <strong>static methods</strong>. This is different from the <code><a href="https://docs.microsoft.com/en-us/dotnet/api/system.type?view=netframework-2.0" class=type>System.Type</a></code> object, which is used to programmatically view the metadata and members of a type; to get that you can call <code>example:<a href="https://docs.microsoft.com/en-us/dotnet/api/system.object.gettype?view=netframework-2.0" class=func>GetType</a>()</code> on instances or <code><a href="#LuaInterface-luanet-ctype" class=func>ctype</a>(Example)</code> on types. (Advanced users: Accessing members via reflection has been <a href="https://github.com/DeathByNukes/MonoBoxedLua/blob/255cc8b56dd9532abcc83f904bdb75da9d579811/LuaInterface/ObjectTranslator.cs#L541">disabled</a>; anything in the <code>System.Reflection</code> namespace gets converted to a string rather than a userdata.)</p>
+<h2 id="LuaInterface-example">Examples</h2>
+<h3 id="LuaInterface-example-material">Materials</h2>
+<pre class=LuaCode><code>local mat = <a href="skins.html#BuildMaterial" class=func>BuildMaterial</a>{
+	shader = "<a href="shaders.html#shader-VertexColorUnlitTintedAddSmooth">VertexColorUnlitTintedAddSmooth</a>",
+	texture = "<a href="magic-literals.html#special-textures">&lt;ALBUMART&gt;</a>",
+}
+
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(mat.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material-renderQueue.html" class=prop>renderQueue</a> == <a href="magic-literals.html#render-queue">3000</a>) <em>-- Read instance property. (Basic <a href="#environment">CLI</a> number types are <a href="https://github.com/DeathByNukes/MonoBoxedLua/blob/255cc8b56dd9532abcc83f904bdb75da9d579811/LuaInterface/ObjectTranslator.cs#L497">automatically converted</a> to Lua numbers.)</em>
+mat.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material-renderQueue.html" class=prop>renderQueue</a> = 1000 <em>-- Set instance property. (Lua numbers are <a href="https://github.com/DeathByNukes/MonoBoxedLua/blob/255cc8b56dd9532abcc83f904bdb75da9d579811/LuaInterface/ObjectTranslator.cs#L392">automatically</a> <a href="https://github.com/DeathByNukes/MonoBoxedLua/blob/255cc8b56dd9532abcc83f904bdb75da9d579811/LuaInterface/CheckType.cs#L30">converted</a> to CLI numbers.)</em>
+local tex = mat:<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.GetTexture.html" class=func>GetTexture</a>("_MainTex") <em>-- Call instance method.</em>
+
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(<a href="https://www.lua.org/manual/5.1/manual.html#pdf-type" class=func>type</a>(mat) == 'userdata')
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(mat:<a href="https://docs.microsoft.com/en-us/dotnet/api/system.object.gettype?view=netframework-2.0" class=func>GetType</a>().<a href="https://docs.microsoft.com/en-us/dotnet/api/system.type.fullname?view=netframework-2.0" class=prop>FullName</a> == "UnityEngine.Material")
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(tex:<a href="https://docs.microsoft.com/en-us/dotnet/api/system.object.gettype?view=netframework-2.0" class=func>GetType</a>().<a href="https://docs.microsoft.com/en-us/dotnet/api/system.type.fullname?view=netframework-2.0" class=prop>FullName</a> == "UnityEngine.Texture2D")
+
+Color = <a href="#LuaInterface-luanet-import_type" class=func>import_type</a> "UnityEngine.Color"
+
+local sky_blue = <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-ctor.html" class=func>Color</a>(0, 0.5, 1, 1) <em>-- Create a new UnityEngine.Color instance.</em>
+local black = Color.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-black.html" class=prop>black</a> <em>-- Read static property.</em>
+local dark_blue = Color.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color.Lerp.html" class=func>Lerp</a>(sky_blue, black, 0.5) <em>-- Call static method. (Static methods don't use colon syntax.)</em>
+
+local w, h = tex.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-width.html" class=prop>width</a>, tex.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-height.html" class=prop>height</a>
+
+<em>-- The pixels of normal textures are marked "<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/ImageConversion.LoadImage.html">non-readable</a>" but the &lt;ALBUMART&gt; texture settings generate a new unrestricted Texture2D every time you use them.</em>
+tex:<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture2D.SetPixel.html" class=func>SetPixel</a>(0, h - 1, dark_blue) <em>-- Turn the top left pixel dark blue.</em>
+tex:<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture2D.Apply.html" class=func>Apply</a>()</code></pre>
+<h3 id="LuaInterface-example-advanced">Advanced</h2>
+<pre class=LuaCode><code>Color = <a href="#LuaInterface-luanet-import_type" class=func>import_type</a> "UnityEngine.Color"
+Object = <a href="#LuaInterface-luanet-import_type" class=func>import_type</a> "System.Object"
+
+local blue = Color.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-blue.html" class=prop>blue</a>
+local green = Color.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-green.html" class=prop>green</a>
+
+<em>-- LuaInterface doesn't currently translate <a href="#environment">CLI</a> operator overloading into Lua operator overloading.</em>
+<em>--local cyan = blue + green -- error("attempt to perform arithmetic on local 'blue' (a userdata value)")</em>
+
+local cyan = Color.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-operator_add.html" class=func>op_Addition</a>(blue, green) <em>-- Full list of operator names is <a href="https://stackoverflow.com/a/11113450">here</a> and <a href="https://stackoverflow.com/a/3016653">here</a>.</em>
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(cyan.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-a.html" class=prop>a</a> == 2)
+cyan.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-a.html" class=prop>a</a> = 1
+
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(cyan:<a href="https://docs.microsoft.com/en-us/dotnet/api/system.valuetype.equals?view=netframework-2.0" class=func>Equals</a>(<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-ctor.html" class=func>Color</a>(0,1,1,1))) <em>-- Compare the colors by value.</em>
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(cyan:<a href="https://docs.microsoft.com/en-us/dotnet/api/system.valuetype.equals?view=netframework-2.0" class=func>Equals</a>(<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-ctor.html" class=func>Color</a>(0,1,1))) <em>-- Multiple constructors.</em>
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(<a href="https://www.lua.org/manual/5.1/manual.html#pdf-tostring" class=func>tostring</a>(cyan) == cyan:<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color.ToString.html" class=func>ToString</a>()) <em>-- LuaInterface implements the <a href="https://www.lua.org/manual/5.1/manual.html#pdf-tostring">tostring</a> metatable field.</em>
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(<a href="https://www.lua.org/manual/5.1/manual.html#pdf-tostring" class=func>tostring</a>(cyan) == "RGBA(0.000, 1.000, 1.000, 1.000)")
+
+<em>-- Create CLI array of colors.</em>
+local colors = Color[3] <em>-- Create CLI array of colors. Equivalent to <code>System.Array.<a href="https://docs.microsoft.com/en-us/dotnet/api/system.array.createinstance?view=netframework-2.0#System_Array_CreateInstance_System_Type_System_Int32_" class=func>CreateInstance</a>(<a href="#LuaInterface-luanet-ctype" class=func>ctype</a>(Color), 3)</code>.</em>
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(colors.<a href="https://docs.microsoft.com/en-us/dotnet/api/system.array.length?view=netframework-2.0" class=prop>Length</a> == 3)
+<em>--assert(#colors == 3) -- error("attempt to get length of local 'colors' (a userdata value)")</em>
+colors[0] = blue <em>-- CLI arrays start with zero.</em>
+colors[1] = black <em>-- If you tried to assign some other type like "foo" or {0,0,0} it would cause an error.</em>
+colors[2] = dark_blue
+
+<em>-- LuaInterface is not able to translate CLI value types (aka <a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/struct">struct</a>) to Lua in a way that preserves by-value semantics.
+-- Each time a class or struct is passed from the CLI to Lua it creates a new <a href="https://www.lua.org/manual/5.1/manual.html#2.2">Lua userdata object</a>, which is a reference type like tables.
+-- If the object is a class or was already <a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/types/boxing-and-unboxing">boxed</a> before being passed to Lua, <a href="https://stackoverflow.com/a/7150832">it is possible</a> for multiple Lua objects to refer to the same CLI object.</em>
+local a, b, c, d, e, array
+a = Color.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-white.html" class=prop>white</a> <em>-- New Lua object and new CLI object.</em>
+b = Color.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-white.html" class=prop>white</a> <em>-- New Lua object and new CLI object, containing the same value.</em>
+c = a <em>-- Reference to the same Lua object.</em>
+
+array = Color[1]
+array[0] = a <em>-- A specific type CLI variable stores structs by value.</em>
+d = array[0] <em>-- New Lua object and new CLI object, containing the same value.</em>
+
+array = Object[1]
+array[0] = a <em>-- An Object type CLI variable <a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/types/boxing-and-unboxing">stores structs by reference</a>. LuaInterface userdata are Object type internally, so a new object will not be created here.</em>
+e = array[0] <em>-- New Lua object containing a reference to the same CLI object.</em>
+
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(a.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-r.html" class=prop>r</a> == 1 and b.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-r.html" class=prop>r</a> == 1 and c.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-r.html" class=prop>r</a> == 1 and d.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-r.html" class=prop>r</a> == 1 and e.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-r.html" class=prop>r</a> == 1)
+a.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-r.html" class=prop>r</a> = 0
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(a.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-r.html" class=prop>r</a> == 0 and b.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-r.html" class=prop>r</a> == 1 and c.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-r.html" class=prop>r</a> == 0 and d.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-r.html" class=prop>r</a> == 1 and e.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Color-r.html" class=prop>r</a> == 0)
+
+<em>-- Currently equality operators are always reference comparison, but operator overloading may be implemented in the future so don't do this.</em>
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(a ~= b)
+
+<em>-- This is the canonical way to compare Lua objects by reference but it insufficient for CLI types because
+-- the same CLI object might be referenced by multiple Lua userdata objects.</em>
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(not <a href="https://www.lua.org/manual/5.1/manual.html#pdf-rawequal" class=func>rawequal</a>(a, b))
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(<a href="https://www.lua.org/manual/5.1/manual.html#pdf-rawequal" class=func>rawequal</a>(a, c))
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(not <a href="https://www.lua.org/manual/5.1/manual.html#pdf-rawequal" class=func>rawequal</a>(a, d))
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(not <a href="https://www.lua.org/manual/5.1/manual.html#pdf-rawequal" class=func>rawequal</a>(a, e))
+
+<em>-- The correct way to compare CLI types by reference.</em>
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(not Object.<a href="https://docs.microsoft.com/en-us/dotnet/api/system.object.referenceequals?view=netframework-2.0" class=func>ReferenceEquals</a>(a, b))
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(Object.<a href="https://docs.microsoft.com/en-us/dotnet/api/system.object.referenceequals?view=netframework-2.0" class=func>ReferenceEquals</a>(a, c))
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(not Object.<a href="https://docs.microsoft.com/en-us/dotnet/api/system.object.referenceequals?view=netframework-2.0" class=func>ReferenceEquals</a>(a, d))
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(Object.<a href="https://docs.microsoft.com/en-us/dotnet/api/system.object.referenceequals?view=netframework-2.0" class=func>ReferenceEquals</a>(a, e))
+
+<em>-- Accessing the array twice creates different objects.</em>
+<a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(not Object.<a href="https://docs.microsoft.com/en-us/dotnet/api/system.object.referenceequals?view=netframework-2.0" class=func>ReferenceEquals</a>(colors[0], colors[0]))</code></pre>
 <h1 id="header">Header</h1>
-<p>These scripts run first inside Skin and Mod Lua environments:</p>
+<p>These scripts run first inside skin and mod Lua environments:</p>
 <h2 id="header-sandbox">Sandbox</h2>
 <p>This chunk can be disabled by the command line flag <code>+disablemodsecuritysandbox</code>. That flag seems to have been neglected when the security system was upgraded, as this is the only part of the game that checks it.</p>
 <pre class=LuaCode><code>
