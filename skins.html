@@ -882,11 +882,27 @@ table shadows = nil <em>-- this is the same as <a href="#CreateLight">CreateLigh
 <p>Creates a material object and returns a reference to it. This allows a single material to be used on multiple objects with less waste, and allows the material to be modified during <code><a href="#Update" class=func>Update</a>()</code> via <code><a href="#UpdateMaterial" class=func>UpdateMaterial</a>{}</code> or the object's members. The object's members also give access to advanced settings.</p>
 <h2 id="CreateMaterial"><a href="#type-UnityEngine.Material">UnityEngine.Material</a> CreateMaterial(<a href="#type-material">material</a>)</h2>
 <p>An alias for <code><a href="#BuildMaterial" class=func>BuildMaterial</a>{}</code></p>
+
 <h2 id="UpdateMaterial">UpdateMaterial(<a href="#type-table">table</a>)</h2>
 <pre><code><a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong>
-{string=float} shadersettings ?= ? <em>-- omitted settings are left at their previous values</em></code></pre>
+{string=float/vector4} shadersettings ?= ? <em>-- Omitted settings are left at their previous values. Types can be mixed.</em>
+table texturesettings ?= ? or {
+	<em>-- These settings only apply to the main texture.</em>
+	vector2 offset ?= ?
+	vector2 scale ?= ?
+	vector2 tiling ?= ? <em>-- Same as <strong>scale</strong>.</em>
+}
+<a href="#type-shadercolors">shadercolors</a> shadercolors ?= ?
+vector2 textureoffset ?= ? <em>-- Same as <strong>texturesettings.offset</strong>.</em>
+vector2 texturescale ?= ? <em>-- Same as <strong>texturesettings.scale</strong>.</em></code></pre>
+<p>Modifies an existing material. Useful for implementing animations inside the <code><a href="#Update" class=func>Update</a>()</code> function. Somewhat redundant now that the material object is exposed for direct changes.</p>
+<ul class="seealso">
+	<li><a href="#BuildMaterial">BuildMaterial</a></li>
+</ul>
+
 <h2 id="UpdateShaderSettings">UpdateShaderSettings(<a href="#type-table">table</a>)</h2>
 <p>An alias for <code><a href="#UpdateMaterial" class=func>UpdateMaterial</a>{}</code></p>
+
 <h2 id="BuildMesh"><a href="#type-mesh">mesh</a> BuildMesh{}</h2>
 <p>Can be one of the following tables:</p>
 <pre><code><a href="#type-mesh">mesh</a> <strong>mesh</strong> = nil <em>-- if not nil, modifies a previously created mesh (this will cause existing objects made with the mesh to update)</em>
