@@ -133,16 +133,68 @@
 
 		<dt><dfn id="type-material">material</dfn></dt>
 		<dd>a table:
-			<pre><code><a href="#type-string">string</a> <strong>shader</strong> ?= nil <em>-- ignored if material already exists and is being updated, mandatory otherwise. it will try stripping spaces from the name when the lookup for a built-in shader fails</em>
-<a href="#type-bool">bool</a> <strong>diffuseinair</strong> ?= false
+			<pre><code><a href="#type-string">string</a>/UnityEngine.Shader <strong>shader</strong> ?= nil <em>-- ignored if material already exists and is being updated, mandatory otherwise. it will try stripping spaces from the name when the lookup for a built-in shader fails</em>
+<a href="#type-bool">bool</a> <strong>diffuseinair</strong> ?= false <em>-- During jumps the shader of the gameobject's main material will be swapped with "Diffuse". Only works in a context where this material is being assigned to a gameobject. (TODO: find and link the shader)</em>
 <a href="#type-int">int</a> <strong>renderqueue</strong> ?= ?
-<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-float">float</a>/<a href="#type-vector3">vector3</a><a href="#type-dict">}</a> <strong>shadersettings</strong> ?= ? <em>-- vector3s are sent as vector4s with the 4th value always 1.0</em>
+<a href="#type-table">table</a> <strong>shadersettings</strong> ?= ? or {
+	<a href="#type-float">float</a> <strong>*</strong>
+	<a href="#type-vector4">vector4</a> <strong>*</strong>
+	float _Mode ?= ? <em>-- In addition to setting the named shader setting, certain values will apply other settings:
+		-- _Mode = 0,
+		--     _SrcBlend = 1,
+		--     _DstBlend = 0,
+		--     _ZWrite = 1,
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.DisableKeyword.html" class=prop>DisableKeyword</a>("_ALPHATEST_ON")
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.DisableKeyword.html" class=prop>DisableKeyword</a>("_ALPHABLEND_ON")
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.DisableKeyword.html" class=prop>DisableKeyword</a>("_ALPHAPREMULTIPLY_ON")
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material-renderQueue.html" class=prop>renderQueue</a> = -1
+		-- _Mode = 1,
+		--     _SrcBlend = 1,
+		--     _DstBlend = 0,
+		--     _ZWrite = 1,
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.EnableKeyword.html" class=prop>EnableKeyword</a>("_ALPHATEST_ON")
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.DisableKeyword.html" class=prop>DisableKeyword</a>("_ALPHABLEND_ON")
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.DisableKeyword.html" class=prop>DisableKeyword</a>("_ALPHAPREMULTIPLY_ON")
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material-renderQueue.html" class=prop>renderQueue</a> = <a href="magic-literals.html#render-queue">2450</a>
+		-- _Mode = 2,
+		--     _SrcBlend = 5,
+		--     _DstBlend = 10,
+		--     _ZWrite = 0,
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.DisableKeyword.html" class=prop>DisableKeyword</a>("_ALPHATEST_ON")
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.EnableKeyword.html" class=prop>EnableKeyword</a>("_ALPHABLEND_ON")
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.DisableKeyword.html" class=prop>DisableKeyword</a>("_ALPHAPREMULTIPLY_ON")
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material-renderQueue.html" class=prop>renderQueue</a> = <a href="magic-literals.html#render-queue">3000</a>
+		-- _Mode = 3,
+		--     _SrcBlend = 1,
+		--     _DstBlend = 10,
+		--     _ZWrite = 0,
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.DisableKeyword.html" class=prop>DisableKeyword</a>("_ALPHATEST_ON")
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.DisableKeyword.html" class=prop>DisableKeyword</a>("_ALPHABLEND_ON")
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.EnableKeyword.html" class=prop>EnableKeyword</a>("_ALPHAPREMULTIPLY_ON")
+		--     Material.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material-renderQueue.html" class=prop>renderQueue</a> = <a href="magic-literals.html#render-queue">3000</a></em>
+}
 <a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
 <a href="#type-string">string</a> <strong>texturewrap</strong> = "repeat" or "clamp"
 <a href="#type-bool">bool</a> <strong>usemipmaps</strong> = true
 <a href="#type-string">string</a> <strong>texturefilter</strong> = ("bilinear" / "Bilinear") or ("trilinear" / "Trilinear") or ("Point" / "point")
+int aniso = 1 or (1 to 9) <em>-- <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-anisoLevel.html">Anisotropic filtering</a>.</em>
 <a href="#type-address">address</a> <strong>texture</strong> ?= nil
-<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a> <strong>textures</strong> ?= nil <em>-- key is a name to assign to the texture and value is the texture file</em></code></pre>
+vector2 textureoffset = {0,0}
+vector2 texturescale = {1,1}
+<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a>/<a href="#type-table">table</a><a href="#type-dict">}</a> <strong>textures</strong> ?= nil or {
+	<em>-- Key is the name of a shader property. The main texture, set above, is named _MainTex.</em>
+	<a href="#type-address">address</a> <strong>*</strong> ?= nil
+	table * ?= nil or {
+		<em>-- Keys in this table are case-insensitive.</em>
+		<em>-- This table defines the six textures of a cubemap. All textures must be square and the same size.</em>
+		address (<strong>_FrontTex</strong> / <strong>FrontTex</strong> / <strong>Front</strong> / <strong>PositiveZ</strong>) = ?
+		address (<strong>_BackTex</strong> / <strong>BackTex</strong> / <strong>Back</strong> / <strong>NegativeZ</strong>) = ?
+		address (<strong>_LeftTex</strong> / <strong>LeftTex</strong> / <strong>Left</strong> / <strong>NegativeX</strong>) = ?
+		address (<strong>_RightTex</strong> / <strong>RightTex</strong> / <strong>Right</strong> / <strong>PositiveX</strong>) = ?
+		address (<strong>_UpTex</strong> / <strong>UpTex</strong> / <strong>Up</strong> / <strong>Top</strong> / <strong>_TopTex</strong> / <strong>PositiveY</strong>) = ?
+		address (<strong>_DownTex</strong> / <strong>DownTex</strong> / <strong>Down</strong> / <strong>Bottom</strong> / <strong>_BottomTex</strong> / <strong>NegativeY</strong>) = ?
+	}
+}</code></pre>
 			<ul class="seealso">
 				<li><a href="glossary.html#material">material</a></li>
 				<li><a href="glossary.html#shader">shader</a></li>
