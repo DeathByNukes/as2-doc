@@ -49,17 +49,35 @@
 <p>Property types we can set:</p>
 <ul>
 	<li><strong>2D</strong>: _MainTex via <code>texture=...</code> and all others via <code><a href="skins.html#type-material">textures</a>={_Property=...}</code></li>
+	<li><strong>Cubemap</strong>: <code><a href="skins.html#type-material">textures</a>={_Property={...}}</code></li>
 	<li><strong>Color</strong>: _Color via <code>color=...</code>, <code><a href="skins.html#SetScene" class="func">watertint</a>=...</code>, etc. and all others via <code><a href="skins.html#type-material">shadercolors</a>={_Property=...}</code></li>
 	<li><strong>Float</strong> and <strong>Range(a,b)</strong>: <code><a href="skins.html#type-material">shadersettings</a>={_Property=..., ...}</code> and <code><a href="skins.html#type-materialcolor">shadercolors</a>={...={... , param=&quot;_Property&quot;, paramMin=a, paramMax=b}}</code></li>
-	<li><strong>Vector</strong>: &quot;Four component vectors and colors are <a href="https://docs.unity3d.com/Documentation/ScriptReference/Material.SetVector.html">the same</a> in Unity shaders. (xyzw in the vector becomes rgba in the color).&quot;</li>
+	<li><strong>Vector</strong>: &quot;Four component vectors and colors are <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.SetVector.html">the same</a> in Unity shaders. (xyzw in the vector becomes rgba in the color).&quot;</li>
+	<li><strong>All types</strong>: Accessible via the <code><a href="skins.html#type-UnityEngine.Material" class=type>UnityEngine.Material</a></code> object returned by <code><a href="skins.html#BuildMaterial" class=func>BuildMaterial</a>{}</code>.</li>
 </ul>
-<p>If you specify a shader that ends in &quot;.shader&quot; or &quot;.txt&quot; it will load that shader file from your skin folder. It does this by feeding the contents of the file into <a href="glossary.html#unity">Unity</a>'s <a href="https://docs.unity3d.com/Documentation/ScriptReference/Material-ctor.html">Material constructor</a> so it must be a <a href="https://docs.unity3d.com/Documentation/Manual/ShaderTut1.html">fixed function</a> shader or one that was compiled by the Unity editor.</p>
 <p>Textures can be loaded from JPG and PNG file formats. All textures will be compressed to <a href="https://en.wikipedia.org/wiki/S3_Texture_Compression">DXT1</a> format (<a href="https://udn.epicgames.com/Two/TextureComparison.html">lossy</a>) unless the path ends in &quot;.png&quot;, in which case RGBA32 (lossless) format is used. The image loader is capable of recognizing the true file type even if the extension is wrong, so it should be possible to trick AS2 into loading PNGs with compression and vice versa by changing the filename. The Unity engine documentation implies that in this situation PNGs will be loaded with DXT5 and JPGs will be loaded with RGB24. Format descriptions are <a href="https://docs.unity3d.com/Documentation/Components/class-Texture2D.html">here</a> in the &quot;Desktop&quot; section.</p>
 <ul class="seealso">
 	<li><a href="glossary.html#shader">shader</a></li>
 	<li><a href="glossary.html#vertex-shader">vertex shader</a></li>
 	<li><a href="glossary.html#pixel-shader">pixel shader</a></li>
 </ul>
+
+
+
+
+<h1 id="loading">Loading</h1>
+<p>Older versions of <a href="lua.html#environment">Unity</a> allowed loading compiled ShaderLab directly from text, and later removed that support in a version that Audiosurf 2 upgraded to. To soften the blow to existing skins, a shader name ending in ".shader" will make it try reading the shader name from the file and replacing your name with that. Dylan said (<span title="If I Recall Correctly">IIRC</span>) he added a bunch of built-in shaders based on what he knew skins were using. If you specify a .txt file instead of a .shader file or the "Shader" line in your file is indented, it will fall back to passing your file contents to the <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material-ctor.html">obsolete</a> <code><a href="https://docs.unity3d.com/460/Documentation/ScriptReference/Material-ctor.html" class=func>Material</a>(string contents)</code> constructor which will (always?) fail to load the shader.</p>
+<p>After the shader name has been decided, it is loaded from the library of <a href="#list">built-in shaders</a> via <code>Shader.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Shader.Find.html" class=func>Find</a></code>.</p>
+<p>If a shader name, after processing, starts with "standard" (case-insensitive) then it sets the following material settings before reading your settings:</p>
+<pre class=LuaCode><code>material:SetOverrideTag("RenderType", "")
+material:SetInt("_SrcBlend", 1)
+material:SetInt("_DstBlend", 0)
+material:SetInt("_ZWrite", 1)
+material:DisableKeyword("_ALPHATEST_ON")
+material:DisableKeyword("_ALPHABLEND_ON")
+material:DisableKeyword("_ALPHAPREMULTIPLY_ON")
+material:renderQueue = -1</code></pre>
+<p>The <code><a href="skins.html#type-material" class=type>material</a>{<strong>shadersettings</strong>{<strong>_Mode</strong>}}</code> setting is probably relevant.</p>
 
 
 
