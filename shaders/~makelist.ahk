@@ -30,28 +30,51 @@ Loop, Parse, list, `n
 	name := split1
 	file := split2
 	output2 .= file "`t" name "`n"
-	FileRead, text, *m2000 %file% ; first 2000 bytes only
-	text := RegExReplace(text, "s)^.*?`n\s*Properties\s+{(.*?)`n\s*}.*$", "$1", change_count) ; get the Properties { ... } section
-	text := trim(text, " `t`n")
-	if (change_count == 0 || text == "")
-		text = No properties.
+	FileRead, text, %file%
+
+	; get the Properties { ... } section
+	props := RegExReplace(text, "s)^.*?`n\s*Properties\s+{(.*?)`n\s*}.*$", "$1", change_count)
+	props := trim(props, " `t`n")
+	if (change_count == 0 || props == "")
+		props = No properties.
 	else
 	{
-		text := RegExReplace(text, "m`n)^\s*(.*?)\s*$", "$1") ; strip whitespace from the ends of each line
+		props := RegExReplace(props, "m`n)^\s*(.*?)\s*$", "$1") ; strip whitespace from the ends of each line
 		; mark the property names/types and tabify
-		IfInString, text, [
-			text := RegExReplace(text, "m`n)^(?:(\[.*?\]) )?(\S+) (\(""[^""]*"",) (.+)\) (= )", "$1 `t<strong>$2</strong> `t$3 `t<span class=type>$4</span>`t) $5")
+		IfInString, props, [
+			props := RegExReplace(props, "m`n)^(?:(\[.*?\]) )?(\S+) (\(""[^""]*"",) (.+)\) (= )", "$1 `t<strong>$2</strong> `t$3 `t<span class=type>$4</span>`t) $5")
 		else
-			text := RegExReplace(text, "m`n)^(\[.*?\] )?(\S+) (\(""[^""]*"",) (.+)\) (= )", "$1<strong>$2</strong> `t$3 `t<span class=type>$4</span>`t) $5")
-		text := fixTabs(text)
-		text = <pre><code>%text%</code></pre>
+			props := RegExReplace(props, "m`n)^(\[.*?\] )?(\S+) (\(""[^""]*"",) (.+)\) (= )", "$1<strong>$2</strong> `t$3 `t<span class=type>$4</span>`t) $5")
+		props := fixTabs(props)
+		props = <pre><code>%props%</code></pre>
 	}
+
+	highlights = <pre><code>
+	highlights_indent := 1024
+	Loop, Parse, text, `n
+	{
+		if !RegExMatch(A_LoopField, "^\s*(?:SubShader|Pass|Name|ZTest|Cull|Tags|Blend|BlendOp|ColorMask|ZWrite|UsePass|GrabPass|Offset|Fallback)\b")
+			continue
+		line := rtrim(A_LoopField)
+		if substr(line,0) == "{"
+			line := rtrim(substr(line,1,-1))
+		if InStr(line, ";", true)
+			throw "Line contains semicolon. Selection needs improvement?`n" line
+		indent := strlen(line) - strlen(ltrim(line))
+		if (indent < highlights_indent)
+			highlights_indent := indent
+		highlights .= (A_Index == 1 ? "" : "`n") line
+	}
+	if highlights_indent > 0
+		highlights := RegExReplace(highlights, "m`n)^[ `t]{" highlights_indent "}")
+	highlights .= "</code></pre>"
+
 	text =
 	(
 
 
 	<dt id="shader-%name%"><dfn>%name%</dfn> <a href="#shader-%name%">#</a></dt>
-	<dd>%text%</dd>
+	<dd>%props%%highlights%</dd>
 
 	)
 	output .= text
