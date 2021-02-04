@@ -67,7 +67,7 @@ Loop, Parse, list, `n
 
 	text =
 	(
-<dt id="shader-%name%"><dfn>%name%</dfn> <a href="#shader-%name%">#</a></dt>
+<dt><dfn id="shader-%name%">%name%</dfn> <a href="#shader-%name%">#</a></dt>
 <dd>
 <pre><code>%props%</code></pre>
 <pre><code>%highlights%</code></pre>
