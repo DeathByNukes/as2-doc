@@ -7,7 +7,15 @@ Loop, *.shader
 {
 	Loop, Read, %A_LoopFileFullPath%
 	{
-		list .= RegExReplace(A_LoopReadLine, "^Shader ""([^""]+)"" {$", "$1") . "`r" . A_LoopFileFullPath . "`n"
+		shader := RegExReplace(A_LoopReadLine, "^\s*Shader\s+""([^""]*)"" {$", "$1")
+		if strlen(A_LoopReadLine) == strlen(shader)
+			throw "not a shader?`n" A_LoopReadLine
+		if shader =
+		{
+			SplitPath, A_LoopFileFullPath,,,, shader
+			shader .= " (blank name)"
+		}
+		list .= shader . "`r" . A_LoopFileFullPath . "`n"
 		break
 	}
 }
@@ -15,31 +23,62 @@ FileRemoveDir, ~renamed, 1
 FileCreateDir, ~renamed
 StringTrimRight, list, list, 1 ; remove final newline
 Sort, list
-output = <dl class="shadersList">`n
+output = <dl class="shadersList codeDefs">`n
 Loop, Parse, list, `n
 {
 	StringSplit, split, A_LoopField, `r
 	name := split1
 	file := split2
 	output2 .= file "`t" name "`n"
-	FileRead, text, *m2000 %file% ; first 2000 bytes only
-	text := RegExReplace(text, "s)^.*?`nProperties {`n(.*?)`n}.*$", "$1", change_count) ; get the Properties { ... } section
-	if (change_count > 0)
-	{
-		text := RegExReplace(text, "m`n)^\s*(.*?)\s*$", "$1") ; strip whitespace from the ends of each line
-		text := RegExReplace(text, "m`n)^(\S+) (\(""[^""]*"",) (.+)\) (= )", "<strong>$1</strong> `t$2 `t<span class=type>$3</span>`t) $4") ; mark the property names/types and tabify
-		text := fixTabs(text)
-		text = <pre><code>%text%</code></pre>
-	}
+	FileRead, text, %file%
+
+	; get the Properties { ... } section
+	props := RegExReplace(text, "s)^.*?`n\s*Properties\s+{(.*?)`n\s*}.*$", "$1", change_count)
+	props := trim(props, " `t`n")
+	if (change_count == 0 || props == "")
+		props = No properties.
 	else
-		text = No properties.
+	{
+		props := RegExReplace(props, "m`n)^\s*(.*?)\s*$", "$1") ; strip whitespace from the ends of each line
+		; mark the property names/types and tabify
+		IfInString, props, [
+			props := RegExReplace(props, "m`n)^(?:(\[.*?\]) )?(\S+) (\(""[^""]*"",) (.+)\) (= )", "$1 `t<strong>$2</strong> `t$3 `t<span class=type>$4</span>`t) $5")
+		else
+			props := RegExReplace(props, "m`n)^(\[.*?\] )?(\S+) (\(""[^""]*"",) (.+)\) (= )", "$1<strong>$2</strong> `t$3 `t<span class=type>$4</span>`t) $5")
+		props := fixTabs(props)
+	}
+
+	highlights =
+	highlights_indent := 1024
+	Loop, Parse, text, `n
+	{
+		line := RegExReplace(A_LoopField, "^(\s*)(SubShader|Pass|Name|ZTest|Cull|Tags|Blend|BlendOp|ColorMask|ZWrite|UsePass|GrabPass|Offset|Fallback)\b(.*?)(?:\s*\{\s*)?$", "$1<strong>$2</strong>$3", highlight_found)
+		if (highlight_found == 0)
+			continue
+		if InStr(line, ";", true)
+			throw "Line contains semicolon. Selection needs improvement?`n" line
+		indent := strlen(line) - strlen(ltrim(line))
+		if (indent < highlights_indent)
+			highlights_indent := indent
+		highlights .= (highlights == "" ? "" : "`n") line
+	}
+	if highlights_indent > 0
+		highlights := RegExReplace(highlights, "m`n)^[ `t]{" highlights_indent "}")
+
+	other_name =
+	if StrReplace(name, "/", "_") ".shader" != file
+		other_name := " <span class=filename>(" file ")</span>"
+
 	text =
 	(
-	<dt><dfn id="shader-%name%">%name%</dfn> <a href="#shader-%name%">#</a></dt>
-	<dd>%text%</dd>
+<dt><dfn id="shader-%name%">%name%</dfn>%other_name% <a href="#shader-%name%">#</a></dt>
+<dd>
+<pre><code>%props%</code></pre>
+<pre><code>%highlights%</code></pre>
+</dd>
 
 	)
-	output .= text
+	output .= (A_Index == 1 ? "" : "`n`n") text
 
 	StringReplace, name, name, /, \, 1
 	name = ~renamed\%name%
