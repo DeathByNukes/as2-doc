@@ -35,7 +35,7 @@ Loop, Parse, list, `n
 		text = No properties.
 	text =
 	(
-	<dt><dfn id="shader-%name%">%name%</dfn> <a href="#shader-%name%">#</a></dt>
+	<dt id="shader-%name%"><dfn>%name%</dfn> <a href="#shader-%name%">#</a></dt>
 	<dd>%text%</dd>
 
 	)
