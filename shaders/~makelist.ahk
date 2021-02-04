@@ -65,9 +65,13 @@ Loop, Parse, list, `n
 	if highlights_indent > 0
 		highlights := RegExReplace(highlights, "m`n)^[ `t]{" highlights_indent "}")
 
+	other_name =
+	if StrReplace(name, "/", "_") ".shader" != file
+		other_name := " <span class=filename>(" file ")</span>"
+
 	text =
 	(
-<dt><dfn id="shader-%name%">%name%</dfn> <a href="#shader-%name%">#</a></dt>
+<dt><dfn id="shader-%name%">%name%</dfn>%other_name% <a href="#shader-%name%">#</a></dt>
 <dd>
 <pre><code>%props%</code></pre>
 <pre><code>%highlights%</code></pre>
