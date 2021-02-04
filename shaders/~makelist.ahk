@@ -23,7 +23,7 @@ FileRemoveDir, ~renamed, 1
 FileCreateDir, ~renamed
 StringTrimRight, list, list, 1 ; remove final newline
 Sort, list
-output = <dl class="shadersList">`n
+output = <dl class="shadersList codeDefs">`n
 Loop, Parse, list, `n
 {
 	StringSplit, split, A_LoopField, `r
@@ -46,10 +46,9 @@ Loop, Parse, list, `n
 		else
 			props := RegExReplace(props, "m`n)^(\[.*?\] )?(\S+) (\(""[^""]*"",) (.+)\) (= )", "$1<strong>$2</strong> `t$3 `t<span class=type>$4</span>`t) $5")
 		props := fixTabs(props)
-		props = <pre><code>%props%</code></pre>
 	}
 
-	highlights = <pre><code>
+	highlights =
 	highlights_indent := 1024
 	Loop, Parse, text, `n
 	{
@@ -63,21 +62,21 @@ Loop, Parse, list, `n
 		indent := strlen(line) - strlen(ltrim(line))
 		if (indent < highlights_indent)
 			highlights_indent := indent
-		highlights .= (A_Index == 1 ? "" : "`n") line
+		highlights .= (highlights == "" ? "" : "`n") line
 	}
 	if highlights_indent > 0
 		highlights := RegExReplace(highlights, "m`n)^[ `t]{" highlights_indent "}")
-	highlights .= "</code></pre>"
 
 	text =
 	(
-
-
-	<dt id="shader-%name%"><dfn>%name%</dfn> <a href="#shader-%name%">#</a></dt>
-	<dd>%props%%highlights%</dd>
+<dt id="shader-%name%"><dfn>%name%</dfn> <a href="#shader-%name%">#</a></dt>
+<dd>
+<pre><code>%props%</code></pre>
+<pre><code>%highlights%</code></pre>
+</dd>
 
 	)
-	output .= text
+	output .= (A_Index == 1 ? "" : "`n`n") text
 
 	StringReplace, name, name, /, \, 1
 	name = ~renamed\%name%
