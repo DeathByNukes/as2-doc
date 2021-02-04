@@ -41,7 +41,10 @@ function writeNavigation(max_header_level, show_all_headers)
 			o = $(this);
 			if (this.tagName.toUpperCase() === 'DL')
 			{
-				o.find("dt[id]").each(addElement);
+				var dl_ids = o.find("dt[id]")
+				if (dl_ids.length == 0)
+					dl_ids = o.find("dfn[id]")
+				dl_ids.each(addElement);
 				return;
 			}
 			// :header
