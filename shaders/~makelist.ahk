@@ -38,7 +38,11 @@ Loop, Parse, list, `n
 	else
 	{
 		text := RegExReplace(text, "m`n)^\s*(.*?)\s*$", "$1") ; strip whitespace from the ends of each line
-		text := RegExReplace(text, "m`n)^(\S+) (\(""[^""]*"",) (.+)\) (= )", "<strong>$1</strong> `t$2 `t<span class=type>$3</span>`t) $4") ; mark the property names/types and tabify
+		; mark the property names/types and tabify
+		IfInString, text, [
+			text := RegExReplace(text, "m`n)^(?:(\[.*?\]) )?(\S+) (\(""[^""]*"",) (.+)\) (= )", "$1 `t<strong>$2</strong> `t$3 `t<span class=type>$4</span>`t) $5")
+		else
+			text := RegExReplace(text, "m`n)^(\[.*?\] )?(\S+) (\(""[^""]*"",) (.+)\) (= )", "$1<strong>$2</strong> `t$3 `t<span class=type>$4</span>`t) $5")
 		text := fixTabs(text)
 		text = <pre><code>%text%</code></pre>
 	}
