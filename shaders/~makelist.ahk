@@ -52,11 +52,9 @@ Loop, Parse, list, `n
 	highlights_indent := 1024
 	Loop, Parse, text, `n
 	{
-		if !RegExMatch(A_LoopField, "^\s*(?:SubShader|Pass|Name|ZTest|Cull|Tags|Blend|BlendOp|ColorMask|ZWrite|UsePass|GrabPass|Offset|Fallback)\b")
+		line := RegExReplace(A_LoopField, "^(\s*)(SubShader|Pass|Name|ZTest|Cull|Tags|Blend|BlendOp|ColorMask|ZWrite|UsePass|GrabPass|Offset|Fallback)\b(.*?)(?:\s*\{\s*)?$", "$1<strong>$2</strong>$3", highlight_found)
+		if (highlight_found == 0)
 			continue
-		line := rtrim(A_LoopField)
-		if substr(line,0) == "{"
-			line := rtrim(substr(line,1,-1))
 		if InStr(line, ";", true)
 			throw "Line contains semicolon. Selection needs improvement?`n" line
 		indent := strlen(line) - strlen(ltrim(line))
