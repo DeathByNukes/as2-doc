@@ -187,6 +187,15 @@ end</code></pre>
 <a href="#type-int">int</a> <strong>colorcount</strong> <em>-- Set by <a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{<strong>colorcount</strong>}, defaults to 1.</em></code></pre>
 <p>Mods can add whatever values they want to the table as long they are one of the basic Lua types. The values can also be Lua tables with keys and values of any of the basic types. Functions and deeper nested tables are not supported, but mods could include them as strings and the skin could convert the strings into Lua code via <code><a href="https://www.lua.org/manual/5.1/manual.html#pdf-loadstring" class=func>loadstring</a>()</code>. Mods can add and overwrite skin properties at any time; skins can call the function again during <code><a href="#Update" class=func>Update</a></code> to see the changes. (The automatic system used internally to transfer the values from mods to skins also supports <a href="https://www.lua.org/manual/5.1/manual.html#lua_pushlightuserdata">light userdata</a>, but I don't think Audiosurf 2 ever produces that type and it can't be created by scripts.)</p>
 
+<h3 id="GetSkinProperties-default">Default Properties</h3>
+<p>These are the default entries that usually get overwritten by mods:</p>
+<pre class=LuaCode><code><a href="mods.html#SetSkinProperties" class=func>SetSkinProperties</a>{
+	lanedividers = {-1.5, 1.5},
+	shoulderlines = {4.5, -4.5}, <em>-- [sic]</em>
+	trackwidth = 11.6,
+	prefersteep = false,
+}</code></pre>
+
 <h3 id="GetSkinProperties-standard">Standard Properties</h3>
 <p>These are the properties set by built-in mods and the ones based on them:</p>
 <pre><code><a href="#type-double">double</a> <strong>trackwidth</strong>
