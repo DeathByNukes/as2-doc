@@ -276,7 +276,7 @@ end</code></pre>
 <a href="#type-float">float</a> <strong>glowspread</strong> ?= 0.5
 <a href="#type-float">float</a> <strong>radialblur_strength</strong> ?= 1.0
 float crease_strength ?= 0 <em>-- cannot be set back to 0 once changed</em>
-<a href="#type-bool">bool</a> <strong>dynamicFOV</strong> ?= false
+<a href="#type-bool">bool</a> <strong>dynamicFOV</strong> ?= false <em>-- While true, the setting changed by <a href="#SetPlayer" class=func>SetPlayer</a>{<strong>fov</strong>} is ignored.</em>
 float closecam_near ?= ? <em>-- near clip plane of the close camera (<a href="glossary.html#layer">layers</a> <a href="magic-literals.html#layer-14">14</a> and <a href="magic-literals.html#layer-15">15</a>)</em>
 float closecam_far ?= 50
 <a href="#type-int">int</a> <strong>airdebris_count</strong> = 500 <em>-- &quot;sprites per chunk&quot;. <strong>airdebris_*</strong><strong></strong> are ?= set as a group; if one is supplied then all of them will be updated</em>
@@ -1101,12 +1101,12 @@ table builtin = nil or {
 	string name = nil or (<a href="#AddPostEffect-builtin">see below</a>) <em>-- A valid name is required or builtin will be ignored.</em>
 	<em>-- Other values, depending on the name. <a href="#AddPostEffect-builtin">See below</a> for all the variations.</em>
 }</code></pre>
-<p>Attaches a post-processing effect to the selected camera:</p>
+<p>Attaches a post-processing effect to the selected <a href="magic-literals.html#cameras">camera</a>:</p>
 <ul>
-	<li><code>background</code>: The background camera. Covers objects on layers 18 and 19.</li>
-	<li><code>middle</code> / <code>foreground_exceptclose</code>: The foreground camera. Covers objects on layers 11, 12, 13, 18, and 19.</li>
-	<li><code>foreground</code>: The close camera. Covers objects on layers 11, 12, 13, 14, 15, 18, and 19.</li>
-	<li><code>topmost_exclusive</code>: The close camera, before it is pasted on top of the background and foreground cameras. Covers objects on layers 14 and 15.</li>
+	<li><code>background</code>: The <a href="magic-literals.html#camera-bg">background camera</a>. Covers objects on layers 18 and 19.</li>
+	<li><code>middle</code> / <code>foreground_exceptclose</code>: The <a href="magic-literals.html#camera-fg">foreground camera</a>. Covers objects on layers 11, 12, 13, 18, and 19.</li>
+	<li><code>foreground</code>: The <a href="magic-literals.html#camera-close">close camera</a>. Covers objects on layers 11, 12, 13, 14, 15, 18, and 19.</li>
+	<li><code>topmost_exclusive</code>: The <a href="magic-literals.html#camera-close-blitter">close blitter camera</a>. Adding a <code>material</code> effect to this camera switches the <a href="magic-literals.html#camera-close">close camera</a> to <a href="#AddPostEffect-material-blitter-mode">blitter mode</a>. Covers objects on layers 14 and 15.</li>
 </ul>
 <ul class="seealso">
 	<li><a href="magic-literals.html#layers">Layers</a></li>
@@ -1123,7 +1123,8 @@ table builtin = nil or {
 	<li>Colors: <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderTextureReadWrite.html">Default</a></li>
 </ul>
 <p>If the effect has 0 materials but is somehow enabled, it does <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Graphics.Blit.html" class=func>Graphics.Blit</a>(src, dest)</code>, making it effectively an <a href="https://en.wikipedia.org/wiki/Identity_function">identity function</a>. We can get this state by specifying no <code>material</code> along with an invalid <code>builtin</code> that causes an exception to be thrown, then <a href="https://www.lua.org/manual/5.1/manual.html#pdf-pcall">catching</a> the exception after it leaves <code>AddPostEffect</code>. Setting an <code>address</code> to something other than a <code>string</code> or <code>nil</code> should cause an <code>InvalidCastException</code>.</p>
-<p>It has special behavior for one type of camera, most likely <code>topmost_exclusive</code>. It will assign the camera a <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderTexture.html" class=type>RenderTexture</a></code> and the blit output will be <code>null</code> (the screen) rather than <code>dest</code>. Settings:</p>
+<h4 id="AddPostEffect-material-blitter-mode">Blitter Mode</h4>
+<p>There is special behavior when adding a <code>material</code> post effect to the <a href="magic-literals.html#camera-close-blitter">close blitter camera</a>: The <a href="magic-literals.html#camera-close">close camera</a> will be assigned a background color and a <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderTexture.html" class=type>RenderTexture</a></code>, which will be used as the  source for the <a href="magic-literals.html#camera-close-blitter">close blitter camera</a> rather than reading from the screen buffer. The blit output will also be <code>null</code> (the screen) rather than <code>dest</code>. Settings:</p>
 <ul>
 	<li>RenderTexture depth buffer: 24 bit</li>
 	<li>RenderTexture format: ARGB32</li>

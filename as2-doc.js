@@ -138,3 +138,38 @@ function formatTypes(types_page)
 		$("code.doc").contents().each(eachNode);
 	});
 }
+
+function writeBitwiseRow(n, zero, one, bits)
+{
+	if (!zero && !one)
+	{
+		zero = "<td></td>";
+		one = "<td>O</td>";
+	}
+	if (!bits)
+		bits = 32;
+	var out = new Array(bits);
+	for (var i = 0; i < bits; ++i)
+		out[i] = ((n >> i) & 1) == 0 ? zero : one;
+	document.write(out.join(""));
+}
+function writeBitwiseHeader(open, close, bits, offset)
+{
+	if (!open && !close)
+	{
+		open = "<th>";
+		close = "</th>";
+	}
+	if (!bits)
+		bits = 32;
+	if (!offset)
+		offset = 0;
+	var out = new Array(bits*3);
+	for (var i = 0; i < bits; ++i)
+	{
+		out[i*3+0] = open;
+		out[i*3+1] = (i+offset).toString();
+		out[i*3+2] = close;
+	}
+	document.write(out.join(""));
+}

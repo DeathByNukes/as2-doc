@@ -7,7 +7,7 @@ Written by DeathByNukes in 2013. Some lines of this file may have been copied ve
 Portions of this file that can be considered copyrighted by me (DeathByNukes) are released under the WTFPL and CC0 licenses. Pick one or both.
 */
 
-body {
+html {
 	font-family: 'Segoe UI', 'Lucida Grande', Verdana, Arial, Helvetica, sans-serif;
 	color: #000;
 	background-color: #FFF;
@@ -24,10 +24,10 @@ a[href^="#"]:hover {
 	text-decoration: underline;
 }
 code a[href|="#type"],
-code .func,
-code .type,
-code .prop,
-code .field,
+.func,
+.type,
+.prop,
+.field,
 h1 a[href|="#type"],
 h2 a[href|="#type"],
 dfn[id|="type"],
@@ -36,10 +36,10 @@ dfn[id|="type"],
 	text-decoration: none;
 }
 code a[href|="#type"]:hover,
-code a.func:hover,
-code a.type:hover,
-code a.prop:hover,
-code a.field:hover,
+a.func:hover,
+a.type:hover,
+a.prop:hover,
+a.field:hover,
 h1 a[href|="#type"]:hover,
 h2 a[href|="#type"]:hover {
 	color: #007FFF;
@@ -75,6 +75,9 @@ pre > code {
 code, pre, .codeDefs dfn, th, td {
 	background-color: #eeeeee;
 }
+html {
+	--box-bg-color: #eeeeee;
+}
 table code {
 	background-color: transparent;
 }
@@ -99,11 +102,12 @@ table {
 	border-spacing: 2px 0;
 	border: none;
 	text-align: left;
+	empty-cells: show;
 }
 tr, th, td {
 	border: none;
 }
-code, pre, .codeDefs dfn {
+code, pre, .codeDefs dfn, .code {
 	font-family: Consolas, Courier, monospace;
 }
 code, .codeDefs dfn {
