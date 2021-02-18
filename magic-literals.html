@@ -81,6 +81,46 @@
 
 
 
+<h1 id="special-textures">Special Textures</h1>
+<ul class="seealso">
+	<li><a href="glossary.html#texture">texture</a></li>
+</ul>
+<p>The texture loading is hidden behind some multithreading code that's hard to read so I'm just going to repeat <a href="http://www.audio-surf.com/forum/index.php/topic,13163.msg93835.html#msg93835">Dylan's announcement</a>.</p>
+<p>You can set any texture to one of these special values:</p>
+<ul>
+	<li><code>&quot;&lt;ALBUMART&gt;&quot;</code></li>
+	<li><code>&quot;&lt;ALBUMART_DOUBLEWIDTH&gt;&quot;</code></li>
+	<li><code>&quot;&lt;ALBUMART_DOUBLEWIDTHMIRRORED&gt;&quot;</code> (handy for a wrapping skysphere)</li>
+</ul>
+<p>The logo is used if a song with no art is selected. You can also append &quot;GREY&quot; in any of the 3 to convert the art to greyscale. For example: <code>&quot;&lt;ALBUMART_DOUBLEWIDTHMIRRORED_GREY&gt;&quot;</code></p>
+
+
+
+
+<h1 id="render-queue">Render Queue</h1>
+<ul class="seealso">
+	<li><a href="glossary.html#render-queue">render queue</a></li>
+	<li><a href="#layers">layers</a></li>
+</ul>
+<ol>
+	<li value="1000"><strong>Background</strong>, skywires (neon, sandstorm, classic)</li>
+	<li value="2000"><strong>Geometry (solid objects)</strong></li>
+	<li value="2001">Stars</li>
+	<li value="2002">Cirrus clouds</li>
+	<li value="2450"><strong>AlphaTest</strong></li>
+	<li value="2997">Water (The front water chunk gets 2997 and other chunks are lower numbers, in order. By default (see <code><a href="skins.html#SetScene" class=func>numvisiblewaterchunks</a></code>) there are up to 8 chunks.)</li>
+	<li value="3000"><strong>Transparent</strong></li>
+	<li value="3099"><a href="skins.html#SetRings">Rings</a></li>
+	<li value="3376"><a href="skins.html#SetBlockFlashes">Block flashes</a></li>
+	<li value="3899"><a href="skins.html#SetScene">Air debris</a></li>
+	<li value="3998"><a href="skins.html#SetWake">Water wakes</a></li>
+	<li value="3999">Surfboard (neon, sandstorm, classic), Vehicle thrusters (classic)</li>
+	<li value="4000"><strong>Overlay</strong></li>
+</ol>
+
+
+
+
 <h1 id="layers">Layers</h1>
 <p>Layers determine which camera an object will be rendered on, and can also sometimes be given other special functions.</p>
 <p>According to Dylan there are 3 cameras: background, foreground, and close. They are drawn to the framebuffer in that order, and the <a href="https://en.wikipedia.org/wiki/Z-buffering">depth buffer</a> is cleared before the next one, so objects on the later cameras will always cover up objects on the previous camera no matter where they are in the world. If you have the <a href="skins.html#SetScene">standard glow effect</a> enabled, all objects drawn to the background camera will be part of the glow effect.</p>
@@ -234,46 +274,6 @@
 	<dt id="layer-31"><dfn>31</dfn> <em>NavFrameTopLevel</em></dt>
 	<dd>The pause screen uses this layer.</dd>
 </dl>
-
-
-
-
-<h1 id="render-queue">Render Queue</h1>
-<ul class="seealso">
-	<li><a href="glossary.html#render-queue">render queue</a></li>
-	<li><a href="#layers">layers</a></li>
-</ul>
-<ol>
-	<li value="1000"><strong>Background</strong>, skywires (neon, sandstorm, classic)</li>
-	<li value="2000"><strong>Geometry (solid objects)</strong></li>
-	<li value="2001">Stars</li>
-	<li value="2002">Cirrus clouds</li>
-	<li value="2450"><strong>AlphaTest</strong></li>
-	<li value="2997">Water (The front water chunk gets 2997 and other chunks are lower numbers, in order. By default (see <code><a href="skins.html#SetScene" class=func>numvisiblewaterchunks</a></code>) there are up to 8 chunks.)</li>
-	<li value="3000"><strong>Transparent</strong></li>
-	<li value="3099"><a href="skins.html#SetRings">Rings</a></li>
-	<li value="3376"><a href="skins.html#SetBlockFlashes">Block flashes</a></li>
-	<li value="3899"><a href="skins.html#SetScene">Air debris</a></li>
-	<li value="3998"><a href="skins.html#SetWake">Water wakes</a></li>
-	<li value="3999">Surfboard (neon, sandstorm, classic), Vehicle thrusters (classic)</li>
-	<li value="4000"><strong>Overlay</strong></li>
-</ol>
-
-
-
-
-<h1 id="special-textures">Special Textures</h1>
-<ul class="seealso">
-	<li><a href="glossary.html#texture">texture</a></li>
-</ul>
-<p>The texture loading is hidden behind some multithreading code that's hard to read so I'm just going to repeat <a href="http://www.audio-surf.com/forum/index.php/topic,13163.msg93835.html#msg93835">Dylan's announcement</a>.</p>
-<p>You can set any texture to one of these special values:</p>
-<ul>
-	<li><code>&quot;&lt;ALBUMART&gt;&quot;</code></li>
-	<li><code>&quot;&lt;ALBUMART_DOUBLEWIDTH&gt;&quot;</code></li>
-	<li><code>&quot;&lt;ALBUMART_DOUBLEWIDTHMIRRORED&gt;&quot;</code> (handy for a wrapping skysphere)</li>
-</ul>
-<p>The logo is used if a song with no art is selected. You can also append &quot;GREY&quot; in any of the 3 to convert the art to greyscale. For example: <code>&quot;&lt;ALBUMART_DOUBLEWIDTHMIRRORED_GREY&gt;&quot;</code></p>
 
 
 
