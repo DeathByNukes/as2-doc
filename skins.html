@@ -1045,24 +1045,31 @@ vector2 texturescale ?= ? <em>-- Same as <strong>texturesettings.scale</strong>.
 
 <h2 id="BuildMesh"><a href="#type-mesh">mesh</a> BuildMesh{}</h2>
 <p>Can be one of the following tables:</p>
-<pre><code><a href="#type-mesh">mesh</a> <strong>mesh</strong> = nil <em>-- if not nil, modifies a previously created mesh (this will cause existing objects made with the mesh to update)</em>
-<a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>vertextable</strong> ?= nil
-<a href="#type-vector2">vector2</a><a href="#type-array">[]</a> <strong>uvtable</strong> ?= nil
-<a href="#type-color">color</a><a href="#type-array">[]</a> <strong>colortable</strong> ?= nil
-<a href="#type-int">int</a><a href="#type-array">[]</a> <strong>indextable</strong> ?= nil <em>-- if it doesn't contain a zero all of the numbers will be reduced by one (its indexing starts with 0)</em>
-<a href="#type-bool">bool</a> <strong>calculatenormals</strong> ?= false</code>
-</pre>
-<pre><code><a href="#type-mesh"></a><a href="#type-address">address</a> <strong>mesh</strong> <em>-- create a new mesh out of the specified model</em>
+<pre><code><a href="#type-address">address</a> <strong>mesh</strong> <em>-- Create a new mesh out of the specified model. This value is required.</em>
 <a href="#type-bool">bool</a> <strong>calculateNormals</strong> = true <em>-- note the capital N in this version</em>
 <a href="#type-bool">bool</a> <strong>calculateTangents</strong> = false
 <a href="#type-bool">bool</a> <strong>submeshesWhenCombining</strong> = false
+int shapetotrack_at = nil <em>-- A <a href="glossary.html#node">track node</a> id. (1 is the first node.)</em>
 bool barycentricTangents = false
 bool splitVertices = false</code></pre>
-<pre><code>address[] meshes <em>-- multi-mesh morphing</em>
-color[] meshcolors = nil
-bool barycentricTangents = false
-bool splitVertices = false
-bool recalculateNormalsEveryFrame = false</code></pre>
+<pre><code>address[] meshes <em>-- mesh morphing</em>
+<em>-- if <strong>meshes</strong> is a table</em>
+	color[] meshcolors = nil
+	bool barycentricTangents = false
+	bool splitVertices = false
+	bool usesequentialmode = false
+	float sequentialspeed = 0
+	string sequentialmode = nil or "loop" or "intensityloop" or "baycrowdloop" or "intensitymatch"
+	bool recalculateNormalsEveryFrame = false
+<em>-- else</em>
+	UnityEngine.Mesh/<a href="#type-mesh">mesh</a> <strong>mesh</strong> = nil <em>-- If specified, modifies an existing mesh. (Procedural animations.)</em>
+	<a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>vertextable</strong> ?= nil <em>-- Sets UnityEngine.Mesh.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Mesh-vertices.html">vertices</a>.</em>
+	<a href="#type-vector2">vector2</a><a href="#type-array">[]</a> <strong>uvtable</strong> ?= nil     <em>-- Sets UnityEngine.Mesh.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Mesh-uv.html">uv</a>.</em>
+	<a href="#type-color">color</a><a href="#type-array">[]</a> <strong>colortable</strong> ?= nil    <em>-- Sets UnityEngine.Mesh.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Mesh-colors.html">colors</a>.</em>
+	<a href="#type-int">int</a><a href="#type-array">[]</a> <strong>indextable</strong> ?= nil      <em>-- Sets UnityEngine.Mesh.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Mesh-triangles.html">triangles</a>. If it doesn't contain a zero, all of the numbers will be reduced by one (its indexing starts with 0).</em>
+	<a href="#type-bool">bool</a> <strong>calculatenormals</strong> ?= false
+<em>-- end if</em>
+int shapetotrack_at = nil <em>-- A <a href="glossary.html#node">track node</a> id. (1 is the first node.)</em></code></pre>
 <p>The <code><a href="#type-mesh">mesh</a></code> object returned by BuildMesh can be used instead of a filename in most functions that take an .obj file:</p>
 <pre class="NppLua"><span class="sc11">exampleMesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">BuildMesh</span><span class="sc10">{</span><span class="sc0">
 	</span><span class="sc11">mesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"example.obj"</span><span class="sc10">,</span><span class="sc0">
@@ -1076,22 +1083,28 @@ bool recalculateNormalsEveryFrame = false</code></pre>
 		</span><span class="sc11">shadercolors</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0"> </span><span class="sc11">_Color</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">}</span><span class="sc0"> </span><span class="sc10">},</span><span class="sc0">
 	</span><span class="sc10">}</span><span class="sc0">
 </span><span class="sc10">}</span></pre>
-<p>See the documentation of the other functions for confirmation. One important exception is that mesh objects cannot be used for mesh morphing. It is possible to imitate mesh morphing via <strong>procedural animations</strong>. (see below)</p>
-<p>BuildMesh has 3 uses:</p>
-
-<h3 id="BuildMesh-loading">Loading a model with custom settings</h3>
-<p>When using the version of BuildMesh that takes an address, </p>
-
-<h3 id="BuildMesh-procedural-generation">Procedural model generation</h3>
-<p>&nbsp;</p>
-
-<h3 id="BuildMesh-procedural-animation">Procedural animation</h3>
-<p>&nbsp;</p>
+<p>See the documentation of the other functions for confirmation. One important exception is that mesh objects cannot be used for mesh morphing. It is possible to imitate mesh morphing via procedural animations.</p>
+<p>BuildMesh has multiple uses:</p>
+<ul>
+	<li>Loading a model with custom settings.</li>
+	<li>Procedural model generation.</li>
+	<li>Procedural animation.</li>
+	<li>Mesh morphing.</li>
+</ul>
+<h3 id="BuildMesh-procedural">Procedural Generation/Animation</h3>
+<p>In general, you define vertices and their attributes with <code><strong>vertextable</strong></code>, <code><strong>uvtable</strong></code>, and <code><strong>colortable</strong></code>. Those 3 tables should be the same length or <code>nil</code> to leave them unchanged. To build faces from the vertices you define triangles by adding sets of 3 vertex indices, in clockwise order, to <code><strong>indextable</strong></code>.</p>
+<p>(I haven't yet published any here but I have made animated spectrum visualizers with this. <a href="index.html#contact">Contact me</a> if you want examples/help.)</p>
+<ul class="seealso">
+	<li><a href="#UpdateMeshMorphWeights">UpdateMeshMorphWeights{}</a></li>
+</ul>
 
 
 <h2 id="UpdateMeshMorphWeights">UpdateMeshMorphWeights{}</h2>
 <pre><code>mesh mesh
 float[] weights</code></pre>
+<ul class="seealso">
+	<li><a href="#BuildMesh">BuildMesh{}</a></li>
+</ul>
 
 
 <h2 id="AddPostEffect">AddPostEffect{}</h2>
