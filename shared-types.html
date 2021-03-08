@@ -227,11 +227,11 @@ vector2 texturescale = {1,1}
 
 		<dt><dfn id="type-scale">scale</dfn></dt>
 		<dd>
-			A <code><a href="#type-vector3">vector3</a></code> or a table:
-			<pre><code><a href="#type-vector3">vector3</a> <strong>min</strong> = {0,0,0} <em>-- if these are both equal, max is ignored and min is treated like the vector3 version of <a href="#type-scale">scale</a></em>
-<a href="#type-vector3">vector3</a> <strong>max</strong> = {0,0,0}
-<a href="#type-string">string</a> <strong>scaletype</strong> = "intensity" <em>-- unused</em></code></pre>
-			(Personal note: this is <code>SceneManager.SetScale(object,GameObject)</code>)
+			<p>A <code><a href="#type-vector3">vector3</a></code> or a table:</p>
+			<pre><code><a href="#type-vector3">vector3</a> <strong>min</strong> = {1,1,1}
+<a href="#type-vector3">vector3</a> <strong>max</strong> = {1,1,1}</code></pre>
+			<p>Scale <a href="glossary.html#lerp">lerps</a> between <code><strong>min</strong></code> and <code><strong>max</strong></code> based on the current (non-normalized) <a href="glossary.html#intensity">intensity</a>, unless they are both the same.</p>
+			<p>(Personal note: this is <code>SceneManager.SetScale(object,GameObject)</code>)</p>
 		</dd>
 
 
