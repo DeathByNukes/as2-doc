@@ -267,58 +267,61 @@ vector2 texturescale = {1,1}
 
 		<dt><dfn id="type-gameobject">gameobject</dfn></dt>
 		<dd>A table with settings for creating a <a href="https://docs.unity3d.com/Documentation/ScriptReference/GameObject.html">Unity GameObject</a>:
-			<pre><code><a href="#type-string">string</a> <strong>prefabName</strong> = nil <em>-- the name of another object or a built-in object to clone when making this object</em>
+			<pre><code><a href="#type-string">string</a> <strong>assetBundle</strong> = nil <em>-- The name of a raw "asset bundle" file to load when making this object. (AssetBundle.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/AssetBundle.LoadFromFile.html" class=func>LoadFromFile</a>(<strong>assetBundle</strong>).<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/AssetBundle-mainAsset.html" class=prop>mainAsset</a>) TODO: ????</em>
+<a href="#type-string">string</a> <strong>prefabName</strong> = nil <em>-- The name of another object or a built-in object to clone when making this object.</em>
+<em>-- If the above are nil, a blank GameObject is created with empty <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/MeshFilter.html">MeshFilter</a> and <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/MeshRenderer.html">MeshRenderer</a> components attached.</em>
 <a href="#type-vector3">vector3</a> <strong>pos</strong> = {0,0,0}
 <a href="#type-scale">scale</a> <strong>scale</strong> ?= {1,1,1}
 <a href="#type-string">string</a> <strong>lookat</strong> ?= "end" or "start" or "camera"
 <a href="#type-transform">transform</a> <strong>transform</strong> ?= nil
-<a href="#type-int">int</a> <strong>layer</strong> = 11
-<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> = nil
+<a href="#type-int">int</a> <strong>layer</strong> = 11 <em>-- If you specify a number greater than 31 or less than 0, a warning will output to console and the layer will be left unchanged. In all other cases, the layer will be set to the number provided or the default value.</em>
+<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> ?= nil
 <em>-- if <strong>material</strong> is omitted</em>
 	(<a href="#type-material">material</a>/<a href="#type-UnityEngine.Material">UnityEngine.Material</a>)<a href="#type-array">[]</a> <strong>materials</strong> ?= nil <em>-- the two types can be mixed</em>
 	<em>-- if <strong>materials</strong> is omitted</em>
 		bool prefabKeepExistingMaterial = false
-		<em>-- if not <strong>prefabKeepExistingMaterial</strong></em>
+		<em>-- if (<strong>assetBundle</strong> == nil and <strong>prefabName</strong> == nil) or not <strong>prefabKeepExistingMaterial</strong></em>
 			<a href="#type-material">material</a> <strong>*</strong> <em>-- all of the variables from <a href="#type-material">material</a> are included directly inside gameobject. if <strong>prefabName</strong> is specified this material still starts from scratch but it is applied in a strange way</em>
 		<em>-- end</em>
 	<em>-- end</em>
 <em>-- end</em>
-<em>-- if <strong>prefabName</strong> == nil</em>
-<a href="#type-bool">bool</a> <strong>shadowcaster</strong> ?= ?
-<a href="#type-bool">bool</a> <strong>shadowreceiver</strong> ?= ?
+<em>-- if <strong>assetBundle</strong> == nil and <strong>prefabName</strong> == nil</em>
+	<a href="#type-bool">bool</a> <strong>shadowcaster</strong> ?= ?
+	<a href="#type-bool">bool</a> <strong>shadowreceiver</strong> ?= ?
 <em>-- end</em>
-<a href="#type-table">table</a> <strong>thrusters</strong> = nil or {
+<a href="#type-table">table</a> <strong>thrusters</strong> ?= nil or {
 	<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> = nil
 	<a href="#type-string">string</a> <strong>shader</strong> = "VertexColorUnlitTinted" <em>-- ignored if <strong>material</strong> is set</em>
 	<a href="#type-int">int</a> <strong>renderqueue</strong> = ? <em>-- see <a href="#render-queue">here</a></em>
 	<a href="#type-int">int</a> <strong>layer</strong> = ?
-	<a href="#type-float">float</a> <strong>colorscaler</strong> = 1.0
 	<a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>crossSectionShape</strong> = nil <em>-- "extrusion points"</em>
 	<a href="#type-int">int</a> <strong>extrusions</strong> = 22 <em>-- the number of <a href="glossary.html#node">extrusion nodes</a>. must be at least 3. the 3rd node is where the audio pulses start; the first 2 nodes are mirrors of the 3rd one with 1/4 and 1/2 size</em>
 	<a href="#type-float">float</a> <strong>stretch</strong> = -0.1 <em>-- "ring separation"</em>
 	<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>perShapeNodeColorScalers</strong> = nil
 	<a href="#type-float">float</a> <strong>updateseconds</strong> = 0.025 <em>-- "update interval"</em>
-	float/table colorscaler = 1.0 or {
+	<a href="#type-transform">transform</a><a href="#type-array">[]</a> <strong>instances</strong> = nil <em>-- must be at least 1 instance for this entire <strong>thrusters</strong> table to be used</em>
+	<a href="#type-float">float</a>/table colorscaler = 1.0 or {
 		float close
 		float far
 	}
 	float sizefalloff = 1.0 <em>-- falloff scale. 0 results in no falloff</em>
 	float minrenderedsize = 0.1
-	<a href="#type-transform">transform</a><a href="#type-array">[]</a> <strong>instances</strong> = nil <em>-- must be at least 1 instance for this entire <strong>thrusters</strong> table to be used</em>
 }
 <a href="#type-bool">bool</a> <strong>recalculateNormals</strong> = false <em>-- we should probably consider this setting deprecated</em>
 bool calculateNormals = recalculateNormals <em>-- when this setting is false normals will not be loaded from OBJ files either. this setting is only honored if <strong>mesh</strong> is an address and mesh morphing isn't being used</em>
 bool calculateTangents = false
 bool submeshesWhenCombining = false
-<em>-- if <strong>prefabName</strong> == nil</em>
-<a href="#type-mesh">mesh</a>/<a href="#type-address">address</a> <strong>mesh</strong> = nil
-<em>-- if <strong>mesh</strong> is an address</em>
-<a href="#type-string">string</a> <strong>meshmorph</strong> = nil <em>-- note: if this option is specified, <strong>mesh</strong> will be treated as a string rather than an address. both of them will always have the skin folder prepended to them</em>
-<a href="#type-float">float</a> <strong>meshmorphsmoothspeed</strong> = 5
-<a href="#type-string">string</a> <strong>meshmorphtype</strong> = &quot;intensity&quot; or &quot;intensitysmooth&quot; or &quot;intensitysmoothfall&quot; or &quot;intensitysmoothrise&quot;
+<em>-- The above group of mesh-altering settings are only used by the <a href="#type-address">address</a> version of <strong>mesh</strong>, not mesh morphing or premade meshes.</em>
+<em>-- if <strong>assetBundle</strong> == nil and <strong>prefabName</strong> == nil</em>
+	<a href="#type-mesh">mesh</a>/<a href="#type-address">address</a> <strong>mesh</strong> ?= nil
+	<em>-- if <strong>mesh</strong> is an address</em>
+		<a href="#type-string">string</a> <strong>meshmorph</strong> = nil <em>-- Note: If this option is specified, <strong>mesh</strong> will be treated as a string rather than an address (both of them will always have the skin folder prepended to them).</em>
+		<a href="#type-float">float</a> <strong>meshmorphsmoothspeed</strong> = 5
+		<a href="#type-string">string</a> <strong>meshmorphtype</strong> = "intensity" or "intensitysmooth" or "intensitysmoothfall" or "intensitysmoothrise"
+	<em>-- end</em>
 <em>-- end</em>
-<em>-- end</em>
-<a href="#type-gameobject">gameobject</a><a href="#type-array">[]</a> <strong>childobjects</strong> = nil</code></pre>
+string collision ?= nil or "<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/MeshCollider.html">mesh</a>" or "<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/BoxCollider.html">box</a>" or "<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/SphereCollider.html">sphere</a>" <em>-- Adds the component to the object with default settings. For "mesh" another component will be added that assigns <code>MeshFilter.sharedMesh</code> to <code>MeshCollider.sharedMesh</code> during <code>Update()</code> (every frame).</em>
+<a href="#type-gameobject">gameobject</a><a href="#type-array">[]</a> <strong>childobjects</strong> ?= nil</code></pre>
 			<ul class="seealso">
 				<li><a href="glossary.html#game-object">game object</a></li>
 				<li><a href="glossary.html#node">node</a></li>

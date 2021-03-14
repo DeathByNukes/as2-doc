@@ -78,6 +78,9 @@ code, pre, .codeDefs dfn, th, td {
 html {
 	--box-bg-color: #eeeeee;
 }
+code code {
+	background-color: rgba(0,0,0,0.0666666667);
+}
 table code {
 	background-color: transparent;
 }
