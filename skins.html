@@ -993,14 +993,15 @@ vector3[] worldspaceoffsets = nil
 <a href="#type-transform">transform</a> <strong>transform</strong> = nil
 <a href="#type-string">string</a> <strong>type</strong> = "point" or "directional"
 <a href="#type-materialcolor">materialcolor</a> <strong>color</strong> = ?
+string mode = "auto" or "pixel" or "vertex"
 <a href="#type-float">float</a> <strong>intensity</strong> = 0.5
 <a href="#type-float">float</a> <strong>range</strong> = ?
-<a href="#type-table">table</a> <strong>shadows</strong> = {
+<a href="#type-table">table</a> <strong>shadows</strong> ?= {
 	<a href="#type-string">string</a> <strong>type</strong> = ("none" / "None") or ("soft" / "Soft") or ("hard" / "Hard")
-	<a href="#type-float">float</a> <strong>strength</strong> = ?
-	<a href="#type-float">float</a> <strong>bias</strong> = ?
-	<a href="#type-float">float</a> <strong>softness</strong> = ?
-	<a href="#type-float">float</a> <strong>softnessfade</strong> = ?
+	<a href="#type-float">float</a> <strong>strength</strong> ?= 1
+	<a href="#type-float">float</a> <strong>bias</strong> ?= 0.05
+	<a href="#type-float">float</a> <strong>softness</strong> ?= ? <em>-- Obsolete: Shadow softness is removed in Unity 5.0+</em>
+	<a href="#type-float">float</a> <strong>softnessfade</strong> ?= ? <em>-- Obsolete: Shadow softness is removed in Unity 5.0+</em>
 }</code></pre>
 
 
@@ -1010,7 +1011,7 @@ transform transform ?= ?
 materialcolor color ?= ?
 float intensity = 0.5
 float range ?= ?
-table shadows = nil <em>-- this is the same as <a href="#CreateLight">CreateLight</a>{<strong>shadows</strong>}. omitting it disables shadows.</em></code></pre>
+table shadows ?= nil <em>-- this is the same as <a href="#CreateLight">CreateLight</a>{<strong>shadows</strong>}. omitting it disables shadows.</em></code></pre>
 
 
 <h2 id="BuildMaterial"><a href="#type-UnityEngine.Material">UnityEngine.Material</a> BuildMaterial(<a href="#type-material">material</a>)</h2>
