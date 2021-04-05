@@ -793,62 +793,180 @@ float sizescaler ?= 1</code></pre>
 
 
 <h2 id="CreateRail">CreateRail{}</h2>
-<pre><code><a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;rail&quot;</em>
+<pre><code><a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: "rail"</em>
 <a href="#type-vector2">vector2</a> <strong>positionOffset</strong> = {0,0} <em>-- added to every coordinate in crossSectionShape</em>
-<a href="#type-vector2">vector2</a><a href="#type-array">[]</a> <strong>crossSectionShape</strong> = nil
+<a href="#type-vector2">vector2</a><a href="#type-array">[]</a> <strong>crossSectionShape</strong> ?= {
+	{-0.5,  0.5},
+	{ 0.5,  0.5},
+	{ 0.5, -0.5},
+	{-0.5, -0.5},
+}
 <a href="#type-string">string</a> <strong>textureMode</strong> = "repeataround" or "wraparound" or "wraparoundcontinuous" or "none" or "repeataroundreverse" or "wraparoundreverse"
-<a href="#type-string">string</a> <strong>colorMode</strong> = "highway" or "highwayinverted" or "static" or "aurora" or "highwayflat" or "trackposition" or &quot;highwayscaledfollowmaxjumpheights&quot; <em>-- the jumpheights option only works inside <a href="mods.html#OnSkinLoaded">OnSkinLoaded</a>/<a href="mods.html#OnRequestLoadObjects">OnRequestLoadObjects</a></em>
+<a href="#type-string">string</a> <strong>colorMode</strong> = "highway" or "highwayinverted" or "static" or "aurora" or "highwayflat" or "trackposition" or "highwayscaledfollowmaxjumpheights" <em>-- The jumpheights option only works inside <code><a href="mods.html#OnSkinLoaded" class=func>OnSkinLoaded</a></code>/<code><a href="mods.html#OnRequestLoadObjects" class=func>OnRequestLoadObjects</a></code>.</em>
 <a href="#type-int">int</a> <strong>stretch</strong> = 1 <em>-- referred to internally as "ring spacing"</em>
-<a href="#type-color">color</a> <strong>color</strong> = ?/white
-<a href="#type-bool">bool</a> <strong>flatten</strong> = false <em>-- "use guard rail heights"</em>
-<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>perShapeNodeColorScalers</strong> = nil
-<a href="#type-string">string</a> <strong>shader</strong> = nil
-<a href="#type-int">int</a> <strong>renderqueue</strong> = 2000 <em>-- see <a href="glossary.html#render-queue">here</a></em>
+<a href="#type-color">color</a> <strong>color</strong> ?= {r=0, g=0, b=0, a=0} <em>-- (#1) (<a href="#CreateRail-colorMode">colorMode specific</a>) There are multiple color settings with the same name. This one sets the vertex colors.</em>
+<a href="#type-bool">bool</a> <strong>flatten</strong> = false <em>-- (<a href="#CreateRail-colorMode">colorMode specific</a>) "use guard rail heights"</em>
+<a href="#type-float">float</a><a href="#type-array">[]</a> <strong>perShapeNodeColorScalers</strong> = nil <em>-- (<a href="#CreateRail-colorMode">colorMode specific</a>)</em>
 <a href="#type-int">int</a> <strong>layer</strong> = 11
-bool allowfullmaterialoptions = false
-material * <em>-- if <strong>allowfullmaterialoptions</strong> is true</em>
-vector3 skyScreen_TrackOffset = nil <em>-- see <a href="#skyscreen">here</a></em>
-vector3 skyScreen_FixedTrackOffset = nil
-bool ignoretrackscale = true
-<a href="#type-int">int</a> <strong>nodeskip</strong> = 1 <em>-- referred to internally as "ring skip"</em>
-bool alphafromintensity = false<em> -- only works on &quot;highway&quot; <strong>colorMode</strong></em>
-bool texturemirroreddowntrack = true
-float textureTrackLength = 1.0
+<a href="#type-bool">bool</a> <strong>allowfullmaterialoptions</strong> = false
+<em>-- if <strong>material</strong> ~= nil or <strong>allowfullmaterialoptions</strong></em>
+	<em>-- if <strong>material</strong> is <a href="#type-UnityEngine.Material">UnityEngine.Material</a></em>
+		<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong>
+	<em>-- else if type(<strong>material</strong>) == 'table'</em>
+		<a href="#type-material">material</a> <strong>material</strong>
+	<em>-- else</em>
+		<a href="#type-material">material</a> <strong>*</strong> <em>-- All of the variables from <a href="#type-material">material</a> are included directly inside this table.</em>
+	<em>-- end</em>
+<em>-- else</em>
+	<a href="#type-string">string</a> <strong>shader</strong> = "<a href="shaders.html#shader-DiffuseVertexColored2">DiffuseVertexColored2</a>" <em>-- If it uses the default, other material settings are also applied. (<a href="#CreateRail-Rail_Default">See below</a>. Specifying that shader explicitly will not apply the default settings.)</em>
+	<a href="#type-color">color</a> <strong>color</strong> = white <em>-- (#2) There are multiple color settings with the same name. This one applies to the material.</em>
+	<a href="#type-int">int</a> <strong>renderqueue</strong> = 2000 <em>-- <a href="glossary.html#render-queue">Render queue</a>. If you specify a number less than 1 it will use the shader's default.</em>
+	<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-float">float</a><a href="#type-dict">}</a> <strong>shadersettings</strong> ?= nil
+	<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= nil <em>-- setting _Color here will work</em>
+	<a href="#type-address">address</a> <strong>texture</strong> ?= nil
+<em>-- end</em>
+vector3 skyScreen_TrackOffset ?= nil <em>-- see <a href="#skyscreen">here</a></em>
+vector3 skyScreen_FixedTrackOffset ?= nil
+bool ignoretrackscale = true <em>-- (<a href="#CreateRail-colorMode">colorMode specific</a>)</em>
+<a href="#type-int">int</a> <strong>nodeskip</strong> ?= 1 <em>-- referred to internally as "ring skip"</em>
+bool alphafromintensity ?= false<em> -- (<a href="#CreateRail-colorMode">colorMode specific</a>) Overwrites the vertex color alpha channel with the <a href="glossary.html#normalized-intensity">normalized intensity</a>.</em>
+bool texturemirroreddowntrack ?= true
+float textureTrackLength ?= 1.0
+fload texturetracklength_offset ?= 0.0
 <a href="#type-bool">bool</a> <strong>fullfuture</strong> = false <em>-- "render full track"</em>
-<a href="#type-bool">bool</a> <strong>futureonly</strong> = false <em>-- "stretch to finish"</em>
+<a href="#type-bool">bool</a> <strong>futureonly</strong> ?= false <em>-- "stretch to finish"</em>
 <a href="#type-bool">bool</a> <strong>calculatenormals</strong> = false
-<a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>perShapeNodeNormals</strong> = nil <em>-- only works with <strong>colorMode</strong>=&quot;static&quot;</em>
-<a href="#type-bool">bool</a> <strong>perShapeNodeColorScalersScaleAlpha</strong> = true
-<a href="#type-color">color</a><a href="#type-array">[]</a> <strong>perShapeNodeColors</strong> = nil <em>-- static mode only</em>
-<a href="#type-int">int</a><a href="#type-array">[]</a> <strong>perShapeNodeFFTInfluenceIndices</strong> = nil <em>-- unused</em>
-<a href="#type-bool">bool</a> <strong>collider</strong> = false
-vector3[][] crossSectionShapeList = nil
-<a href="#type-bool">bool</a> <strong>wrapnodeshape</strong> = true <em>-- "should close extrusion loop"</em>
-<a href="#type-bool">bool</a> <strong>shadowcaster</strong> = ?
-<a href="#type-bool">bool</a> <strong>shadowreceiver</strong> = ?
-<em>-- if not <strong>allowfullmaterialoptions</strong> then</em>
-<em>-- <strong>color</strong> or White is applied to _Color</em>
-<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-float">float</a><a href="#type-dict">}</a> <strong>shadersettings</strong> = nil
-<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> = nil <em>-- setting _Color here will work</em>
-<a href="#type-address">address</a> <strong>texture</strong> = nil
-<em>-- end</em></code></pre>
+<a href="#type-bool">bool</a> <strong>calculateNormals</strong> = false <em>-- If either of these two is true, normals will be calculated.</em>
+<a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>perShapeNodeNormals</strong> ?= nil <em>-- (<a href="#CreateRail-colorMode">colorMode specific</a>) These values are rotated by the node rotation but no other corrections are applied, so you may need to use <strong>ignoretrackscale</strong> to avoid incorrect normals.</em>
+<a href="#type-bool">bool</a> <strong>perShapeNodeColorScalersScaleAlpha</strong> = true <em>-- (<a href="#CreateRail-colorMode">colorMode specific</a>) Forces the vertex color alpha to always be 100%.</em>
+<a href="#type-color">color</a><a href="#type-array">[]</a> <strong>perShapeNodeColors</strong> ?= nil <em>-- static mode only</em>
+<em>-- Unused: <a href="#type-int">int</a><a href="#type-array">[]</a> <strong>perShapeNodeFFTInfluenceIndices</strong> ?= nil</em>
+<a href="#type-bool">bool</a> <strong>collider</strong> ?= false
+vector3[] perTrackNodeScales ?= nil <em>-- (<a href="#CreateRail-colorMode">colorMode specific</a>) Scales rail segments individually. If specified and valid, <strong>positionOffset</strong> will be applied after scaling instead of immediately being added to <strong>crossSectionShape</strong>. Array length must match <code>#<a href="#GetTrack" class=func>GetTrack</a>()</code>. Can also use the name <strong>scales</strong>. There is some inconsistency in the effects of this setting when an invalid value is specified, but I didn't notice anything useful.</em>
+vector3[][] crossSectionShapeList ?= nil <em>-- (<a href="#CreateRail-colorMode">colorMode specific</a>) Overrides <strong>crossSectionShape</strong> with multiple shapes, one for each <a href="glossary.html#node">track node</a>. If shorter than the track it will repeat. The outer array must be a table but the inner arrays can be <a href="lua.html#LuaInterface">CLI UnityEngine.Vector3[] objects</a>, which will be stored internally without further copying. (This can be used to make large shape lists of mostly reused shape objects with low memory usage.)</em>
+<a href="#type-bool">bool</a> <strong>wrapnodeshape</strong> = true <em>-- Connect the first and last points in <strong>crossSectionShape</strong>. Might be turned off if using a two-sided shader or the player will never see that side of the rail.</em>
+<a href="#type-bool">bool</a> <strong>shadowcaster</strong> ?= true
+<a href="#type-bool">bool</a> <strong>shadowreceiver</strong> ?= true</code></pre>
 
-<h3 id="colorMode">colorMode</h3>
-<p>Controls the vertex colors of the rail.</p>
+<h3 id="CreateRail-colorMode"><code><strong>colorMode</strong></code> Setting</h3>
+<p>The <code><strong>colorMode</strong></code> setting ostensibly controls the vertex colors of the rail, but in practice each mode has its own copy-pasted code for builing the rail and not all of them use all of the settings. Below are the used settings per mode. (The names in parentheses after the settings names are the internal names of those settings, put there for me to reference when updating this document.)</p>
 <dl>
-	<dt>highway</dt>
-	<dd>The node's highway color. When <code>alphafromintensity</code> is turned on the alpha channel is overwritten with the node's normalized intensity.</dd>
-	<dt>highwayinverted</dt>
-	<dd>TODO</dd>
-	<dt>static</dt>
-	<dd>Uses <code><strong>perShapeNodeColors</strong></code>, <code><strong>color</strong></code>, or black.</dd>
-	<dt>aurora</dt>
-	<dd>Uses highway color multiplied by the intensity squared. The intensity it uses is not <a href="glossary.html#normalized-intensity">normalized</a> like <code><a href="#GetTrack" class=func>GetTrack</a>()[i].intensity</code> is. The alpha is multiplied as well. If all the highway colors have an alpha of 1 (the default) then this allows a shader to determine the exact intensity.</dd>
-	<dt>highwayflat</dt>
-	<dd>TODO</dd>
-	<dt>trackposition</dt>
-	<dd>Instead of storing a color, stores the zero-based node index divided by the number of nodes, encoded with <code><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-BuiltinFunctions.html" class=func>EncodeFloatRGBA</a></code>. This is useful in rail <a href="#skyscreen">skyscreen</a> shaders. (I don't understand why he won't just pass this information through UV or <a href="https://docs.unity3d.com/Documentation/ScriptReference/Mesh-uv2.html">UV2</a>.)</dd>
+	<dt>highway (HIGHWAYSCALED)</dt>
+	<dd>
+		<ul>
+			<li>Vertex colors: The node's highway color.<code>GetTrack()[...].color</code> (TrackServer.Node.color)</li>
+			<li><code>stretch</code> (ringSpacing)</li>
+			<li><code>flatten</code> (useGuardrailHeights)</li>
+			<li><code>alphafromintensity</code> (intensityInVertexColorAlpha)</li>
+			<li><code>crossSectionShape</code> (extrusionPoints)</li>
+			<li><code>crossSectionShapeList</code> (shapeList)</li>
+			<li><code>ignoretrackscale</code> (ignoreTrackScaler)</li>
+			<li><code>OnRequestTrackReshaping()[...].widthscaler</code>/<code>.heightscaler</code> (TrackServer.Node.trackScale)</li>
+			<li><code>perTrackNodeScales</code>/<code>scales</code> (ringScales)</li>
+			<li><code>perShapeNodeColorScalers</code> (extrusionColorScalers)</li>
+			<li><code>perShapeNodeColorScalersScaleAlpha</code> (extrusionColorScalersScaleAlpha)</li>
+		</ul>
+	</dd>
+	<dt>highwayinverted (HIGHWAYSCALEDINVERTED)</dt>
+	<dd>Exactly the same as "highway" except it inverts the vertex color.</dd>
+	<dt>static (STATIC)</dt>
+	<dd>
+		<ul>
+			<li>Vertex colors: Uses <code><strong>perShapeNodeColors</strong></code> or <code><strong>color</strong></code>(#1).</li>
+			<li><code>stretch</code> (ringSpacing)</li>
+			<li><code>flatten</code> (useGuardrailHeights)</li>
+			<li><code>crossSectionShape</code> (extrusionPoints)</li>
+			<li><code>crossSectionShapeList</code> (shapeList)</li>
+			<li><code>ignoretrackscale</code> (ignoreTrackScaler)</li>
+			<li><code>OnRequestTrackReshaping()[...].widthscaler</code>/<code>.heightscaler</code> (TrackServer.Node.trackScale)</li>
+			<li><code>perTrackNodeScales</code>/<code>scales</code> (ringScales)</li>
+			<li><code>perShapeNodeColors</code> (extrusionColors)</li>
+			<li><code>color</code> (staticModeColor)</li>
+			<li><code>perShapeNodeNormals</code> (extrusionNormals)</li>
+		</ul>
+	</dd>
+	<dt>aurora (AURORA)</dt>
+	<dd>
+		<ul>
+			<li>Vertex colors: The node's highway color multiplied by the intensity squared. The intensity it uses is not <a href="glossary.html#normalized-intensity">normalized</a> like <code><a href="#GetTrack" class=func>GetTrack</a>()[i].intensity</code> is. The alpha is multiplied as well. If all the highway colors have an alpha of 1 (the default) then this allows a shader to determine the exact intensity.</li>
+			<li><code>stretch</code> (ringSpacing)</li>
+			<li><code>flatten</code> (useGuardrailHeights)</li>
+			<li><code>crossSectionShape</code> (extrusionPoints)</li>
+			<li><code>crossSectionShapeList</code> (shapeList)</li>
+			<li><code>ignoretrackscale</code> (ignoreTrackScaler)</li>
+			<li><code>OnRequestTrackReshaping()[...].widthscaler</code>/<code>.heightscaler</code> (TrackServer.Node.trackScale)</li>
+			<li><code>perTrackNodeScales</code>/<code>scales</code> (ringScales)</li>
+			<li><code>perShapeNodeColorScalers</code> (extrusionColorScalers)</li>
+		</ul>
+	</dd>
+	<dt>highwayflat (HIGHWAYFLAT)</dt>
+	<dd>
+		<ul>
+			<li>This special mode completely ignores track node position and rotation. The origin of each extrusion node is simply <code>{0, 0, (node_index - 1) * 3}</code>.</li>
+			<li>Vertex colors: The node's highway color.</li>
+			<li><code>stretch</code> (ringSpacing)</li>
+			<li><code>crossSectionShape</code> (extrusionPoints)</li>
+			<li><code>perTrackNodeScales</code>/<code>scales</code> (ringScales)</li>
+			<li><code>perShapeNodeColorScalers</code> (extrusionColorScalers)</li>
+		</ul>
+	</dd>
+	<dt>trackposition (TRACKPOS)</dt>
+	<dd>
+		<ul>
+			<li>Vertex colors: The zero-based node index divided by the number of nodes, encoded with <code><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-BuiltinFunctions.html" class=func>EncodeFloatRGBA</a></code>. This is useful in rail <a href="#skyscreen">skyscreen</a> shaders. (I don't understand why he won't just pass this information through UV or <a href="https://docs.unity3d.com/Documentation/ScriptReference/Mesh-uv2.html">UV2</a>.)</li>
+			<li><code>stretch</code> (ringSpacing)</li>
+			<li><code>flatten</code> (useGuardrailHeights)</li>
+			<li><code>crossSectionShape</code> (extrusionPoints)</li>
+			<li>
+				<code>crossSectionShapeList</code> (shapeList)
+				<br>In this mode a non-zero Z coordinate in a shape point will cause it to use an interpolated node based on the current node index plus the Z value. Bug: If you mix zero and non-zero Z values in the same individual cross-section shape, any zeroes after a non-zero will use the non-zero's interpolated node. To work around this, use a small but non-zero Z value (<a href="https://en.wikipedia.org/wiki/Machine_epsilon">not so small that a 32-bit float rounds it to zero</a>) or, if your shape allows it, place the wrap point so that all the non-zero values come after the zeroes.
+			</li>
+			<li><code>ignoretrackscale</code> (ignoreTrackScaler)</li>
+			<li><code>OnRequestTrackReshaping()[...].widthscaler</code>/<code>.heightscaler</code> (TrackServer.Node.trackScale)</li>
+			<li><code>perTrackNodeScales</code>/<code>scales</code> (ringScales)</li>
+		</ul>
+	</dd>
+	<dt>highwayscaledfollowmaxjumpheights (HIGHWAYSCALEDFOLLOWMAXJUMPHEIGHTS)</dt>
+	<dd>
+		<ul>
+			<li>This special mode uses highway colors for the vertex colors but the Y component of the extrusion node origin is modified: <code>origin.y = <a href="mods.html#GetTrack" class=field>track</a>[i].pos.y + fif(<a href="mods.html#GetTrack" class=field>track</a>[i].maxAir &lt; <a href="mods.html#GameplaySettings" class=field>minimumjump_height</a> + 2, -9, <a href="mods.html#GetTrack" class=field>track</a>[i].maxAir)</code></li>
+			<li><code><a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{<strong>minimumjump_height</strong>}</code> (CharacterManager.minimumJump_MaxHeight)</li>
+			<li><code>stretch</code> (ringSpacing)</li>
+			<li><code>flatten</code> (useGuardrailHeights)</li>
+			<li><code>crossSectionShape</code> (extrusionPoints)</li>
+			<li><code>perTrackNodeScales</code>/<code>scales</code> (ringScales)</li>
+			<li><code>GetTrack()[...].maxAir</code> (TrackServer.Node.maxAir)</li>
+			<li><code>perShapeNodeColorScalers</code> (extrusionColorScalers)</li>
+			<li><code>perShapeNodeColorScalersScaleAlpha</code> (extrusionColorScalersScaleAlpha)</li>
+		</ul>
+	</dd>
 </dl>
+
+<h3 id="CreateRail-Rail_Default">Default Material</h3>
+<p>If no material or shader is specified, the following material is used:</p>
+<pre class=LuaCode><code>material = {
+	shader = "<a href="shaders.html#shader-DiffuseVertexColored2">DiffuseVertexColored2</a>",
+	texture = UnityEngine.Resources.Load("textures/White.png"),
+	shadersettings = {
+		_BumpAmt = 10,
+		_Cutoff = 0.5,
+		_EmissionLM = 0,
+		_InvFade = 1,
+		_Parallax = 0.02,
+		_Rate = 300,
+		_Shininess = 0.7,
+		_farDistance = 20,
+		_nearDistance = 10,
+	},
+	shadercolors = {
+		_Color = {r=0.1701978, g=0.6251901, b=0.8842655, a=1}, <em>-- Currently, this will always get overwritten by the <strong>color</strong> setting.</em>
+		_Emission = {r=0, g=0, b=0, a=0},
+		_SpecColor = {r=0.090909, g=0, b=1, a=1},
+		_TintColor = {r=1, g=1, b=1, a=0.5019608},
+		_farColor = {r=0.00980173, g=0.6567164, b=0.6024298, a=1},
+		_nearColor = {r=0.9850746, g=0, b=0, a=1},
+	},
+}</code></pre>
 
 
 <h2 id="CreateRepeatedMeshRail">CreateRepeatedMeshRail{}</h2>
