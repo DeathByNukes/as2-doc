@@ -971,12 +971,16 @@ vector3[][] crossSectionShapeList ?= nil <em>-- (<a href="#CreateRail-colorMode"
 
 <h2 id="CreateRepeatedMeshRail">CreateRepeatedMeshRail{}</h2>
 <pre><code><em>-- calls to this function after the <a href="#script-execution">first run</a> are ignored</em>
-<a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: &quot;RepeatedMeshRail&quot;</em>
+<a href="#type-globalname">globalname</a> <strong>globalName</strong> = nil <em>-- typeName: "RepeatedMeshRail"</em>
+string prefabName = nil <em>-- If this is a valid name, <strong>gameobject</strong> will be ignored.</em>
 <a href="#type-gameobject">gameobject</a> <strong>gameobject</strong> = nil
 <a href="#type-float">float</a> <strong>ahead_renderdist</strong> = 500
 <a href="#type-float">float</a> <strong>behind_renderdist</strong> = 25
 <a href="#type-int">int</a> <strong>maxverticesperbatch</strong> = 50000
 <a href="#type-float">float</a> <strong>spacing</strong> = 0
+vector3[] offsets ?= nil <em>-- Must be the same length as <code>#<a href="#GetTrack" class=func>GetTrack</a>()</code>.</em>
+vector3[] scales ?= nil <em>-- Parts of the rail where the interpolated X+Y scale is 0 will be skipped. If your array only contains scales of one and zero, no actual scaling will be performed but zeroes will still be skipped. Must be the same length as <code>#<a href="#GetTrack" class=func>GetTrack</a>()</code>.</em>
+float track_tilt_factor ?= 1
 <a href="#type-string">string</a> <strong>colorMode</strong> = "none" or "highway" or "highwayinverted"
 <a href="#type-bool">bool</a> <strong>buildlive</strong> = false
 <a href="#type-int">int</a> <strong>maxmeshesperbatch</strong> = 999999
