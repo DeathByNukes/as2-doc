@@ -709,7 +709,9 @@ vector3[] offsets ?= {{7.5, 0, 0}, {-7.5, 0, 0}}
 
 <h2 id="SetBlockFlashes">SetBlockFlashes{}</h2>
 <pre><code>address texture ?= ? <em>-- clamped and mipmaps off</em>
-float sizescaler ?= 1</code></pre>
+float sizescaler ?= 1
+float sizescaler_missed ?= 1 <em>-- Until you set this explicitly, changes to <strong>sizescaler</strong> will be mirrored to <strong>sizescaler_missed</strong>.</em>
+UnityEngine.Material material ?= ?</code></pre>
 
 
 <h2 id="SetBlocks">SetBlocks{}</h2>
