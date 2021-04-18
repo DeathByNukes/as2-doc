@@ -716,78 +716,90 @@ UnityEngine.Material material ?= ?</code></pre>
 
 <h2 id="SetBlocks">SetBlocks{}</h2>
 <pre><code>int maxvisiblecount ?= 30
+bool allow_mod_block_scaling = true
 <a href="#type-table">table</a> <strong>chainspans</strong> ?= ? or {
 	bool hide ?= false
-	<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> ?= ?
-	<em>-- if <strong>material</strong> is omitted</em>
-		<a href="#type-string">string</a> <strong>shader</strong> ?= ?
-		<em>-- if <strong>shader</strong> is not omitted</em>
-			<em>-- create a new material</em>
-			material *
-		<em>-- else</em>
-			<em>-- modify the existing material (if a <a href="#type-UnityEngine.Material">UnityEngine.Material</a> was used, this modifies anything else that uses the same instance)</em>
-			<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
-			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
-		<em>-- end</em>
+	<em>-- if <strong>material</strong> is UnityEngine.Material</em>
+		<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong>
+	<em>-- else if <strong>shader</strong> ~= nil</em>
+		<a href="#type-material">material</a> <strong>*</strong> <em>-- Create a new material.</em>
+	<em>-- else</em>
+		<em>-- Modify the default or previously set material.</em>
+		<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
+		<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- Uses "repeat", mipmaps on, and bilinear filtering.</em>
 	<em>-- end</em>
 }
 <a href="#type-table">table</a> <strong>colorblocks</strong> ?= ? or {
-	<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> ?= ?
-	<em>-- if <strong>material</strong> is omitted</em>
-		<a href="#type-string">string</a> <strong>shader</strong> ?= ?
-		<em>-- if <strong>shader</strong> is not omitted</em>
-			<em>-- create a new material</em>
-			material *
-		<em>-- else</em>
-			<em>-- modify the existing material (if a <a href="#type-UnityEngine.Material">UnityEngine.Material</a> was used, this modifies anything else that uses the same id)</em>
-			<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
-			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
-		<em>-- end</em>
-	<em>-- end</em>
+	<a href="#type-vector3">vector3</a> <strong>scale</strong> ?= ?
+	<a href="#type-float">float</a> <strong>height</strong> ?= 0 <em>-- Height offset. This might affect all blocks, not just <strong>colorblocks</strong>.</em>
+	<a href="#type-bool">bool</a> <strong>float_on_water</strong> = true <em>-- This might affect all blocks, not just <strong>colorblocks</strong>.</em>
 	bool reflect = false
-	<a href="#type-address">address</a>/<a href="#type-mesh">mesh</a> <strong>mesh</strong> ?= ?
-	<a href="#type-address">address</a> <strong>meshmorph</strong> ?= nil <em>-- only used if <strong>mesh</strong> is an address. if <strong>meshmorph</strong> is set then <strong>mesh</strong> is mandatory</em>
-	<a href="#type-float">float</a> <strong>meshmorphsmoothspeed</strong> = 5
-	<a href="#type-string">string</a> <strong>meshmorphtype</strong> = &quot;intensity&quot; or &quot;intensitysmooth&quot; or &quot;intensitysmoothfall&quot; or &quot;intensitysmoothrise&quot;
-	<a href="#type-vector3">vector3</a> <strong>scale</strong> ?= ? <em>-- this and the next two values might affect all blocks not just <strong>colorblocks</strong></em>
-	<a href="#type-float">float</a> <strong>height</strong> ?= 0
-	<a href="#type-bool">bool</a> <strong>float_on_water</strong> = true
+	<em>-- if <strong>gameobject</strong> ~= nil</em>
+		<a href="#type-gameobject">gameobject</a> <strong>gameobject</strong> <em>-- <a href="#SetBlocks-prefab">See below about prefabs</a>.</em>
+	<em>-- else if <strong>material</strong> is UnityEngine.Material</em>
+		<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong>
+	<em>-- else if <strong>shader</strong> ~= nil</em>
+		<a href="#type-material">material</a> <strong>*</strong> <em>-- Create a new material.</em>
+	<em>-- else</em>
+		<em>-- Modify the default or previously set material.</em>
+		<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
+		<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- Uses "repeat", mipmaps on, and bilinear filtering.</em>
+	<em>-- end</em>
+	UnityEngine.Mesh/<a href="#type-mesh">mesh</a>/<a href="#type-address">address</a> <strong>mesh</strong> ?= ?
+	<em>-- if type(<strong>mesh</strong>) == "string" and type(<strong>meshmorph</strong>) == "string"</em>
+		<em>-- In this mode, OBJ file normals will be read from <strong>mesh</strong> and <strong>meshmorph</strong>.</em>
+		<a href="#type-address">address</a> <strong>meshmorph</strong>
+		<a href="#type-float">float</a> <strong>meshmorphsmoothspeed</strong> ?= 5
+		<a href="#type-string">string</a> <strong>meshmorphtype</strong> = "intensity" or "intensitysmooth" or "intensitysmoothfall" or "intensitysmoothrise"
+	<em>-- end</em>
 }
 <a href="#type-table">table</a> <strong>greyblocks</strong> ?= ? or {
-	<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> ?= ?
-	<em>-- if <strong>material</strong> is omitted</em>
-		<a href="#type-string">string</a> <strong>shader</strong> ?= ?
-		<em>-- if <strong>shader</strong> is not omitted</em>
-			<em>-- create a new material</em>
-			material *
-		<em>-- else</em>
-			<em>-- modify the existing material</em>
-			<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
-			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
-		<em>-- end</em>
+	bool reflect ?= false
+	<em>-- if <strong>gameobject</strong> ~= nil</em>
+		<a href="#type-gameobject">gameobject</a> <strong>gameobject</strong> <em>-- <a href="#SetBlocks-prefab">See below about prefabs</a>.</em>
+	<em>-- else if <strong>material</strong> is UnityEngine.Material</em>
+		<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong>
+	<em>-- else if <strong>shader</strong> ~= nil</em>
+		<a href="#type-material">material</a> <strong>*</strong> <em>-- Create a new material.</em>
+	<em>-- else</em>
+		<em>-- Modify the default or previously set material.</em>
+		<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
+		<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- Uses "repeat", mipmaps on, and bilinear filtering.</em>
 	<em>-- end</em>
-	bool reflect = false
-	<a href="#type-address">address</a>/<a href="#type-mesh">mesh</a> <strong>mesh</strong> ?= ?
-	<a href="#type-address">address</a> <strong>meshmorph</strong> ?= nil <em>-- only used if <strong>mesh</strong> is an address. if <strong>meshmorph</strong> is set then <strong>mesh</strong> is mandatory</em>
-	<a href="#type-float">float</a> <strong>meshmorphsmoothspeed</strong> = 5
-	<a href="#type-string">string</a> <strong>meshmorphtype</strong> = &quot;intensity&quot; or &quot;intensitysmooth&quot; or &quot;intensitysmoothfall&quot; or &quot;intensitysmoothrise&quot;<em></em>
+	UnityEngine.Mesh/<a href="#type-mesh">mesh</a>/<a href="#type-address">address</a> <strong>mesh</strong> ?= ?
+	<em>-- if type(<strong>mesh</strong>) == "string" and type(<strong>meshmorph</strong>) == "string"</em>
+		<em>-- In this mode, OBJ file normals will be read from <strong>mesh</strong> and <strong>meshmorph</strong>.</em>
+		<a href="#type-address">address</a> <strong>meshmorph</strong>
+		<a href="#type-float">float</a> <strong>meshmorphsmoothspeed</strong> ?= 5
+		<a href="#type-string">string</a> <strong>meshmorphtype</strong> = "intensity" or "intensitysmooth" or "intensitysmoothfall" or "intensitysmoothrise"
+	<em>-- end</em>
 }
-<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-table">table</a><a href="#type-dict">}</a> <strong>powerups</strong> ?= ? or {example = { <em>-- this dictionary is merged into the default dictionary, overwriting any conflicting keys</em>
-	<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong> ?= ?
-	<em>-- if <strong>material</strong> is omitted</em>
-		<a href="#type-string">string</a> <strong>shader</strong> ?= ?
-		<em>-- if <strong>shader</strong> is not omitted</em>
-			<em>-- create a new material</em>
-			material *
-		<em>-- else</em>
-			<em>-- modify the existing material</em>
-			<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- uses "repeat", mipmaps on, bilinear filtering</em>
-		<em>-- end</em>
+<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-table">table</a><a href="#type-dict">}</a> <strong>powerups</strong> ?= ? or {example = { <em>-- Specifying a powerup will completely discard all of the powerup's previous settings.</em>
+	<em>-- if <strong>gameobject</strong> ~= nil</em>
+		<a href="#type-gameobject">gameobject</a> <strong>gameobject</strong> <em>-- <a href="#SetBlocks-prefab">See below about prefabs</a>.</em>
+	<em>-- else if <strong>material</strong> is UnityEngine.Material</em>
+		<a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>material</strong>
+	<em>-- else if <strong>shader</strong> ~= nil</em>
+		<a href="#type-material">material</a> <strong>*</strong>
+	<em>-- else</em>
+		<a href="#type-address">address</a> <strong>texture</strong> ?= nil <em>-- BUG: I don't think this setting branch does anything other than load the texture into the cache and log a "mat is null" error. Uses "repeat", mipmaps on, and bilinear filtering.</em>
 	<em>-- end</em>
+	UnityEngine.Mesh/<a href="#type-mesh">mesh</a>/<a href="#type-address">address</a> <strong>mesh</strong> <em>-- Unspecified mesh will cause errors later.</em>
 	bool reflect = false
-	<a href="#type-address">address</a>/<a href="#type-mesh">mesh</a> <strong>mesh</strong> = nil
-	<a href="#type-vector3">vector3</a> <strong>scale</strong> ?= {1,1,1}
+	<a href="#type-vector3">vector3</a> <strong>scale</strong> = {1,1,1}
+	int blockcolorid = nil
 }, ...}</code></pre>
+
+<h2 id="SetBlocks-prefab"><code><strong>gameobject</strong></code> Prefabs</h2>
+<p><code><strong>colorblocks</strong></code>, <code><strong>greyblocks</strong></code>, and <code><strong>powerups</strong></code> accept a <code><strong>gameobject</strong></code> setting but only specific aspects of the object <em>and the object's children</em> are referenced when rendering the blocks:</p>
+<ul>
+	<li>Mesh. (A reference to the object's <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/MeshFilter.html">MeshFilter</a> component is stored at the time the prefab is provided and the mesh is retrieved from that during each draw call.)</li>
+	<li>Material. (Reference to <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/MeshRenderer.html">MeshRenderer</a> component stored, material retrieved during each draw call.)</li>
+	<li>World-space position, used as an offset. (Snapshotted at the time the prefab is provided.)</li>
+	<li>Local scale, not accounting for the scale of parents. (Snapshotted.)</li>
+	<li>Shadow settings. (Snapshotted. Reflections always have shadows disabled.)</li>
+	<li>Layer. (Snapshotted.)</li>
+</ul>
 
 
 <h2 id="OverrideTrackColorForDynamicBlockColors">OverrideTrackColorForDynamicBlockColors(<a href="#type-color">color</a>)</h2>
