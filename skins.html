@@ -682,18 +682,26 @@ string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
 
 
 <h2 id="SetRings">SetRings{}</h2>
-<pre><code><a href="#type-string">string</a> <strong>texture</strong> = nil <em>-- bug: only supports built-in shaders</em>
-<a href="#type-string">string</a> <strong>shader</strong> = nil
-<a href="#type-bool">bool</a> <strong>shadowcaster</strong> = false
+<pre><code><a href="#type-bool">bool</a> <strong>shadowcaster</strong> = false
 <a href="#type-bool">bool</a> <strong>shadowreceiver</strong> = false
 <a href="#type-int">int</a> <strong>layer</strong> = 11
 vector3 offset = {0,0,0}
 <a href="#type-float">float</a> <strong>size</strong> = 0
 <a href="#type-float">float</a> <strong>percentringed</strong> = 0
 <a href="#type-bool">bool</a> <strong>useairrings</strong> = true
-<a href="#type-string">string</a> <strong>airtexture</strong> = nil
-<a href="#type-string">string</a> <strong>airshader</strong> = nil
-<a href="#type-float">float</a> <strong>airsize</strong> = 0</code></pre>
+<em>-- if <strong>material</strong> is UnityEngine.Material</em>
+	UnityEngine.Material material
+<em>-- else</em>
+	<a href="#type-string">string</a> <strong>texture</strong> = nil
+	<a href="#type-string">string</a> <strong>shader</strong> = nil <em>-- Built-in shaders only.</em>
+<em>-- end</em>
+<a href="#type-float">float</a> <strong>airsize</strong> = 0
+<em>-- if <strong>airmaterial</strong> is UnityEngine.Material</em>
+	UnityEngine.Material airmaterial
+<em>-- else</em>
+	<a href="#type-string">string</a> <strong>airtexture</strong> = nil
+	<a href="#type-string">string</a> <strong>airshader</strong> = nil <em>-- Built-in shaders only.</em>
+<em>-- end</em></code></pre>
 
 
 <h2 id="SetWake">SetWake{}</h2>
