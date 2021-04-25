@@ -255,49 +255,57 @@ end</code></pre>
 
 
 <h2 id="SetScene">SetScene{}</h2>
-<pre><code><em>-- <a href="#script-execution">First run</a> only:</em>
-<a href="#type-float">float</a> <strong>maxAllowedTrackHeight</strong> = 10000000000
-<a href="#type-float">float</a> <strong>camStaticZone</strong> = 0
-<em>-- if this is a dedicated skin</em>
-<a href="#type-string">string</a>/<a href="#type-table">table</a> <strong>twistmode</strong> ?= nil or "cork" or "straight" or "straightish" or "straightisher" or "straightishest" or "straightishest_flatishest" or "straightishest_flatish" or "straightisher_flatish" or "straight_flat50" or "straight_flat25" or "straight_flatish" or "straight_flatisher" or "straight_flatishest" or "straight_flat" or "cork_flatish" or "circle" or "default" or table { <em>-- forced to be "straight" if mod sets GameplaySettings{sideview=true}</em>
-	<em>-- cork twist mode</em>
-	<a href="#type-float">float</a> <strong>curvescaler</strong> = 1
-	<a href="#type-float">float</a> <strong>steepscaler</strong> = 1
-}
+<pre><code><em>-- if this is the <a href="#script-execution">first run</a></em>
+	<a href="#type-float">float</a> <strong>maxAllowedTrackHeight</strong> = 10000000000
+	<a href="#type-float">float</a> <strong>camStaticZone</strong> = 0
+	<em>-- if this is a dedicated skin (included with the mod)</em>
+		<em>-- Forced to be "straight" if mod sets <code><a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{<strong>sideview</strong>=true}</code>.</em>
+		<a href="#type-string">string</a>/<a href="#type-table">table</a> <strong>twistmode</strong> ?= nil or "cork" or "straight" or "straightish" or "straightisher" or "straightishest" or "straightishest_flatishest" or "straightishest_flatish" or "straightisher_flatish" or "straight_flat50" or "straight_flat25" or "straight_flatish" or "straight_flatisher" or "straight_flatishest" or "straight_flat" or "cork_flatish" or "circle" or "default" or table {
+			<em>-- Cork twist mode.</em>
+			<a href="#type-float">float</a> <strong>curvescaler</strong> = 1
+			<a href="#type-float">float</a> <strong>steepscaler</strong> = 1
+		}
+	<em>-- end</em>
+	<a href="#type-bool">bool</a> <strong>water</strong> = true <em>-- When setting this to false, water is permanently <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/GameObject.SetActive.html">deactivated</a>. Setting it to true again will set a flag that water is in use without actually re-activating the water surface object.</em>
+	<a href="#type-int">int</a> <strong>numvisiblewaterchunks</strong> = -1 <em>-- Any value 1 or less is replaced with 4 or 8, depending on how much graphics memory is available.</em>
+	<a href="#type-bool">bool</a> <strong>towropes</strong> ?= false <em>-- Wakeboard mode effect that connects <strong>pullermodel</strong> to <a href="#SetPlayer">SetPlayer</a>{surfer={arms}}.</em>
+	bool usebackgroundcamera = true <em>-- Once set to false it can't be re-enabled.</em>
 <em>-- end</em>
-<a href="#type-bool">bool</a> <strong>water</strong> = true <em>-- When setting this to false, water is permanently <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/GameObject.SetActive.html">deactivated</a>. Setting it to true again will set a flag that water is in use without actually re-activating the water surface object.</em>
-<a href="#type-int">int</a> <strong>numvisiblewaterchunks</strong> = -1 <em>-- Any value 1 or less is replaced with 4 or 8, depending on how much graphics memory is available.</em>
-<a href="#type-bool">bool</a> <strong>towropes</strong> ?= false <em>-- Wakeboard mode effect that connects <strong>pullermodel</strong> to <a href="#SetPlayer">SetPlayer</a>{surfer={arms}}.</em>
-<em>-- End of first run only</em>
 <a href="#type-vector3">vector3</a><a href="#type-array">[]</a> <strong>waterclones</strong> = nil
 <a href="#type-color">color</a> <strong>skywirecolor</strong> ?= nil
 <a href="#type-string">string</a> <strong>minimap_colormode</strong> = "track" or "white" or "black" or "greyscale"
-<a href="#type-int">int</a> <strong>glowpasses</strong> ?= 4
-<a href="#type-float">float</a> <strong>glowspread</strong> ?= 0.5
-<a href="#type-float">float</a> <strong>radialblur_strength</strong> ?= 1.0
-float crease_strength ?= 0 <em>-- cannot be set back to 0 once changed</em>
+bool use_intro_swoop_cam = true <em>-- Only alters the camera behavior; doesn't change the interval of silence before the song.</em>
+<a href="#type-int">int</a> <strong>glowpasses</strong> ?= 4 <em>-- Glow changes take effect next frame. If a pass count less than 1 is applied, the glow effect will be permanently disabled. Passes greater than 30 become 30. The glow "intensity" is always 1.5.</em>
+<a href="#type-float">float</a> <strong>glowspread</strong> ?= 0.5 <em>-- Values are clamped to the range 0.5 to 1.0.</em>
+<a href="#type-float">float</a> <strong>radialblur_strength</strong> ?= 1.0 <em>-- Changes will be applied on the next frame. 0.0 disables the effect. The actual radial blur strength per-frame is <code>math.min(1.5, math.max(0, current_camera_bias - 0.6) * 5) * fif(is_jumping, 0, 1) * <strong>radialblur_strength</strong></code></em>
+bool hide_default_background_verticals ?= false <em>-- Objects that draw on top of other objects in the background <a href="magic-literals.html#cameras">camera</a>. This was used to add a special effect to the <a href="glossary.html#skywires">skywires</a> but tends to interfere with other uses of the background camera. Once hidden they cannot be un-hidden.</em>
+float crease_strength ?= 0 <em>-- Cannot be set back to 0 once changed.</em>
 <a href="#type-bool">bool</a> <strong>dynamicFOV</strong> ?= false <em>-- While true, the setting changed by <a href="#SetPlayer" class=func>SetPlayer</a>{<strong>fov</strong>} is ignored.</em>
-float closecam_near ?= ? <em>-- near clip plane of the close camera (<a href="glossary.html#layer">layers</a> <a href="magic-literals.html#layer-14">14</a> and <a href="magic-literals.html#layer-15">15</a>)</em>
+float closecam_near ?= ? <em>-- Changes the near clip plane of the close <a href="magic-literals.html#cameras">camera</a> (<a href="glossary.html#layer">layers</a> <a href="magic-literals.html#layer-14">14</a> and <a href="magic-literals.html#layer-15">15</a>).</em>
 float closecam_far ?= 50
-<a href="#type-int">int</a> <strong>airdebris_count</strong> = 500 <em>-- &quot;sprites per chunk&quot;. <strong>airdebris_*</strong><strong></strong> are ?= set as a group; if one is supplied then all of them will be updated</em>
-<a href="#type-int">int</a> <strong>airdebris_density</strong> = 10 <em>-- &quot;sprites each ring&quot;</em>
-float <strong>airdebris_particlesize</strong> = 1 <em>-- &quot;particle scaler&quot;</em>
-float <strong>airdebris_fieldsize</strong> <em>-- &quot;cell size&quot;</em>
-int <strong>airdebris_layer</strong> = 11
+<em>-- if <strong>airdebris_count</strong> ~= nil or <strong>airdebris_density</strong> ~= nil or <strong>airdebris_particlesize</strong> ~= nil or <strong>airdebris_fieldsize</strong> ~= nil or <strong>airdebris_layer</strong> ~= nil</em>
+	<a href="#type-int">int</a> <strong>airdebris_count</strong> = 500 <em>-- "Sprites per chunk".</em>
+	<a href="#type-int">int</a> <strong>airdebris_density</strong> = 10 <em>-- "Sprites each ring".</em>
+	float <strong>airdebris_particlesize</strong> = 1 <em>-- "Particle scaler".</em>
+	float <strong>airdebris_fieldsize</strong> <em>-- "Cell size".</em>
+	int <strong>airdebris_layer</strong> = 11
+<em>-- end</em>
+string airdebris_texture ?= ? <em>-- Texture options: Clamp, Use Mipmaps.</em>
 <a href="#type-color">color</a> <strong>watertint</strong> ?= ?
 bool widewater ?= false <em>-- Water width is 11.25 normally or 16.25 wide. When turned off, width is not changed back to 11.25 but water simulation behavior does change back.</em>
-<a href="#type-float">float</a> <strong>minwaterrandomdarkness</strong> ?= 0.5 <em>-- individual water cubes will be tinted to a random greyscale color between this and 1</em>
-<a href="#type-int">int</a> <strong>watertype</strong> = 0 <em>-- the only usage of it I could find is that type 2 has shader GpuOffsetCubesNoLines and all others have GpuOffsetCubes</em>
-<a href="#type-bool">bool</a> <strong>watertint_highway</strong> = false <em>-- water color changes to the current highway color automatically. if enabled, only the alpha of <strong>watertint</strong> will be used</em>
-<a href="#type-address">address</a> <strong>watertexture</strong> ?= ? <em>-- uses "clamp" wrapping and no mipmaps.</em>
+<a href="#type-float">float</a> <strong>minwaterrandomdarkness</strong> ?= 0.5 <em>-- Individual water cubes will be tinted to a random greyscale color between this and 1.</em>
+<a href="#type-int">int</a> <strong>watertype</strong> = 0 <em>-- Changes the water shader. Type 1 (default): <a href="shaders.html#shader-GpuOffsetCubes">GpuOffsetCubes</a>, type 2: <a href="shaders.html#shader-GpuOffsetCubesNoLines">GpuOffsetCubesNoLines</a></em>
+<a href="#type-bool">bool</a> <strong>watertint_highway</strong> = false <em>-- Water color changes to the current highway color automatically. If enabled, only the alpha of <strong>watertint</strong> will be used.</em>
+<a href="#type-address">address</a> <strong>watertexture</strong> ?= ? <em>-- Texture options: Clamp, No Mipmaps.</em>
 <a href="#type-bool">bool</a> <strong>usecubewater</strong> ?= true <em>-- When false, water will be <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Behaviour-enabled.html">disabled</a> after the skin loads.</em>
 <a href="#type-bool">bool</a> <strong>usedefaultrails</strong> ?= false
-<a href="#type-bool">bool</a> <strong>fogenabled</strong> = false <em>-- enables or disables fog. also sets <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/FogMode.html">UnityEngine.FogMode.Linear</a> when true.</em>
+<a href="#type-bool">bool</a> <strong>fogenabled</strong> = false <em>-- Enables or disables fog. Also sets <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/FogMode.html">UnityEngine.FogMode.Linear</a> when true.</em>
 <a href="#type-color">color</a> <strong>fogcolor</strong> ?= ?
 <a href="#type-float">float</a> <strong>fogdensity</strong> ?= ? <em>-- <a href="https://docs.unity3d.com/Documentation/ScriptReference/RenderSettings-fogDensity.html">unused</a> in this fog mode</em>
 <a href="#type-float">float</a> <strong>fogstart</strong> ?= ?
 <a href="#type-float">float</a> <strong>fogend</strong> ?= ?
-<a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>ambientlight</strong> = {51,51,51,255} or "highway" or "highwayinverted" <em>-- accessible in shaders via <a href="https://docs.unity3d.com/Manual/SL-BuiltinStateInPrograms.html">UNITY_LIGHTMODEL_AMBIENT</a></em>
+bool fog_allowcolorshiftwhenjupming = true <em>-- Temporarily overrides fog settings (on: true, color: highwaycolor * 0.6, mode: ExponentialSquared) at the start of jumps greater than 1 second and restores "normal" settings after the jump. "Normal" settings are determined by checking the fog settings once, on gameplay start, so you may need to turn this off if doing your own dynamic fog effects.</em>
+<a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>ambientlight</strong> = {51,51,51,255} or "highway" or "highwayinverted" <em>-- Changes <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/RenderSettings-ambientLight.html">RenderSettings.ambientLight</a>. Accessible in shaders via <a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-UnityShaderVariables.html">UNITY_LIGHTMODEL_AMBIENT</a>. The dynamic color setter enabled by the string settings cannot be switched off once enabled, but setting the constant color every frame may be enough to override it.</em>
 <a href="#type-bool">bool</a> <strong>useblackgrid</strong> ?= true
 <a href="#type-string">string</a> <strong>pullermodel</strong> ?= ? <em>-- The wakeboard mode "boats" that connect to <strong>towropes</strong> and <a href="#SetWake">SetWake</a>.</em></code></pre>
 
