@@ -697,15 +697,27 @@ vector3 offset = {0,0,0}
 
 
 <h2 id="SetWake">SetWake{}</h2>
-<pre><code><a href="#type-material">material</a> <strong>*</strong> <em>-- all of the variables from <a href="#type-material">material</a> are included directly inside SetWake{}</em>
-<a href="#type-float">float</a> <strong>height</strong> = 0.0
+<pre><code><a href="#type-float">float</a> <strong>height</strong> = 0.0
 <a href="#type-float">float</a> <strong>fallrate</strong> = 0.0
+<a href="#type-int">int</a> <strong>layer</strong> = 11
+<em>-- if <strong>material</strong> ~= nil</em>
+	UnityEngine.Material material
+<em>-- else</em>
+	<a href="#type-material">material</a> <strong>*</strong> <em>-- All of the variables from <a href="#type-material">material</a> are included directly inside SetWake{}.</em>
+<em>-- end</em>
+vector3[] offsets ?= {{7.5, 0, 0}, {-7.5, 0, 0}}
 <a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>bottomcolor</strong> = "highway" or "highwayinverted" or {1,1,1,1} etc
 <a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>topcolor</strong> = "highway" or "highwayinverted" or {1,1,1,1} etc
-<a href="#type-int">int</a> <strong>layer</strong> = 11
-vector3[] offsets ?= {{7.5, 0, 0}, {-7.5, 0, 0}}
 <a href="#type-bool">bool</a> <strong>extraspray</strong> = false</code></pre>
-<p>Renderqueue is forced to be <a href="magic-literals.html#render-queue">3998</a> and _Color is forced to be white.</p>
+<p>The <a href="glossary.html#render-queue">render queue</a> is changed to be <a href="magic-literals.html#render-queue">3998</a> (can be changed after calling <code>SetWake</code> to bypass) and <strong>_Color</strong> is forced to be white (cannot be bypassed).</p>
+
+<h3 id="SetWake-diff">Differences Check</h3>
+<p>The settings are not applied until a check is run to see if they are different from the current settings, and there are some bugs in this process:</p>
+<ul>
+	<li>The material is not compared.</li>
+	<li>If <code><strong>offsets</strong></code> is omitted it will not be compared.</li>
+	<li><code><strong>extraspray</strong></code> is not compared.</li>
+</ul>
 
 
 <h2 id="SetPuzzleGraphics">SetPuzzleGraphics{}</h2>
