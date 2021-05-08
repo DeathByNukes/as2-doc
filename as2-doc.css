@@ -4,15 +4,29 @@
 This style is a mix of inspiration from MSDN and Stack Overflow styles
 
 Written by DeathByNukes in 2013. Some lines of this file may have been copied verbatim from MSDN and/or Stack Overflow.
+Dark mode added in 2021, based on the Dark Reader extension with an original design for the "See Also" buttons.
 Portions of this file that can be considered copyrighted by me (DeathByNukes) are released under the WTFPL and CC0 licenses. Pick one or both.
 */
 
 html {
+	color-scheme: light dark;
 	font-family: 'Segoe UI', 'Lucida Grande', Verdana, Arial, Helvetica, sans-serif;
 	color: #000;
 	background-color: #FFF;
 	-moz-tab-size: 4;
 	tab-size: 4;
+}
+@media (prefers-color-scheme: dark) {
+	html {
+		color: #E8E6E3;
+		background-color: #181A1B;
+	}
+	a {
+		color: #3391FF;
+	}
+	a:visited {
+		color: #9C33FF;
+	}
 }
 a[href^="#"] {
 	/* css3 selector */
@@ -44,6 +58,30 @@ h1 a[href|="#type"]:hover,
 h2 a[href|="#type"]:hover {
 	color: #007FFF;
 	text-decoration: underline;
+}
+@media (prefers-color-scheme: dark) {
+	code a[href|="#type"],
+	.func,
+	.type,
+	.prop,
+	.field,
+	h1 a[href|="#type"],
+	h2 a[href|="#type"],
+	dfn[id|="type"],
+	.example_type {
+		color: #337DFF;
+		text-decoration: none;
+	}
+	code a[href|="#type"]:hover,
+	a.func:hover,
+	a.type:hover,
+	a.prop:hover,
+	a.field:hover,
+	h1 a[href|="#type"]:hover,
+	h2 a[href|="#type"]:hover {
+		color: #3391FF;
+		text-shadow: 0px 0px 2px rgba(51,145,255,0.25);
+	}
 }
 h1, h2 {
 	font-family: 'Segoe UI Light','Segoe UI','Lucida Grande',Verdana,Arial,Helvetica,sans-serif;
@@ -83,6 +121,17 @@ code code {
 }
 table code {
 	background-color: transparent;
+}
+@media (prefers-color-scheme: dark) {
+	code, pre, .codeDefs dfn, th, td {
+		background-color: #222426;
+	}
+	html {
+		--box-bg-color: #222426;
+	}
+	code code {
+		background-color: rgba(255,255,255,0.0666666667);
+	}
 }
 /**
 body { width: 50em; }
@@ -136,6 +185,11 @@ code em {
 	font-weight: normal;
 	color: #009900;
 }
+@media (prefers-color-scheme: dark) {
+	code em {
+		color: #61FF61;
+	}
+}
 ul#navigation {
 	margin: 0px;
 	padding: 0px;
@@ -150,6 +204,12 @@ span[title] {
 	border-bottom-style: dotted;
 	border-bottom-color: #999999;
 	border-bottom-color: rgba(0,0,0,0.6);
+}
+@media (prefers-color-scheme: dark) {
+	span[title] {
+		border-bottom-color: #5E5850;
+		border-bottom-color: rgba(140,130,115,0.6);
+	}
 }
 
 
@@ -185,6 +245,32 @@ span[title] {
 	background-color: #BBDDFF;
 	text-decoration: none;
 }
+@media (prefers-color-scheme: dark) {
+	.seealso:before {
+		color: #999999;
+	}
+	.seealso a {
+		color: #71B8FF;
+		background-color: #001B35;
+		border: 1px solid rgba(113, 184, 255,0.125);
+		/*-webkit-box-shadow: 0px 0px 2px 0px rgba(0,27,53,1);
+		-moz-box-shadow: 0px 0px 2px 0px rgba(0,27,53,1);
+		box-shadow: 0px 0px 2px 0px rgba(0,27,53,1);
+		border: none;*/
+		/*border: 1px solid #001226;*/
+		/*border-bottom-style: none;
+		border-right-style: none;*/
+	}
+	.seealso a:hover {
+		color: #B0D7FF;
+		background-color: #002A52;
+		border: 1px solid rgba(113, 184, 255, 0.5);
+		-webkit-box-shadow: 0px 0px 5px 0px rgba(113, 184, 255, 0.25), inset 0px 0px 5px 0px rgba(113, 184, 255, 0.125);
+		-moz-box-shadow: 0px 0px 5px 0px rgba(113, 184, 255, 0.25), inset 0px 0px 5px 0px rgba(113, 184, 255, 0.125);
+		box-shadow: 0px 0px 5px 0px rgba(113, 184, 255, 0.25), inset 0px 0px 5px 0px rgba(113, 184, 255, 0.125);
+		text-shadow: 0px 0px 2px rgba(176,215,255,0.25);
+	}
+}
 .seealso a[href^="https://en.wikipedia.org/"]:before,
 .seealso a[href^="https://docs.unity3d.com/"]:before,
 .seealso a[href^="https://forum.unity3d.com/"]:before,
@@ -210,7 +296,7 @@ span[title] {
 	background-image: url(https://www.blender.org/wp-content/themes/bthree/assets/images/favicon.ico);
 }
 .seealso a[href^="https://www.lua.org/"]:before {
-	background-image: url(lua.png);
+	background-image: url(Lua.svg);
 }
 dt dfn{
 	font-style: normal;
@@ -234,6 +320,15 @@ dt dfn{
 	color: #FFF;
 	padding: 0px 1.5em;
 }
+@media (prefers-color-scheme: dark) {
+	.NppLua, .LuaCode, .NppCg, .GenericCode, .ShaderLabCode {
+		border-top-color: #00257A;
+	}
+	.NppLua:before, .LuaCode:before, .NppCg:before, .GenericCode:before, .ShaderLabCode:before {
+		background-color: #00257A;
+		color: #FFF;
+	}
+}
 
 .NppCg {
 	border-top-color: #81C60B;
@@ -242,6 +337,15 @@ dt dfn{
 	content: "Cg";
 	background-color: #81C60B;
 	color: #000;
+}
+@media (prefers-color-scheme: dark) {
+	.NppCg {
+		border-top-color: #81C60B;
+	}
+	.NppCg:before {
+		background-color: #81C60B;
+		color: #000;
+	}
 }
 
 .GenericCode {
@@ -252,6 +356,15 @@ dt dfn{
 	background-color: #C4C4C4;
 	color: #000;
 }
+@media (prefers-color-scheme: dark) {
+	.GenericCode {
+		border-top-color: #000;
+	}
+	.GenericCode:before {
+		background-color: #C4C4C4;
+		color: #000;
+	}
+}
 
 .ShaderLabCode {
 	border-top-color: #616161;
@@ -260,6 +373,15 @@ dt dfn{
 	content: "Unity ShaderLab";
 	background-color: #E2E2E2;
 	color: #000;
+}
+@media (prefers-color-scheme: dark) {
+	.ShaderLabCode {
+		border-top-color: #616161;
+	}
+	.ShaderLabCode:before {
+		background-color: #E2E2E2;
+		color: #000;
+	}
 }
 
 /* Notepad++ NppExport plugin output */
@@ -303,6 +425,39 @@ dt dfn{
 	font-weight: bold;
 	font-style: italic;
 	color: #0000A0;
+}
+@media (prefers-color-scheme: dark) {
+	/* these are all just inverted HSL brightness */
+	.NppLua .sc1 {
+		color: #7FFF7F;
+	}
+	.NppLua .sc2 {
+		color: #7FFF7F;
+	}
+	.NppLua .sc4 {
+		color: #FF8000;
+	}
+	.NppLua .sc5 {
+		color: #0000FF;
+	}
+	.NppLua .sc6 {
+		color: #7F7F7F;
+	}
+	.NppLua .sc7 {
+		color: #7F7F7F;
+	}
+	.NppLua .sc10 {
+		color: #7F7FFF;
+	}
+	.NppLua .sc13 {
+		color: #3FBFFF;
+	}
+	.NppLua .sc14 {
+		color: #8000FF;
+	}
+	.NppLua .sc15 {
+		color: #5F5FFF;
+	}
 }
 
 
@@ -350,4 +505,43 @@ dt dfn{
 	color: #008080;
 }
 .NppCg .sc23 {
+}
+@media (prefers-color-scheme: dark) {
+	/* these are all just inverted HSL brightness */
+	.NppCg .sc1 {
+		color: #7FFF7F;
+	}
+	.NppCg .sc2 {
+		color: #7FFF7F;
+	}
+	.NppCg .sc3 {
+		color: #7FFFFF;
+	}
+	.NppCg .sc4 {
+		color: #FF8000;
+	}
+	.NppCg .sc5 {
+		color: #0000FF;
+	}
+	.NppCg .sc6 {
+		color: #7F7F7F;
+	}
+	.NppCg .sc7 {
+		color: #7F7F7F;
+	}
+	.NppCg .sc9 {
+		color: #FFBF7F;
+	}
+	.NppCg .sc10 {
+		color: #7F7FFF;
+	}
+	.NppCg .sc16 {
+		color: #8000FF;
+	}
+	.NppCg .sc17 {
+		color: #7FFFFF;
+	}
+	.NppCg .sc18 {
+		color: #7FFFFF;
+	}
 }
