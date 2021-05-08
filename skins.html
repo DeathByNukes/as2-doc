@@ -236,7 +236,7 @@ end</code></pre>
 <pre><code><a href="#type-int">int</a> <strong>mincount</strong> = 3
 <a href="#type-int">int</a> <strong>maxcount</strong> = 5</code></pre>
 <p>Color format: <code>{r=0-1, g=0-1, b=0-1, a=1}</code></p>
-<p>Reads the <code><a href="magic-literals.html#special-textures">&lt;ALBUMART&gt;</a></code> texture with a tool named Color Thief and produces colors that presumably came from that image. If there is no album art it generates <code>mincount</code> random colors. (Each color is just 3 random floats between 0.0 and 1.0 inclusive. There is no attempt to avoid greys or produce a tasteful palette.)</p>
+<p>Reads the <code><a href="engine.html#special-textures">&lt;ALBUMART&gt;</a></code> texture with a tool named Color Thief and produces colors that presumably came from that image. If there is no album art it generates <code>mincount</code> random colors. (Each color is just 3 random floats between 0.0 and 1.0 inclusive. There is no attempt to avoid greys or produce a tasteful palette.)</p>
 <p>According to Dylan: It picks out prominent colors from the album art image. Less colorful images return less colors and if you force it to return more with a high <code>mincount</code> the colors will have less variation.</p>
 <p><code>mincount</code> and <code>maxcount</code> used to be bugged but it is fixed now.</p>
 
@@ -278,10 +278,10 @@ bool use_intro_swoop_cam = true <em>-- Only alters the camera behavior; doesn't 
 <a href="#type-int">int</a> <strong>glowpasses</strong> ?= 4 <em>-- Glow changes take effect next frame. If a pass count less than 1 is applied, the glow effect will be permanently disabled. Passes greater than 30 become 30. The glow "intensity" is always 1.5.</em>
 <a href="#type-float">float</a> <strong>glowspread</strong> ?= 0.5 <em>-- Values are clamped to the range 0.5 to 1.0.</em>
 <a href="#type-float">float</a> <strong>radialblur_strength</strong> ?= 1.0 <em>-- Changes will be applied on the next frame. 0.0 disables the effect. The actual radial blur strength per-frame is <code>math.min(1.5, math.max(0, current_camera_bias - 0.6) * 5) * fif(is_jumping, 0, 1) * <strong>radialblur_strength</strong></code></em>
-bool hide_default_background_verticals ?= false <em>-- Objects that draw on top of other objects in the background <a href="magic-literals.html#cameras">camera</a>. This was used to add a special effect to the <a href="glossary.html#skywires">skywires</a> but tends to interfere with other uses of the background camera. Once hidden they cannot be un-hidden.</em>
+bool hide_default_background_verticals ?= false <em>-- Objects that draw on top of other objects in the background <a href="engine.html#cameras">camera</a>. This was used to add a special effect to the <a href="glossary.html#skywires">skywires</a> but tends to interfere with other uses of the background camera. Once hidden they cannot be un-hidden.</em>
 float crease_strength ?= 0 <em>-- Cannot be set back to 0 once changed.</em>
 <a href="#type-bool">bool</a> <strong>dynamicFOV</strong> ?= false <em>-- While true, the setting changed by <a href="#SetPlayer" class=func>SetPlayer</a>{<strong>fov</strong>} is ignored.</em>
-float closecam_near ?= ? <em>-- Changes the near clip plane of the close <a href="magic-literals.html#cameras">camera</a> (<a href="glossary.html#layer">layers</a> <a href="magic-literals.html#layer-14">14</a> and <a href="magic-literals.html#layer-15">15</a>).</em>
+float closecam_near ?= ? <em>-- Changes the near clip plane of the close <a href="engine.html#cameras">camera</a> (<a href="glossary.html#layer">layers</a> <a href="engine.html#layer-14">14</a> and <a href="engine.html#layer-15">15</a>).</em>
 float closecam_far ?= 50
 <em>-- if <strong>airdebris_count</strong> ~= nil or <strong>airdebris_density</strong> ~= nil or <strong>airdebris_particlesize</strong> ~= nil or <strong>airdebris_fieldsize</strong> ~= nil or <strong>airdebris_layer</strong> ~= nil</em>
 	<a href="#type-int">int</a> <strong>airdebris_count</strong> = 500 <em>-- "Sprites per chunk".</em>
@@ -323,8 +323,8 @@ return register0.x == 0 ? body : half4(color.xyz, 0.01);</pre>
 	<br>If a mod enables jump markers, a 3 pixel thick opaque white stripe will be drawn horizontally through the texture before it's sent to the GPU. The center of the line is calculated to be offset <code>(height * 0.37)</code> from the bottom of the image. Therefore, by varying the resolution of the image, you could change how thick the line is from the shader's perspective.</li>
 <li>Color: <code>watertint</code> and <code>watertint_highway</code> directly control the <code>_Color</code> of the material.</li>
 <li>Vertex Color: <code>minwaterrandomdarkness</code> produces random shades of grey in the vertex color. All 8 vertices of each cube are the same color.</li>
-<li>Layer: <a href="magic-literals.html#layer-13">13</a> (foreground)</li>
-<li>Renderqueue of the front-most water chunk is 2997 and all additional chunks are lower numbers, in order. <a href="magic-literals.html#render-queue">Normal transparent objects are at 3000</a>. So if you are using the default <code>numvisiblewaterchunks</code> setting the range to expect water in is 2990-2997.</li>
+<li>Layer: <a href="engine.html#layer-13">13</a> (foreground)</li>
+<li>Renderqueue of the front-most water chunk is 2997 and all additional chunks are lower numbers, in order. <a href="engine.html#render-queue">Normal transparent objects are at 3000</a>. So if you are using the default <code>numvisiblewaterchunks</code> setting the range to expect water in is 2990-2997.</li>
 <li>The formula for the default setting of <code>numvisiblewaterchunks</code> is <code>fif(<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/SystemInfo-graphicsMemorySize.html">gpu_megabytes</a> > 3 * (#<a href="#GetTrack">GetTrack</a>() / 84), 4, 8)</code>. The debug console will have "Prebuilding 84-ring-size wave chunks" if the default is 4 and "Live building 21-ring-size wave chunks" if it is 8. (There is no way for Lua to change the rendering mode mentioned in those console lines.) Since this setting appears to have significant performance implications, it is probably best to leave it alone in most graphics quality modes unless it is causing your skin problems.</li>
 <li><code>waterclones</code> lists relative world-space coordinates to render the water surface extra times in different locations. There is no provision for giving them a different rotation, shape, or material. This can't be used to reliably do much unless used with mods that have some limitation on track shape.</li>
 <li><code>widewater</code> widens water from 11.25 to 16.25 and alters water behavior.</li>
@@ -502,7 +502,7 @@ string cameradynamics = null or "high" <em>-- "use extra dynamic camera", adjust
 		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer-sharedMaterial.html" class=type>UnityEngine.Renderer.sharedMaterial</a>
 		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer.html" class=type>UnityEngine.Renderer</a>.<span title="Compatibility shim: shadowCastingMode = castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off">castShadows</span>
 		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Renderer-receiveShadows.html" class=type>UnityEngine.Renderer.receiveShadows</a>
-		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/GameObject-layer.html" class=type>UnityEngine.GameObject.layer</a> <em>-- Default: <a href="magic-literals.html#layers">14</a></em>
+		<a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/GameObject-layer.html" class=type>UnityEngine.GameObject.layer</a> <em>-- Default: <a href="engine.html#layers">14</a></em>
 	}
 	<a href="#type-gameobject">gameobject</a> <strong>board</strong> ?= ? or {
 		<em>-- The object will be completely created in the usual way, and then some things will be shallow copied to the real object.</em>
@@ -528,7 +528,7 @@ string cameradynamics = null or "high" <em>-- "use extra dynamic camera", adjust
 <p>Sets the background color of the "<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Camera-main.html">main camera</a>", which will permanently change the camera mode to clear whatever was drawn by previous cameras. I don't know which camera is the main camera.</p>
 <ul class="seealso">
 	<li><a href="#SetSkybox">SetSkybox{}</a></li>
-	<li><a href="magic-literals.html#layers">Layers</a></li>
+	<li><a href="engine.html#layers">Layers</a></li>
 </ul>
 
 
@@ -562,7 +562,7 @@ string cameradynamics = null or "high" <em>-- "use extra dynamic camera", adjust
 <a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>skysphere</strong> ?= ?
 string skyscreen <em>-- Shader name.</em>
 <a href="#type-UnityEngine.Material">UnityEngine.Material</a> skyscreen
-int skyscreenlayer = <a href="magic-literals.html#layers">18</a> <em>-- If the background camera is disabled, it uses layer 13 instead of your setting.</em>
+int skyscreenlayer = <a href="engine.html#layers">18</a> <em>-- If the background camera is disabled, it uses layer 13 instead of your setting.</em>
 vector3 skyScreen_TrackOffset = nil <em>-- A position in <a href="glossary.html#node-space">node space</a>.</em>
 vector3 skyScreen_FixedTrackOffset = nil
 <em>-- END IF</em>
@@ -717,7 +717,7 @@ vector3[] offsets ?= {{7.5, 0, 0}, {-7.5, 0, 0}}
 <a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>bottomcolor</strong> = "highway" or "highwayinverted" or {1,1,1,1} etc
 <a href="#type-color">color</a>/<a href="#type-string">string</a> <strong>topcolor</strong> = "highway" or "highwayinverted" or {1,1,1,1} etc
 <a href="#type-bool">bool</a> <strong>extraspray</strong> = false</code></pre>
-<p>The <a href="glossary.html#render-queue">render queue</a> is changed to be <a href="magic-literals.html#render-queue">3998</a> (can be changed after calling <code>SetWake</code> to bypass) and <strong>_Color</strong> is forced to be white (cannot be bypassed).</p>
+<p>The <a href="glossary.html#render-queue">render queue</a> is changed to be <a href="engine.html#render-queue">3998</a> (can be changed after calling <code>SetWake</code> to bypass) and <strong>_Color</strong> is forced to be white (cannot be bypassed).</p>
 
 <h3 id="SetWake-diff">Differences Check</h3>
 <p>The settings are not applied until a check is run to see if they are different from the current settings, and there are some bugs in this process:</p>
@@ -1280,15 +1280,15 @@ table builtin = nil or {
 	string name = nil or (<a href="#AddPostEffect-builtin">see below</a>) <em>-- A valid name is required or builtin will be ignored.</em>
 	<em>-- Other values, depending on the name. <a href="#AddPostEffect-builtin">See below</a> for all the variations.</em>
 }</code></pre>
-<p>Attaches a post-processing effect to the selected <a href="magic-literals.html#cameras">camera</a>:</p>
+<p>Attaches a post-processing effect to the selected <a href="engine.html#cameras">camera</a>:</p>
 <ul>
-	<li><code>background</code>: The <a href="magic-literals.html#camera-bg">background camera</a>. Covers objects on layers 18 and 19.</li>
-	<li><code>middle</code> / <code>foreground_exceptclose</code>: The <a href="magic-literals.html#camera-fg">foreground camera</a>. Covers objects on layers 11, 12, 13, 18, and 19.</li>
-	<li><code>foreground</code>: The <a href="magic-literals.html#camera-close">close camera</a>. Covers objects on layers 11, 12, 13, 14, 15, 18, and 19.</li>
-	<li><code>topmost_exclusive</code>: The <a href="magic-literals.html#camera-close-blitter">close blitter camera</a>. Adding a <code>material</code> effect to this camera switches the <a href="magic-literals.html#camera-close">close camera</a> to <a href="#AddPostEffect-material-blitter-mode">blitter mode</a>. Covers objects on layers 14 and 15.</li>
+	<li><code>background</code>: The <a href="engine.html#camera-bg">background camera</a>. Covers objects on layers 18 and 19.</li>
+	<li><code>middle</code> / <code>foreground_exceptclose</code>: The <a href="engine.html#camera-fg">foreground camera</a>. Covers objects on layers 11, 12, 13, 18, and 19.</li>
+	<li><code>foreground</code>: The <a href="engine.html#camera-close">close camera</a>. Covers objects on layers 11, 12, 13, 14, 15, 18, and 19.</li>
+	<li><code>topmost_exclusive</code>: The <a href="engine.html#camera-close-blitter">close blitter camera</a>. Adding a <code>material</code> effect to this camera switches the <a href="engine.html#camera-close">close camera</a> to <a href="#AddPostEffect-material-blitter-mode">blitter mode</a>. Covers objects on layers 14 and 15.</li>
 </ul>
 <ul class="seealso">
-	<li><a href="magic-literals.html#layers">Layers</a></li>
+	<li><a href="engine.html#layers">Layers</a></li>
 	<li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/PostProcessingWritingEffects.html">Unity post-processing effects</a></li>
 </ul>
 
@@ -1303,7 +1303,7 @@ table builtin = nil or {
 </ul>
 <p>If the effect has 0 materials but is somehow enabled, it does <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Graphics.Blit.html" class=func>Graphics.Blit</a>(src, dest)</code>, making it effectively an <a href="https://en.wikipedia.org/wiki/Identity_function">identity function</a>. We can get this state by specifying no <code>material</code> along with an invalid <code>builtin</code> that causes an exception to be thrown, then <a href="https://www.lua.org/manual/5.1/manual.html#pdf-pcall">catching</a> the exception after it leaves <code>AddPostEffect</code>. Setting an <code>address</code> to something other than a <code>string</code> or <code>nil</code> should cause an <code>InvalidCastException</code>.</p>
 <h4 id="AddPostEffect-material-blitter-mode">Blitter Mode</h4>
-<p>There is special behavior when adding a <code>material</code> post effect to the <a href="magic-literals.html#camera-close-blitter">close blitter camera</a>: The <a href="magic-literals.html#camera-close">close camera</a> will be assigned a background color and a <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderTexture.html" class=type>RenderTexture</a></code>, which will be used as the  source for the <a href="magic-literals.html#camera-close-blitter">close blitter camera</a> rather than reading from the screen buffer. The blit output will also be <code>null</code> (the screen) rather than <code>dest</code>. Settings:</p>
+<p>There is special behavior when adding a <code>material</code> post effect to the <a href="engine.html#camera-close-blitter">close blitter camera</a>: The <a href="engine.html#camera-close">close camera</a> will be assigned a background color and a <code><a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/RenderTexture.html" class=type>RenderTexture</a></code>, which will be used as the  source for the <a href="engine.html#camera-close-blitter">close blitter camera</a> rather than reading from the screen buffer. The blit output will also be <code>null</code> (the screen) rather than <code>dest</code>. Settings:</p>
 <ul>
 	<li>RenderTexture depth buffer: 24 bit</li>
 	<li>RenderTexture format: ARGB32</li>
