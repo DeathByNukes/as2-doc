@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>vector</title>
+<link href="../as2-doc.css" rel="stylesheet" type="text/css">
+<script src="../jquery.min.js" type="text/javascript"></script>
+<script src="../as2-doc.js" type="text/javascript"></script>
+</head>
+<body>
+<h1 id="about">About</h1>
+<address>Author: <a href="index.html#contact">DeathByNukes</a></address>
+<p>This is a part of my <a href="index.html">Audiosurf 2 scripting library</a>.</p>
+<h1 id="contents">Contents</h1>
+<script type="text/javascript">writeNavigation();</script>
+
+
+
+
+<h1 id="TextureSettingsToString">TextureSettingsToString</h1>
+<p>Get texture settings of a <code>UnityEngine.Texture2D</code> object. Can also pass it a <code><a href="../skins.html#type-UnityEngine.Material" class=type>UnityEngine.Material</a></code> to get information on the material's main texture.</p>
+<pre class="NppLua"><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">TextureSettingsToString</span><span class="sc10">(</span><span class="sc11">texture</span><span class="sc10">)</span><span class="sc0">
+	</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">texture</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc5">nil</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0"> </span><span class="sc5">return</span><span class="sc0"> </span><span class="sc7">'nil'</span><span class="sc0"> </span><span class="sc5">end</span><span class="sc0">
+	</span><span class="sc13">assert</span><span class="sc10">(</span><span class="sc13">type</span><span class="sc10">(</span><span class="sc11">texture</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc7">'userdata'</span><span class="sc10">)</span><span class="sc0">
+	</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">texture:GetType</span><span class="sc10">().</span><span class="sc11">FullName</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc6">"UnityEngine.Material"</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
+		</span><span class="sc11">texture</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">texture:GetTexture</span><span class="sc10">(</span><span class="sc6">"_MainTex"</span><span class="sc10">)</span><span class="sc0">
+	</span><span class="sc5">end</span><span class="sc0">
+	</span><span class="sc13">assert</span><span class="sc10">(</span><span class="sc11">texture:GetType</span><span class="sc10">().</span><span class="sc11">FullName</span><span class="sc0"> </span><span class="sc10">==</span><span class="sc0"> </span><span class="sc7">'UnityEngine.Texture2D'</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc7">'Only UnityEngine.Texture2D is supported.'</span><span class="sc10">)</span><span class="sc0">
+	</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">v</span><span class="sc10">(</span><span class="sc11">name</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">hide</span><span class="sc10">)</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">result</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc13">tostring</span><span class="sc10">(</span><span class="sc11">texture</span><span class="sc10">[</span><span class="sc11">name</span><span class="sc10">])</span><span class="sc0">
+		</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">hide</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0"> </span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">result</span><span class="sc0"> </span><span class="sc5">end</span><span class="sc0">
+		</span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">name</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc6">": "</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc11">result</span><span class="sc0">
+	</span><span class="sc5">end</span><span class="sc0">
+	</span><span class="sc5">return</span><span class="sc0"> </span><span class="sc14">table.concat</span><span class="sc10">({</span><span class="sc0">
+		</span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'format'</span><span class="sc10">),</span><span class="sc0">
+		</span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'mipmapCount'</span><span class="sc10">),</span><span class="sc0">
+		</span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'hideFlags'</span><span class="sc10">),</span><span class="sc0">
+		</span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'name'</span><span class="sc10">),</span><span class="sc0">
+		</span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'anisoLevel'</span><span class="sc10">),</span><span class="sc0">
+		</span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'dimension'</span><span class="sc10">),</span><span class="sc0">
+		</span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'filterMode'</span><span class="sc10">),</span><span class="sc0">
+		</span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'mipMapBias'</span><span class="sc10">),</span><span class="sc0">
+		</span><span class="sc7">'width x height: '</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'width'</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc6">" x "</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'height'</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc10">),</span><span class="sc0">
+		</span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'wrapMode'</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc6">" (U: "</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'wrapModeU'</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc6">", V: "</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'wrapModeU'</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc6">", W: "</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc11">v</span><span class="sc10">(</span><span class="sc7">'wrapModeW'</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc10">)</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc6">")"</span><span class="sc10">,</span><span class="sc0">
+	</span><span class="sc10">},</span><span class="sc0"> </span><span class="sc6">"\n"</span><span class="sc10">)</span><span class="sc0">
+</span><span class="sc5">end</span></pre>
+</body>
+</html>

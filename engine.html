@@ -80,18 +80,161 @@
 
 
 
-<h1 id="special-textures">Special Textures</h1>
+<h1 id="textures">Textures</h1>
+<p>A texture is an image file loaded into main memory and uploaded to the GPU, typically mapped onto a <a href="glossary.html#mesh">mesh</a> with <a href="glossary.html#UV">UV</a> mapping and rendered by a <a href="glossary.html#material">material</a>'s <a href="glossary.html#shader">shader</a>. Textures have their own formats such as RGB24/RGBA32 (lossless and large, like bmp) or DXT1/DXT5 (<a href="https://udn.epicgames.com/Two/TextureComparison.html">lossy and compressed</a>, like jpeg) that images get converted to when they are imported by Unity or Audiosurf 2.</p>
 <ul class="seealso">
 	<li><a href="glossary.html#texture">texture</a></li>
+	<li><a href="https://en.wikipedia.org/wiki/Texture_mapping">Texture mapping</a></li>
+	<li><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/TextureTypes.html">Texture Settings</a></li>
+	<li><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture2D.html">UnityEngine.Texture2D</a></li>
+	<li><a href="lib/tostring.html#TextureSettingsToString">TextureSettingsToString</a></li>
 </ul>
-<p>The texture loading is hidden behind some multithreading code that's hard to read so I'm just going to repeat <a href="http://www.audio-surf.com/forum/index.php/topic,13163.msg93835.html#msg93835">Dylan's announcement</a>.</p>
-<p>You can set any texture to one of these special values:</p>
-<ul>
-	<li><code>&quot;&lt;ALBUMART&gt;&quot;</code></li>
-	<li><code>&quot;&lt;ALBUMART_DOUBLEWIDTH&gt;&quot;</code></li>
-	<li><code>&quot;&lt;ALBUMART_DOUBLEWIDTHMIRRORED&gt;&quot;</code> (handy for a wrapping skysphere)</li>
+
+
+<h2 id="textures-special">Special Textures</h2>
+<p>If you specify a texture name containing <code>&lt;ALBUMART</code> it will load a texture containing the album art or, if there is no album art, the placeholder image (the <a href="https://static.tumblr.com/2e28f764248b93248e4648f0efc06de1/uq2jl7f/uP4ms780s/tumblr_static_audiosurf2_logo_250.png">old Audiosurf 2 logo</a> in a black square). If the texture name starts with <code>&lt;ALBUMART_DOUBLEWIDTH</code> the texture will be twice as wide with two side-by-side images of the album art. If it starts with <code>&lt;ALBUMART_DOUBLEWIDTHMIRRORED</code>, the right side copy will be flipped. If you add <code>GREY</code> or <code>GRAY</code>, the texture will be modified to be greyscale (aka black and white). All of the special textures except <code>&lt;ALBUMART&gt;</code> currently have critical bugs and aren't useful for the purpose of displaying album art in the game. <a href="#textures-special-bugfix">See below</a> for a way to fix this.</p>
+<p>Unlike most other textures loaded by AS2, this one will be marked "readable" which means if you retrieve it from the material later you can <a href="lua.html#LuaInterface-example-material">read the pixels and modify them</a>. If you use this image in multiple places it will normally reuse the same texture object to improve performance unless the name contains the <code>&lt;ALBUMART_DOUBLEWIDTHMIRRORED</code> or <code>&lt;ALBUMART_DOUBLEWIDTH</code> modifiers. (Bug: The <code>GREY</code>/<code>GRAY</code> modifier alters the original texture object unless another modifier is also used!)</p>
+<p>Album art textures ignore any texture settings provided by the <a href="#textures-loader">texture loader</a>; they are always created with the below settings.</p>
+<table>
+	<tbody>
+		<tr><td>Format</td><td>DXT5 (RGB24 for the placeholder image)</td></tr>
+		<tr><td>Wrap Mode</td><td>Repeat</td></tr>
+		<tr><td>Mipmaps</td><td>(<a href="#textures-special-list">See Below</a>)</td></tr>
+		<tr><td>Filter Mode</td><td>Bilinear</td></tr>
+		<tr><td>Aniso Level</td><td>1</td></tr>
+		<tr><td>Read/Write Enabled</td><td>Yes</td></tr>
+	</tbody>
+</table>
+<ul class="seealso">
+	<li><a href="https://web.archive.org/web/20170629124417/http://www.audio-surf.com/forum/index.php/topic,13163.0.html">Forum Topic: Use artwork, track name/album/artist in mods/skins</a></li> <!-- original direct link: http://www.audio-surf.com/forum/index.php/topic,13163.msg93835.html#msg93835 -->
 </ul>
-<p>The logo is used if a song with no art is selected. You can also append &quot;GREY&quot; in any of the 3 to convert the art to greyscale. For example: <code>&quot;&lt;ALBUMART_DOUBLEWIDTHMIRRORED_GREY&gt;&quot;</code></p>
+<h3 id=textures-special-list>All Combinations</h3>
+<table>
+	<thead><tr><th>Texture</th><th>Mipmaps</th><th>Unique Object</th><th>OK</th><th>Comments</th></tr></thead>
+	<tbody>
+		<tr><td class=code>&lt;ALBUMART&gt;</td><td><span title='Personal note: Loader.instance.defaultAlbumArt -> Loader.instance -> Resources.Load("Loader") -> Loader (prefab asset) -> DefaultAlbumArt (texture asset)'>No</span></td><td>No</td><td>✔️</td><td></td></tr>
+		<tr><td class=code>&lt;ALBUMART_GREY&gt;</td><td>No</td><td>No</td><td>❌</td><td>With the default art or the <a href="#textures-special-bugfix">bug fix</a>, permanently turns the game's internal copy of the texture grey until the game is closed. Otherwise, has no effect or crashes the game.</td></tr>
+		<tr><td class=code>&lt;ALBUMART_DOUBLEWIDTH&gt;</td><td>Yes</td><td>Yes</td><td>⚠️</td><td>Double width textures produce a corrupted image unless it's the default album art or the <a href="#textures-special-bugfix">bug fix</a> is applied. Still useful if you want to produce a new unrestricted texture object to use for other purposes.</td></tr>
+		<tr><td class=code>&lt;ALBUMART_DOUBLEWIDTH_GREY&gt;</td><td>Yes</td><td>Yes</td><td>⚠️</td><td>Corrupted image, needs <a href="#textures-special-bugfix">bug fix</a>.</td></tr>
+		<tr><td class=code>&lt;ALBUMART_DOUBLEWIDTHMIRRORED&gt;</td><td>Yes</td><td>Yes</td><td>⚠️</td><td>Dylan suggested this for <a href="skins.html#SetSkybox">skyspheres</a>. Corrupted image, needs <a href="#textures-special-bugfix">bug fix</a>.</td></tr>
+		<tr><td class=code>&lt;ALBUMART_DOUBLEWIDTHMIRRORED_GREY&gt;</td><td>Yes</td><td>Yes</td><td>⚠️</td><td>Corrupted image, needs <a href="#textures-special-bugfix">bug fix</a>.</td></tr>
+	</tbody>
+</table>
+<h3 id=textures-special-bugfix>Bug Fix</h3>
+<p>If you want to use the <code>ALBUMART_DOUBLEWIDTH</code> textures as they were designed, here is a Lua hack to make them work again. Put it in your skin anywhere above the first place you want to use a <code>DOUBLEWIDTH</code> texture.</p>
+<pre class="NppLua"><span class="sc5">do</span><span class="sc0"> </span><span class="sc2">-- Fix album art variation textures.</span><span class="sc0">
+	</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc5">function</span><span class="sc0"> </span><span class="sc11">getTextureFormatARGB32</span><span class="sc10">()</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">TextureFormat</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">import_type</span><span class="sc0"> </span><span class="sc7">'UnityEngine.TextureFormat'</span><span class="sc0">
+		</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">TextureFormat</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0"> </span><span class="sc2">-- currently not whitelisted for importing</span><span class="sc0">
+			</span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">TextureFormat.ARGB32</span><span class="sc0">
+		</span><span class="sc5">end</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">cubemap_mat</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">BuildMaterial</span><span class="sc10">{</span><span class="sc0">
+			</span><span class="sc11">shader</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"VertexColorUnlitTintedAddSmooth"</span><span class="sc10">,</span><span class="sc0">
+			</span><span class="sc11">textures</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
+				</span><span class="sc11">_MainTex</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc10">{</span><span class="sc0">
+					</span><span class="sc2">-- Any texture that exists (other than &lt;ALBUMART&gt;) will work here. Something small like white.png is best.</span><span class="sc0">
+					</span><span class="sc11">front</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"&lt;ALBUMART_DOUBLEWIDTH&gt;"</span><span class="sc10">,</span><span class="sc0">
+					</span><span class="sc2">--front = "white.png",</span><span class="sc0">
+				</span><span class="sc10">},</span><span class="sc0">
+			</span><span class="sc10">},</span><span class="sc0">
+		</span><span class="sc10">}</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">result</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">cubemap_mat:GetTexture</span><span class="sc10">(</span><span class="sc6">"_MainTex"</span><span class="sc10">).</span><span class="sc14">format</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">name</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc13">tostring</span><span class="sc10">(</span><span class="sc11">result</span><span class="sc10">)</span><span class="sc0">
+		</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">name</span><span class="sc0"> </span><span class="sc10">~=</span><span class="sc0"> </span><span class="sc7">'ARGB32'</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
+			</span><span class="sc13">error</span><span class="sc10">(</span><span class="sc7">'Failed to get enum value TextureFormat.ARGB32, got "'</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc11">name</span><span class="sc0"> </span><span class="sc10">..</span><span class="sc0"> </span><span class="sc7">'" instead.'</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc4">2</span><span class="sc10">)</span><span class="sc0">
+		</span><span class="sc5">end</span><span class="sc0">
+		</span><span class="sc5">return</span><span class="sc0"> </span><span class="sc11">result</span><span class="sc0">
+	</span><span class="sc5">end</span><span class="sc0">
+
+	</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">albumart_mat</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">BuildMaterial</span><span class="sc10">{</span><span class="sc0">
+		</span><span class="sc11">shader</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"VertexColorUnlitTintedAddSmooth"</span><span class="sc10">,</span><span class="sc0">
+		</span><span class="sc11">texture</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"&lt;ALBUMART&gt;"</span><span class="sc10">,</span><span class="sc0">
+	</span><span class="sc10">}</span><span class="sc0">
+	</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">albumart</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">albumart_mat:GetTexture</span><span class="sc10">(</span><span class="sc6">"_MainTex"</span><span class="sc10">)</span><span class="sc0">
+	</span><span class="sc2">--print('album art texture format: ' .. albumart.format:ToString())</span><span class="sc0">
+
+	</span><span class="sc2">-- https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture2D.SetPixels32.html</span><span class="sc0">
+	</span><span class="sc2">-- "This function works only on RGBA32, ARGB32 texture formats"</span><span class="sc0">
+	</span><span class="sc2">-- Also, the RGB24 format currently used by the default album art seems to work fine.</span><span class="sc0">
+	</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">format_name</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">albumart.format:ToString</span><span class="sc10">()</span><span class="sc0">
+	</span><span class="sc5">if</span><span class="sc0"> </span><span class="sc11">format_name</span><span class="sc0"> </span><span class="sc10">~=</span><span class="sc0"> </span><span class="sc7">'RGB24'</span><span class="sc0"> </span><span class="sc5">and</span><span class="sc0"> </span><span class="sc11">format_name</span><span class="sc0"> </span><span class="sc10">~=</span><span class="sc0"> </span><span class="sc7">'RGBA32'</span><span class="sc0"> </span><span class="sc5">and</span><span class="sc0"> </span><span class="sc11">format_name</span><span class="sc0"> </span><span class="sc10">~=</span><span class="sc0"> </span><span class="sc7">'ARGB32'</span><span class="sc0"> </span><span class="sc5">then</span><span class="sc0">
+		</span><span class="sc2">-- We are going to exploit the fact that Audiosurf 2 handed us the original</span><span class="sc0">
+		</span><span class="sc2">-- texture rather than a copy in order to fix an internal bug in the album</span><span class="sc0">
+		</span><span class="sc2">-- art variation textures. Unity only allows editing the pixels of</span><span class="sc0">
+		</span><span class="sc2">-- uncompressed textures, and Audiosurf 2 is trying to do edits with copies</span><span class="sc0">
+		</span><span class="sc2">-- of the compressed album art.</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">ARGB32</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">getTextureFormatARGB32</span><span class="sc10">()</span><span class="sc0">
+		</span><span class="sc5">local</span><span class="sc0"> </span><span class="sc11">albumart_pixels</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">albumart:GetPixels32</span><span class="sc10">()</span><span class="sc0">
+		</span><span class="sc11">albumart:Resize</span><span class="sc10">(</span><span class="sc11">albumart.width</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">albumart.height</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">ARGB32</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc5">true</span><span class="sc10">)</span><span class="sc0">
+		</span><span class="sc11">albumart:SetPixels32</span><span class="sc10">(</span><span class="sc11">albumart_pixels</span><span class="sc10">)</span><span class="sc0">
+		</span><span class="sc11">albumart:Apply</span><span class="sc10">()</span><span class="sc0">
+		</span><span class="sc2">-- This change will persist in future reloads, main menus, and other skins.</span><span class="sc0">
+	</span><span class="sc5">end</span><span class="sc0">
+</span><span class="sc5">end</span></pre>
+
+
+<h2 id="textures-cache">Texture Cache</h2>
+<p>Textures loaded from local files will be cached and reused across skin reloads until the game closes or a different skin is chosen. The texture's settings like clamping and mipmaps will also be reused, which might cause problems if a single file is used for multiple purposes. (Some settings will work but they will also retroactively apply to the first use of the texture.) The cache is case-sensitive on all platforms but it is not a good idea to exploit this for bypassing the cache because the game is available on Linux, which has case-sensitive paths.</p>
+
+
+<h2 id="textures-loader">Texture Loader</h2>
+<p>There are multiple internal functions that Audiosurf uses to load textures. They are documented below. Check the documentation of individual texture settings to see which one is used and how it is configured.</p>
+
+<h3 id="textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</h3>
+<p>
+	This is the most commonly used texture loader. Loads a texture then directly adds it to a material. Although it has asynchronous capabilities, it doesn't use async I/O for reading any local files. (Asynchronous means that when the function returns it appears to not have loaded the texture into a material, but it will be added to the material on some later frame. For local files, it will be completely synchronous and the material will have the texture in it as soon as the function returns.)
+	<table>
+		<thead><tr><th>Setting</th><th><a href="#textures-cache">Cached</a></th><th><a href="#textures-special">Special</a></th><th>Skin/Mod Folder</th><th>HTTP</th></tr></thead>
+		<tbody>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture2D-format.html" class=prop>format</a></code></th><td>?</td><td>Art: DXT5, Logo: RGB24</td><td>JPEG: DXT1, PNG: DXT5</td><td>JPEG: RGB24, PNG: ARGB32</td></tr>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-wrapMode.html" class=prop>wrapMode</a></code></th><td>Repeat**</td><td>Repeat**</td><td>Repeat**</td><td>Repeat**</td></tr>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture2D-ctor.html" class=field>mipmap</a></code></th><td>?</td><td>Normal: No, Wide: Yes</td><td>Yes*</td><td>Yes</td></tr>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-filterMode.html" class=prop>filterMode</a></code></th><td>Bilinear**</td><td>Bilinear**</td><td>Bilinear**</td><td>Bilinear**</td></tr>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-anisoLevel.html" class=prop>anisoLevel</a></code></th><td>1**</td><td>1**</td><td>1**</td><td>1*</td></tr>
+			<tr><th>Asynchronous Load</th><td>No</td><td>No</td><td>No</td><td>Yes</td></tr>
+			<tr><th>Read/Write Enabled</th><td>?</td><td>Yes</td><td>No</td><td>No</td></tr>
+		</tbody>
+	</table>
+	* This is a default value that might be overridden by the setting that uses this loader. Check the documentation of specific texture settings.<br>
+	** Same as above but, in rare cases where the loader only puts it into the cache without loading it into a material, this setting will not be applied.
+</p>
+
+<h3 id="textures-loader-SyncLoadTexture">SyncLoadTexture</h3>
+<p>
+	Synchronously loads a texture and returns it to the function that invoked it. This theoretically allows the calling function to overwrite most of these settings but in practice none of them do this at the time of writing. (Not to be confused with overrides, below, which are used.) The caller specifies whether the texture should be read/write enabled or not, and this affects the way downloaded textures are loaded. (Special textures will always be R/W enabled, as usual.)
+	<table>
+		<thead><tr><th>Setting</th><th><a href="#textures-cache">Cached</a></th><th><a href="#textures-special">Special</a></th><th>Skin/Mod Folder</th><th>HTTP (R/W Disabled)*</th><th>HTTP (R/W Enabled)</th></tr></thead>
+		<tbody>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture2D-format.html" class=prop>format</a></code></th><td>?</td><td>Art: DXT5, Logo: RGB24</td><td>* JPEG: DXT1, PNG: DXT5</td><td>* JPEG: RGB24, PNG: ARGB32</td><td>* JPEG: DXT1, PNG: DXT5</td></tr>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-wrapMode.html" class=prop>wrapMode</a></code></th><td>?</td><td>Repeat</td><td>Repeat</td><td>Repeat*</td><td>Repeat*</td></tr>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture2D-ctor.html" class=field>mipmap</a></code></th><td>?</td><td>Normal: No, Wide: Yes</td><td>Yes*</td><td>Yes</td><td>Yes*</td></tr>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-filterMode.html" class=prop>filterMode</a></code></th><td>?</td><td>Bilinear</td><td>Bilinear</td><td>Bilinear</td><td>Bilinear</td></tr>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-anisoLevel.html" class=prop>anisoLevel</a></code></th><td>?</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+			<tr><th>Asynchronous Load</th><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+			<tr><th>Read/Write Enabled</th><td>?</td><td>Yes</td><td>No*</td><td>No</td><td>Yes</td></tr>
+		</tbody>
+	</table>
+	* This is a default value that might be overridden by the setting that uses this loader. Check the documentation of specific texture settings.
+</p>
+
+<h3 id="textures-loader-AsyncLoadTextureThenBroadcastTo">AsyncLoadTextureThenBroadcastTo</h3>
+<p>
+	Similar to <a href="#textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</a>, but instead of directly adding the texture to a material it passes it to a setting-specific function that handles adding the texture to one or more materials and applying the setting. This loader also takes a <code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-wrapMode.html" class=prop>wrapMode</a></code> override but, due to a bug, never actually applies it.
+	<table>
+		<thead><tr><th>Setting</th><th><a href="#textures-cache">Cached</a></th><th><a href="#textures-special">Special</a></th><th>Skin/Mod Folder</th><th>HTTP</th></tr></thead>
+		<tbody>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture2D-format.html" class=prop>format</a></code></th><td>?</td><td>Art: DXT5, Logo: RGB24</td><td>JPEG: DXT1, PNG: DXT5</td><td>JPEG: RGB24, PNG: ARGB32</td></tr>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-wrapMode.html" class=prop>wrapMode</a></code></th><td>?</td><td>Repeat</td><td>Repeat</td><td>Repeat</td></tr>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture2D-ctor.html" class=field>mipmap</a></code></th><td>?</td><td>Normal: No, Wide: Yes</td><td>*</td><td>Yes</td></tr>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-filterMode.html" class=prop>filterMode</a></code></th><td>?</td><td>Bilinear</td><td>Bilinear</td><td>Bilinear</td></tr>
+			<tr><th><code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-anisoLevel.html" class=prop>anisoLevel</a></code></th><td>?</td><td>1</td><td>1</td><td>1</td></tr>
+			<tr><th>Asynchronous  Load</th><td>No</td><td>No</td><td>No</td><td>Yes</td></tr>
+			<tr><th>Read/Write Enabled</th><td>?</td><td>Yes</td><td>No</td><td>No</td></tr>
+		</tbody>
+	</table>
+	* This is specified by the setting that uses this loader.
+</p>
+
 
 
 

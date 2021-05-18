@@ -272,7 +272,7 @@
 <h3 id="LuaInterface-example-material">Materials</h2>
 <pre class=LuaCode><code>local mat = <a href="skins.html#BuildMaterial" class=func>BuildMaterial</a>{
 	shader = "<a href="shaders.html#shader-VertexColorUnlitTintedAddSmooth">VertexColorUnlitTintedAddSmooth</a>",
-	texture = "<a href="engine.html#special-textures">&lt;ALBUMART&gt;</a>",
+	texture = "<a href="engine.html#textures-special">&lt;ALBUMART&gt;</a>",
 }
 
 <a href="https://www.lua.org/manual/5.1/manual.html#pdf-assert" class=func>assert</a>(mat.<a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material-renderQueue.html" class=prop>renderQueue</a> == <a href="engine.html#render-queue">3000</a>) <em>-- Read instance property. (Basic <a href="#environment">CLI</a> number types are <a href="https://github.com/DeathByNukes/MonoBoxedLua/blob/255cc8b56dd9532abcc83f904bdb75da9d579811/LuaInterface/ObjectTranslator.cs#L497">automatically converted</a> to Lua numbers.)</em>

@@ -236,7 +236,7 @@ end</code></pre>
 <pre><code><a href="#type-int">int</a> <strong>mincount</strong> = 3
 <a href="#type-int">int</a> <strong>maxcount</strong> = 5</code></pre>
 <p>Color format: <code>{r=0-1, g=0-1, b=0-1, a=1}</code></p>
-<p>Reads the <code><a href="engine.html#special-textures">&lt;ALBUMART&gt;</a></code> texture with a tool named Color Thief and produces colors that presumably came from that image. If there is no album art it generates <code>mincount</code> random colors. (Each color is just 3 random floats between 0.0 and 1.0 inclusive. There is no attempt to avoid greys or produce a tasteful palette.)</p>
+<p>Reads the <code><a href="engine.html#textures-special">&lt;ALBUMART&gt;</a></code> texture with a tool named Color Thief and produces colors that presumably came from that image. If there is no album art it generates <code>mincount</code> random colors. (Each color is just 3 random floats between 0.0 and 1.0 inclusive. There is no attempt to avoid greys or produce a tasteful palette.)</p>
 <p>According to Dylan: It picks out prominent colors from the album art image. Less colorful images return less colors and if you force it to return more with a high <code>mincount</code> the colors will have less variation.</p>
 <p><code>mincount</code> and <code>maxcount</code> used to be bugged but it is fixed now.</p>
 
@@ -290,13 +290,13 @@ float closecam_far ?= 50
 	float <strong>airdebris_fieldsize</strong> <em>-- "Cell size".</em>
 	int <strong>airdebris_layer</strong> = 11
 <em>-- end</em>
-string airdebris_texture ?= ? <em>-- Texture options: Clamp, Use Mipmaps.</em>
+string airdebris_texture ?= ? <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureThenBroadcastTo">AsyncLoadTextureThenBroadcastTo</a>(mipmaps: yes, wrapMode: Clamp (BUG))</em>
 <a href="#type-color">color</a> <strong>watertint</strong> ?= ?
 bool widewater ?= false <em>-- Water width is 11.25 normally or 16.25 wide. When turned off, width is not changed back to 11.25 but water simulation behavior does change back.</em>
 <a href="#type-float">float</a> <strong>minwaterrandomdarkness</strong> ?= 0.5 <em>-- Individual water cubes will be tinted to a random greyscale color between this and 1.</em>
 <a href="#type-int">int</a> <strong>watertype</strong> = 0 <em>-- Changes the water shader. Type 1 (default): <a href="shaders.html#shader-GpuOffsetCubes">GpuOffsetCubes</a>, type 2: <a href="shaders.html#shader-GpuOffsetCubesNoLines">GpuOffsetCubesNoLines</a></em>
 <a href="#type-bool">bool</a> <strong>watertint_highway</strong> = false <em>-- Water color changes to the current highway color automatically. If enabled, only the alpha of <strong>watertint</strong> will be used.</em>
-<a href="#type-address">address</a> <strong>watertexture</strong> ?= ? <em>-- Texture options: Clamp, No Mipmaps.</em>
+<a href="#type-address">address</a> <strong>watertexture</strong> ?= ? <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureThenBroadcastTo">AsyncLoadTextureThenBroadcastTo</a>(mipmaps: no, wrapMode: Clamp (BUG))</em>
 <a href="#type-bool">bool</a> <strong>usecubewater</strong> ?= true <em>-- When false, water will be <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/Behaviour-enabled.html">disabled</a> after the skin loads.</em>
 <a href="#type-bool">bool</a> <strong>usedefaultrails</strong> ?= false
 <a href="#type-bool">bool</a> <strong>fogenabled</strong> = false <em>-- Enables or disables fog. Also sets <a href="https://docs.unity3d.com/2017.3/Documentation/ScriptReference/FogMode.html">UnityEngine.FogMode.Linear</a> when true.</em>
@@ -319,8 +319,8 @@ bool fog_allowcolorshiftwhenjupming = true <em>-- Temporarily overrides fog sett
 half4 body = color * vertex.texcoord.z * 10;
 return register0.x == 0 ? body : half4(color.xyz, 0.01);</pre>
 </li>
-<li>Texture: <code>watertexture</code> is loaded with "clamp" wrapping and no mipmaps. I have not found any official documentation on the significance of different areas of the texture and haven't studied it.
-	<br>If a mod enables jump markers, a 3 pixel thick opaque white stripe will be drawn horizontally through the texture before it's sent to the GPU. The center of the line is calculated to be offset <code>(height * 0.37)</code> from the bottom of the image. Therefore, by varying the resolution of the image, you could change how thick the line is from the shader's perspective.</li>
+<li>Texture: <code>watertexture</code> is loaded with "repeat" wrapping (due to a bug) and no mipmaps. I have not found any official documentation on the significance of different areas of the texture and haven't studied it.
+	<br>If a mod sets <code><a href="mods.html#GameplaySettings" class=func>GameplaySettings</a>{<strong>usejumpmarkers</strong>=true}</code>, Audiosurf 2 will try to draw a 3 pixel thick opaque white stripe horizontally through the texture. (BUG: This will cause a crash unless the texture is writable. One might be able to work around this by manipulating the texture cache to contain a writable texture.) The center of the line is calculated to be offset <code>(height * 0.37)</code> from the bottom of the image. Therefore, by varying the resolution of the image, you could change how thick the line is from the shader's perspective.</li>
 <li>Color: <code>watertint</code> and <code>watertint_highway</code> directly control the <code>_Color</code> of the material.</li>
 <li>Vertex Color: <code>minwaterrandomdarkness</code> produces random shades of grey in the vertex color. All 8 vertices of each cube are the same color.</li>
 <li>Layer: <a href="engine.html#layer-13">13</a> (foreground)</li>
@@ -556,9 +556,9 @@ string cameradynamics = null or "high" <em>-- "use extra dynamic camera", adjust
 	<a href="#type-bool">bool</a> <strong>useProceduralSunLight</strong> ?= true
 	vector3 windspeed ?= {10, 0, 10}
 }
-<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a> <strong>custom</strong> = nil <em>-- Textures (clamp, mipmaps, bilinear). Names to use: _BackTex _DownTex _FrontTex _LeftTex _RightTex _UpTex</em>
+<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a><a href="#type-dict">}</a> <strong>custom</strong> = nil <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</a>(wrapMode: Clamp). Names to use: _BackTex _DownTex _FrontTex _LeftTex _RightTex _UpTex</em>
 <em>-- IF <strong>custom</strong> is a table these values will be read as nil:</em>
-<a href="#type-address">address</a> <strong>skysphere</strong> ?= ? or "default" or (...) <em>-- Texture (repeat, no mipmaps, bilinear). "default" will leave the texture at its current setting but allow you to change the other settings. This setting is only applied on the first run but you must supply a string whenever you want to change the other skysphere settings.</em>
+<a href="#type-address">address</a> <strong>skysphere</strong> ?= ? or "default" or (...) <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</a>(wrapMode: Repeat, mipmaps: no). "default" will leave the texture at its current setting but allow you to change the other settings. This setting is only applied on the first run but you must supply a string whenever you want to change the other skysphere settings.</em>
 <a href="#type-UnityEngine.Material">UnityEngine.Material</a> <strong>skysphere</strong> ?= ?
 string skyscreen <em>-- Shader name.</em>
 <a href="#type-UnityEngine.Material">UnityEngine.Material</a> skyscreen
@@ -568,7 +568,7 @@ vector3 skyScreen_FixedTrackOffset = nil
 <em>-- END IF</em>
 <em>-- IF <strong>skysphere</strong> is a string:</em>
 rotation sphererot ?= ? <em>-- If you want to change this setting on the <a href="#type-UnityEngine.Material">UnityEngine.Material</a> version of <strong>skyscreen</strong>, call SetSkybox a second time with <strong>skyscreen</strong> = "default".</em>
-string emissionmap ?= ? <em>-- Texture (clamp, no mipmaps, bilinear).</em>
+string emissionmap ?= ? <em>-- <a href="engine.html#textures-loader-SyncLoadTexture">SyncLoadTexture</a>(wrapMode: Clamp, mipmaps: no)</em>
 <a href="#type-vector2">vector2</a> <strong>texturescale</strong> ?= ?
 <a href="#type-vector2">vector2</a> <strong>textureoffset</strong> ?= ?
 <em>-- END IF</em></code></pre>
@@ -692,14 +692,14 @@ vector3 offset = {0,0,0}
 <em>-- if <strong>material</strong> is UnityEngine.Material</em>
 	UnityEngine.Material material
 <em>-- else</em>
-	<a href="#type-string">string</a> <strong>texture</strong> = nil
+	<a href="#type-string">string</a> <strong>texture</strong> = nil <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</a>()</em>
 	<a href="#type-string">string</a> <strong>shader</strong> = nil <em>-- Built-in shaders only.</em>
 <em>-- end</em>
 <a href="#type-float">float</a> <strong>airsize</strong> = 0
 <em>-- if <strong>airmaterial</strong> is UnityEngine.Material</em>
 	UnityEngine.Material airmaterial
 <em>-- else</em>
-	<a href="#type-string">string</a> <strong>airtexture</strong> = nil
+	<a href="#type-string">string</a> <strong>airtexture</strong> = nil <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</a>()</em>
 	<a href="#type-string">string</a> <strong>airshader</strong> = nil <em>-- Built-in shaders only.</em>
 <em>-- end</em></code></pre>
 
@@ -736,7 +736,7 @@ vector3[] offsets ?= {{7.5, 0, 0}, {-7.5, 0, 0}}
 
 
 <h2 id="SetBlockFlashes">SetBlockFlashes{}</h2>
-<pre><code>address texture ?= ? <em>-- clamped and mipmaps off</em>
+<pre><code>address texture ?= ? <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureThenBroadcastTo">AsyncLoadTextureThenBroadcastTo</a>(mipmaps: no, wrapMode: Clamp (BUG))</em>
 float sizescaler ?= 1
 float sizescaler_missed ?= 1 <em>-- Until you set this explicitly, changes to <strong>sizescaler</strong> will be mirrored to <strong>sizescaler_missed</strong>.</em>
 UnityEngine.Material material ?= ?</code></pre>
@@ -754,7 +754,7 @@ bool allow_mod_block_scaling = true
 	<em>-- else</em>
 		<em>-- Modify the default or previously set material.</em>
 		<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
-		<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- Uses "repeat", mipmaps on, and bilinear filtering.</em>
+		<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</a>()</em>
 	<em>-- end</em>
 }
 <a href="#type-table">table</a> <strong>colorblocks</strong> ?= ? or {
@@ -771,7 +771,7 @@ bool allow_mod_block_scaling = true
 	<em>-- else</em>
 		<em>-- Modify the default or previously set material.</em>
 		<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
-		<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- Uses "repeat", mipmaps on, and bilinear filtering.</em>
+		<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</a>()</em>
 	<em>-- end</em>
 	UnityEngine.Mesh/<a href="#type-mesh">mesh</a>/<a href="#type-address">address</a> <strong>mesh</strong> ?= ?
 	<em>-- if type(<strong>mesh</strong>) == "string" and type(<strong>meshmorph</strong>) == "string"</em>
@@ -792,7 +792,7 @@ bool allow_mod_block_scaling = true
 	<em>-- else</em>
 		<em>-- Modify the default or previously set material.</em>
 		<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= ?
-		<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- Uses "repeat", mipmaps on, and bilinear filtering.</em>
+		<a href="#type-address">address</a> <strong>texture</strong> ?= ? <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</a>()</em>
 	<em>-- end</em>
 	UnityEngine.Mesh/<a href="#type-mesh">mesh</a>/<a href="#type-address">address</a> <strong>mesh</strong> ?= ?
 	<em>-- if type(<strong>mesh</strong>) == "string" and type(<strong>meshmorph</strong>) == "string"</em>
@@ -810,7 +810,7 @@ bool allow_mod_block_scaling = true
 	<em>-- else if <strong>shader</strong> ~= nil</em>
 		<a href="#type-material">material</a> <strong>*</strong>
 	<em>-- else</em>
-		<a href="#type-address">address</a> <strong>texture</strong> ?= nil <em>-- BUG: I don't think this setting branch does anything other than load the texture into the cache and log a "mat is null" error. Uses "repeat", mipmaps on, and bilinear filtering.</em>
+		<a href="#type-address">address</a> <strong>texture</strong> ?= nil <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</a>(material: none) BUG: I don't think this setting branch does anything other than load the texture into the cache and log a "mat is null" error.</em>
 	<em>-- end</em>
 	UnityEngine.Mesh/<a href="#type-mesh">mesh</a>/<a href="#type-address">address</a> <strong>mesh</strong> <em>-- Unspecified mesh will cause errors later.</em>
 	bool reflect = false
@@ -865,7 +865,7 @@ bool allow_mod_block_scaling = true
 	<a href="#type-int">int</a> <strong>renderqueue</strong> = 2000 <em>-- <a href="glossary.html#render-queue">Render queue</a>. If you specify a number less than 1 it will use the shader's default.</em>
 	<a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-float">float</a><a href="#type-dict">}</a> <strong>shadersettings</strong> ?= nil
 	<a href="#type-shadercolors">shadercolors</a> <strong>shadercolors</strong> ?= nil <em>-- setting _Color here will work</em>
-	<a href="#type-address">address</a> <strong>texture</strong> ?= nil
+	<a href="#type-address">address</a> <strong>texture</strong> ?= nil <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</a>()</em>
 <em>-- end</em>
 vector3 skyScreen_TrackOffset ?= nil <em>-- see <a href="#skyscreen">here</a></em>
 vector3 skyScreen_FixedTrackOffset ?= nil
@@ -1317,9 +1317,9 @@ table builtin = nil or {
 <p>An older version of <a href="https://github.com/AmplifyCreations/AmplifyColor">Amplify Color</a>. Adds <a href="https://github.com/AmplifyCreations/AmplifyColor/blob/master/Assets/AmplifyColor/Plugins/AmplifyColorEffect.cs">AmplifyColorEffect</a> with the old version's default settings.</p>
 <pre><code>string name = "amplifycolor" / "AmplifyColor"
 float blendamount = 0 <em>-- BlendAmount</em>
-address lut = nil <em>-- LutTexture, clamp, no mipmaps</em>
-address blendlut = nil <em>-- LutBlendTexture, clamp, no mipmaps</em>
-address mask = nil <em>-- MaskTexture, clamp, no mipmaps</em></code></pre>
+address lut = nil      <em>-- LutTexture,      <a href="engine.html#textures-loader-SyncLoadTexture">SyncLoadTexture</a>(wrapMode: Clamp, mipmaps: no, readable: yes, format: RGBA32)</em>
+address blendlut = nil <em>-- LutBlendTexture, <a href="engine.html#textures-loader-SyncLoadTexture">SyncLoadTexture</a>(wrapMode: Clamp, mipmaps: no, readable: yes, format: RGBA32)</em>
+address mask = nil     <em>-- MaskTexture,     <a href="engine.html#textures-loader-SyncLoadTexture">SyncLoadTexture</a>(wrapMode: Clamp, mipmaps: no, readable: yes, format: RGBA32)</em></code></pre>
 <h4 id="AddPostEffect-builtin-CandelaSSRR">Candela SSRR (?)</h4>
 <p>Enables the <a href="https://forum.unity.com/threads/released-candela-ssrr-v2-advanced-screen-space-pbs-reflections-for-unity-5.342803/">Candela SSRR</a> effect. (Screen Space Ray-traced Reflections) All it does is check if the object exists and, if found, activates it. I can't find the class in the version of Audiosurf 2 I am looking at, and it was made for an older version of Unity, so <strong>this might be a removed feature</strong>. Because this component is added in the editor, like <code>PostEffects</code>, I am not sure which one renders first.</p>
 <pre><code>string name = "CandelaSSR" / "CandelaSSRR" / "SSR" / "ssr"
@@ -1340,7 +1340,7 @@ address mask = nil <em>-- MaskTexture, clamp, no mipmaps</em></code></pre>
 <pre><code>string name = "SENaturalBloomAndDirtyLens" / "NaturalBloom" / "SENaturalBloom" / "senaturalbloom" / "naturalbloom"
 float dirtintensity = 0.05 <em>-- <a href="https://github.com/sonicether/SE-Natural-Bloom-Dirty-Lens/blob/bc15de63773354ca99d2a24abe065814e8ba60cf/Assets/SE%20Natural%20Bloom/Scripts/SENaturalBloomAndDirtyLens.cs#L24">lensDirtIntensity</a>, suggested range is 0.0 to 0.95</em>
 float bloomintensity = 0.05 <em>-- <a href="https://github.com/sonicether/SE-Natural-Bloom-Dirty-Lens/blob/bc15de63773354ca99d2a24abe065814e8ba60cf/Assets/SE%20Natural%20Bloom/Scripts/SENaturalBloomAndDirtyLens.cs#L18">bloomIntensity</a>, suggested range is 0.0 to 0.4</em>
-address dirt = nil <em>-- <a href="https://github.com/sonicether/SE-Natural-Bloom-Dirty-Lens/blob/bc15de63773354ca99d2a24abe065814e8ba60cf/Assets/SE%20Natural%20Bloom/Scripts/SENaturalBloomAndDirtyLens.cs#L26">lensDirtTexture</a>, clamp, no mipmaps</em></code></pre>
+address dirt = nil <em>-- <a href="https://github.com/sonicether/SE-Natural-Bloom-Dirty-Lens/blob/bc15de63773354ca99d2a24abe065814e8ba60cf/Assets/SE%20Natural%20Bloom/Scripts/SENaturalBloomAndDirtyLens.cs#L26">lensDirtTexture</a>, <a href="engine.html#textures-loader-SyncLoadTexture">SyncLoadTexture</a>(wrapMode: Clamp, mipmaps: no, readable: yes, format: RGBA32)</em></code></pre>
 <h4 id="AddPostEffect-builtin-SSAOPro">SSAO Pro</h4>
 <p>The <a href="https://forum.unity.com/threads/ssao-pro-high-quality-screen-space-ambient-occlusion.274003/">SSAO Pro</a> effect. Adds <code>SSAOPro</code> with default settings.</p>
 <ul class="seealso">

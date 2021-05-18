@@ -178,15 +178,17 @@
 <a href="#type-bool">bool</a> <strong>usemipmaps</strong> = true
 <a href="#type-string">string</a> <strong>texturefilter</strong> = ("bilinear" / "Bilinear") or ("trilinear" / "Trilinear") or ("Point" / "point")
 int aniso = 1 or (1 to 9) <em>-- <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Texture-anisoLevel.html">Anisotropic filtering</a>.</em>
-<a href="#type-address">address</a> <strong>texture</strong> ?= nil
+<a href="#type-address">address</a> <strong>texture</strong> ?= nil <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</a>(wrapMode: <strong>texturewrap</strong>, mipmaps: <strong>usemipmaps</strong>, filterMode: <strong>texturefilter</strong>, anisoLevel: <strong>aniso</strong>)</em>
 vector2 textureoffset = {0,0}
 vector2 texturescale = {1,1}
 <a href="#type-dict">{</a><a href="#type-string" class=func>string</a><a href="#type-dict">=</a><a href="#type-address">address</a>/<a href="#type-table">table</a><a href="#type-dict">}</a> <strong>textures</strong> ?= nil or {
 	<em>-- Key is the name of a shader property. The main texture, set above, is named _MainTex.</em>
-	<a href="#type-address">address</a> <strong>*</strong> ?= nil
+	<a href="#type-address">address</a> <strong>*</strong> ?= nil <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureInto">AsyncLoadTextureInto</a>(wrapMode: <strong>texturewrap</strong>, mipmaps: <strong>usemipmaps</strong>, filterMode: <strong>texturefilter</strong>) BUG: This honors the other texture settings but not <strong>aniso</strong>.</em>
 	table * ?= nil or {
 		<em>-- Keys in this table are case-insensitive.</em>
 		<em>-- This table defines the six textures of a cubemap. All textures must be square and the same size.</em>
+		<em>-- Uses <a href="engine.html#textures-loader-SyncLoadTexture">SyncLoadTexture</a>(readable: yes, add to cache: no, ...) to load the individual textures but discards everything except the pixel colors.</em>
+		<em>-- The actual <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Cubemap.html">Cubemap</a> object is created with format ARGB32, mipmaps enabled, and read/write disabled.</em>
 		address (<strong>_FrontTex</strong> / <strong>FrontTex</strong> / <strong>Front</strong> / <strong>PositiveZ</strong>) = ?
 		address (<strong>_BackTex</strong> / <strong>BackTex</strong> / <strong>Back</strong> / <strong>NegativeZ</strong>) = ?
 		address (<strong>_LeftTex</strong> / <strong>LeftTex</strong> / <strong>Left</strong> / <strong>NegativeX</strong>) = ?

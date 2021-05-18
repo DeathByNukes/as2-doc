@@ -55,11 +55,11 @@
 	<li><strong>Vector</strong>: &quot;Four component vectors and colors are <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Material.SetVector.html">the same</a> in Unity shaders. (xyzw in the vector becomes rgba in the color).&quot;</li>
 	<li><strong>All types</strong>: Accessible via the <code><a href="skins.html#type-UnityEngine.Material" class=type>UnityEngine.Material</a></code> object returned by <code><a href="skins.html#BuildMaterial" class=func>BuildMaterial</a>{}</code>.</li>
 </ul>
-<p>Textures can be loaded from JPG and PNG file formats. All textures will be compressed to <a href="https://en.wikipedia.org/wiki/S3_Texture_Compression">DXT1</a> format (<a href="https://udn.epicgames.com/Two/TextureComparison.html">lossy</a>) unless the path ends in &quot;.png&quot;, in which case RGBA32 (lossless) format is used. The image loader is capable of recognizing the true file type even if the extension is wrong, so it should be possible to trick AS2 into loading PNGs with compression and vice versa by changing the filename. The Unity engine documentation implies that in this situation PNGs will be loaded with DXT5 and JPGs will be loaded with RGB24. Format descriptions are <a href="https://docs.unity3d.com/Documentation/Components/class-Texture2D.html">here</a> in the &quot;Desktop&quot; section.</p>
 <ul class="seealso">
 	<li><a href="glossary.html#shader">shader</a></li>
 	<li><a href="glossary.html#vertex-shader">vertex shader</a></li>
 	<li><a href="glossary.html#pixel-shader">pixel shader</a></li>
+	<li><a href="glossary.html#texture">texture</a></li>
 </ul>
 
 

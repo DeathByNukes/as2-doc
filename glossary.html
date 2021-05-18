@@ -232,8 +232,11 @@
 
 
 	<dt id="texture"><dfn>texture</dfn></dt>
-	<dd>A typical 2D image that is applied to a 3D surface.
+	<dd>A typical 2D image that is usually applied to a 3D surface.
 		<ul class="seealso">
+			<li><a href="#material">material</a></li>
+			<li><a href="#shader">shader</a></li>
+			<li><a href="engine.html#textures">Textures in Audiosurf 2</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Texture_mapping">Texture Mapping</a></li>
 			<li><a href="https://wiki.blender.org/index.php/Doc:2.6/Manual/Textures">Introduction to Textures</a></li>
 		</ul>
@@ -243,14 +246,19 @@
 	<dt id="material"><dfn>material</dfn></dt>
 	<dd>A collection of settings that are applied to a face. Textures are one part of a material. Audiosurf 2 lets us specify material settings via the <a href="skins.html#type-material">material</a> type. Some AS2 <a href="skins.html#customization-functions">customization functions</a> only expose a limited number of material settings.
 		<ul class="seealso">
-			<li><a href="https://docs.unity3d.com/Documentation/Manual/Materials.html">Materials and Shaders</a></li>
+			<li><a href="#texture">texture</a></li>
+			<li><a href="#shader">shader</a></li>
+			<li><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/Materials.html">Materials and Shaders</a></li>
 		</ul>
 	</dd>
 
 
 	<dt id="shader"><dfn>shader</dfn></dt>
 	<dd>A shader is a computer program which takes a <a href="#model">model</a> and <a href="#material">material</a> as its inputs then outputs a 2D image. All the graphics in Audiosurf 2 are drawn by shaders. AS2 shaders are written in the &quot;Cg&quot; programming language. Most shaders written for AS2 need to be compiled by the <a href="https://unity3d.com/">Unity 4 editor</a> (free) before they can be used. <a href="https://en.wikipedia.org/wiki/Graphics_processing_unit">GPUs</a> execute the shader program in <a href="https://en.wikipedia.org/wiki/Parallel_computing">parallel</a> for each <a href="#vertex-shader">vertex</a> and each <a href="#pixel-shader">pixel</a>. Due to its highly parallel nature, <a href="https://en.wikipedia.org/wiki/Shading_language">shader programming</a> is very different from <a href="https://en.wikipedia.org/wiki/General-purpose_programming_language">conventional programming</a>. For instance, it is impossible for a shader program to write to any kind of <a href="https://en.wikipedia.org/wiki/Global_variable">global variable</a>.
-<ul class="seealso">
+		<ul class="seealso">
+			<li><a href="#material">material</a></li>
+			<li><a href="#texture">texture</a></li>
+			<li><a href="shaders.html#overview">Shaders in Audiosurf 2</a></li>
 			<li><a href="https://docs.unity3d.com/Documentation/Manual/Materials.html">Materials and Shaders</a></li>
 			<li><a href="https://docs.unity3d.com/Documentation/Manual/Shaders.html">Shaders</a></li>
 			<li><a href="https://docs.unity3d.com/Documentation/Components/SL-Reference.html">Shader Reference</a></li>
@@ -265,6 +273,7 @@
 	<dt id="vertex-shader"><dfn>vertex shader</dfn></dt>
 	<dd>A <a href="#shader">shader</a> subroutine that takes raw per-<a href="#vertex">vertex</a> data from the engine and prepares it for rendering. At a minimum this usually involves transforming the vertex coordinates from <a href="#object-space">object space</a> into projection space. (object -&gt; world -&gt; camera -&gt; projection) The vertex shader's control over this process means it can animate and distort the object in some ways. Other shader-specific calculations are performed in the vertex shader when possible in order to conserve processing power since there are usually more pixels than vertices. The output of the vertex shader is <a href="#lerp">interpolated</a> across each <a href="#triangle">triangle</a> and the results of the interpolation are passed to many parallel instances of the <a href="#pixel-shader">pixel shader</a>.
 <ul class="seealso">
+			<li><a href="#shader">shader</a></li>
 			<li><a href="https://docs.unity3d.com/Documentation/Manual/ShaderTut2.html">Vertex and Fragment Programs</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Vertex_shaders">Vertex shaders</a></li>
 			<li><a href="#vertex">vertex</a></li>
@@ -276,6 +285,7 @@
 	<dt id="pixel-shader"><dfn>pixel shader</dfn></dt>
 	<dd>A <a href="#shader">shader</a> subroutine that takes the <a href="#lerp">interpolated</a> output of the <a href="#vertex-shader">vertex shader</a> and draws a single pixel. In OpenGL-influenced documents this is also known as a fragment shader.
 		<ul class="seealso">
+			<li><a href="#shader">shader</a></li>
 			<li><a href="https://docs.unity3d.com/Documentation/Manual/ShaderTut2.html">Vertex and Fragment Programs</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Pixel_shaders">Pixel shaders</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Fragment_(computer_graphics)">Fragment (computer graphics)</a></li>
@@ -286,6 +296,7 @@
 	<dt id="surface-shader"><dfn>surface shader</dfn></dt>
 	<dd>A <a href="#shader">shader</a> subroutine specific to <a href="#Unity">Unity</a>. It serves the same role as a <a href="#pixel-shader">pixel shader</a> but it is redesigned to eliminate the need to manually implement lighting. As such, surface shaders should only be used for shaders that can be influenced by light and shadow. (Skins styled like the Neon skin shouldn't use these.)
 		<ul class="seealso">
+			<li><a href="#shader">shader</a></li>
 			<li><a href="https://docs.unity3d.com/Documentation/Components/SL-SurfaceShaders.html">Writing Surface Shaders</a></li>
 			<li><a href="https://docs.unity3d.com/Documentation/Components/SL-SurfaceShaderExamples.html">Surface Shader Examples</a></li>
 		</ul>
@@ -296,7 +307,8 @@
 	<dd>
 		Objects in the game are marked as being on specific layers, which influences how they are rendered into the scene. Layers DO NOT work like Photoshop layers. Though specific layers might cause some objects to appear on top of others, that is not how all of them work. They are more like categories or labels.
 		<ul class="seealso">
-			<li><a href="engine.html#layers">layers (full documentation)</a></li>
+			<li><a href="#render-queue">render queue</a></li>
+			<li><a href="engine.html#layers">Layers in Audiosurf 2</a></li>
 			<li><a href="https://docs.unity3d.com/2017.3/Documentation/Manual/Layers.html">Layers</a></li>
 		</ul>
 	</dd>
@@ -325,7 +337,8 @@
 	<dd>
 		Determines the order that materials are rendered in. Generally only matters for shaders that have some sort of transparency. If not set, it defaults to a value specified by the shader, which is usually appropriate. For solid objects, the <a href="#depth-buffer">depth buffer</a> ensures things are visible in the correct order regardless of the queue order. Different transparent shaders can interact with the depth buffer in different ways.
 		<ul class="seealso">
-			<li><a href="engine.html#render-queue">render queue (numbers)</a></li>
+			<li><a href="#layer">layer</a></li>
+			<li><a href="engine.html#render-queue">Render queue in Audiosurf 2</a></li>
 			<li><a href="https://docs.unity3d.com/2017.4/Documentation/Manual/SL-SubShaderTags.html">ShaderLab: SubShader Tags: Queue tag</a></li>
 		</ul>
 	</dd>
