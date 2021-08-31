@@ -80,6 +80,32 @@
 
 
 
+<h1 id="meshes">Meshes</h1>
+<p>The only <a href="glossary.html#mesh">mesh</a> file format Audiosurf 2 supports is <a href="https://en.wikipedia.org/wiki/Wavefront_.obj_file">Wavefront .OBJ</a>, via the Unity addon "<a href="https://forum.unity3d.com/threads/181303-ObjReader-load-obj-files-at-runtime">ObjReader</a>". It does not support <a href="https://en.wikipedia.org/wiki/Wavefront_.obj_file#Material_template_library">MTL files</a> which often come with OBJ files; material settings must be specified by the script when it uses the model. ObjReader has internal support for MTL files so support for this could be added in the future. Dylan's skins often include MTL files anyways, presumably because he didn't bother to remove them or wanted to make it easier for us to examine his OBJ files in an external program. (If you are using an <a href="blender.html#export">exporter</a> in a program like <a href="blender.html">Blender</a>, leave the export MTL setting checked because that also puts something inside the OBJ file that ObjReader requires.) OBJ is a very simple and commonly supported format. The downside is there are limitations on the kind of data they can contain. Unity <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Mesh.html">internally</a> supports <a href="glossary.html#vertex-color">vertex colors</a>, <a href="glossary.html#vertex-normal">normals</a>, <a href="glossary.html#vertex-tangent">tangents</a>, two sets of <a href="glossary.html#UV">UV coordinates</a>, <a href="glossary.html#sub-mesh">sub-meshes</a> (one <a href="glossary.html#material">material</a> per sub-mesh), and a custom <a href="glossary.html#bounding-box">bounding box</a>. OBJ files cannot contain vertex colors, tangents, more than one set of UVs, or a custom bounding box. Also, ObjReader only supports <a href="glossary.html#face">faces</a> composed of 3 or 4 <a href="glossary.html#vertex">vertices</a> and ignores larger ones, so be sure to configure your OBJ exporter to export faces as <a href="glossary.html#triangle">triangles</a>.</p>
+<p>In skins, models can also be dynamically generated or modified with the <a href="skins.html#BuildMesh">BuildMesh</a> function. BuildMesh is an advanced tool that allows skin scripts to directly control vertex positions, triangle definitions, the first set of UV coordinates, and vertex colors. It can also request automatically generated vertex normals. It is incapable of generating sub-meshes. BuildMesh is capable of applying changes to a model that was previously generated with BuildMesh, and such changes will be immediately applied to all instances of that model in the scene.</p>
+<p>In addition to generating a mesh from scratch, BuildMesh can also load a model file into a mesh object. When loading a model in this way, it's possible to specify some special options to the OBJ importer: calculateNormals, calculateTangents, submeshesWhenCombining. These options are the only way to get models with tangents and/or sub-meshes into Audiosurf 2.</p>
+<p>For advanced users, it is possible to directly modify the <code><a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/Mesh.html" class=type>UnityEngine.Mesh</a></code> object returned by BuildMesh, which enables scripts to access the full capabilities of Unity meshes.</p>
+<ul class="seealso">
+	<li><a href="glossary.html#mesh">mesh</a></li>
+	<li><a href="https://docs.unity3d.com/Documentation/ScriptReference/Mesh.html">UnityEngine.Mesh</a></li>
+</ul>
+
+
+<h2 id="meshes-sub">Sub-Meshes</h2>
+<p>Each mesh can contain multiple <a href="glossary.html#sub-mesh">sub-meshes</a>, each of which can be assigned a different <a href="glossary.html#material">material</a>. Audiosurf 2 currently only supports multiple materials in the <code><strong>materials</strong></code> setting of <code><a href="skins.html#type-gameobject" class=type>gameobject</a></code> definitions. The first material in the materials list will go to the first sub-mesh and so on. Audiosurf 2's OBJ importer merges OBJ contents into a single mesh by default. To enable sub-mesh support you must load the model with <a href="skins.html#BuildMesh">BuildMesh</a>'s <code><strong>submeshesWhenCombining</strong></code> option: </p>
+<pre class="NppLua"><code><span class="sc2">-- replace
+</span><span class="sc11">mesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"example.obj"</span><span class="sc10">,</span><span class="sc0">
+</span><span class="sc2">-- with
+</span><span class="sc11">mesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">BuildMesh</span><span class="sc10">{</span><span class="sc11">mesh</span><span class="sc10">=</span><span class="sc6">"example.obj"</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">submeshesWhenCombining</span><span class="sc10">=</span><span class="sc5">true</span><span class="sc10">},</span></code></pre>
+<p>With this enabled, different OBJ groups will go to different sub-meshes.
+	If you aren't sure what order the groups are in, open the OBJ file with Notepad++ and look for lines starting with "g" followed by a group name. All face definitions ("f") after a group definition go in that group.</p>
+<ul class="seealso">
+	<li><a href="glossary.html#sub-mesh">sub-mesh</a></li>
+</ul>
+
+
+
+
 <h1 id="textures">Textures</h1>
 <p>A texture is an image file loaded into main memory and uploaded to the GPU, typically mapped onto a <a href="glossary.html#mesh">mesh</a> with <a href="glossary.html#UV">UV</a> mapping and rendered by a <a href="glossary.html#material">material</a>'s <a href="glossary.html#shader">shader</a>. Textures have their own formats such as RGB24/RGBA32 (lossless and large, like bmp) or DXT1/DXT5 (<a href="https://udn.epicgames.com/Two/TextureComparison.html">lossy and compressed</a>, like jpeg) that images get converted to when they are imported by Unity or Audiosurf 2.</p>
 <ul class="seealso">

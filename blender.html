@@ -22,90 +22,24 @@
 
 
 <h1 id="basics">Basics</h1>
-<p>Blender (<a href="https://www.blender.org/">www.blender.org</a>) is a free open-source 3D graphics design program. It can be used for many things but in our case we want to use it to create a &quot;<a href="#term-model">model</a>&quot; for use in Audiosurf 2 skins and mods. As far as I know, it is the most feature-complete free <a href="https://en.wikipedia.org/wiki/3D_modeling_software">3D modeler</a> available. Another relatively powerful free modeler is <a href="http://www.wings3d.com/">Wings 3D</a>. Common commercial <a href="https://en.wikipedia.org/wiki/List_of_3D_modeling_software">alternatives</a> are 3ds Max, Lightwave, Maya, and ZBrush.</p>
-<p>This article will explain how to get models from Blender into Audiosurf 2. Actually learning to make something in Blender is outside the scope of this article. If you don't know how to use Blender, there are many resources out there to help you learn it. The resource you should choose depends on how much you already know about 3D graphics and the style of learning that works best for you. The official Blender learning page is <a href="https://www.blender.org/support/tutorials/">here</a>. There are many other good resources on <a href="https://encrypted.google.com/search?q=blender+learn">other sites</a> and there are several <a href="https://wiki.blender.org/index.php/Doc:2.6/Books">books</a> as well. A 3D modeling class, if available to you, probably won't teach you Blender specifically but many of the things you learn there can be applied to Blender. Blender is an intimidating program but it is possible to produce simple models with only basic knowledge about how to use it. Just be careful not to make a model with a million polygons.</p>
-<p>An important thing to understand about Blender and most 3D modeling programs is they aren't specifically designed to make models for video games. Many of them, including Blender, focus on &quot;rendering&quot; capabilities for producing photorealistic images or videos from your models. Many 3D modeler features cannot survive the conversion process needed to load the model into a game. Features like shaders, materials, animations, and lighting typically cannot be converted or can only be partially converted with some extra work. In some cases Blender lacks simple functionality that would make producing game models much easier. Blender also has &quot;game creation&quot; tools, but they are used for Blender's own game engine and generally should be ignored. Keep this in mind when you look at Blender documentation and tutorials. While we're on that subject, also be aware of the version of Blender you are using. Currently, searching the internet will often show both &quot;Doc:2.6&quot; and &quot;Doc:2.4&quot; pages. Blender 2.6 had a big facelift and the old documentation is often useless.</p>
-
-
-
-
-<h1 id="glossary">Glossary</h1>
-<dl>
-	<dt><dfn id="term-model">model</dfn></dt>
-	<dd>A <a href="https://en.wikipedia.org/wiki/3D_model">model</a> (aka <a href="https://en.wikipedia.org/wiki/Polygon_mesh">mesh</a>) is a 3D shape. The ship, blocks, background objects, and some track shapes (the hexagon tunnel in the Resistance skin) are examples of models. A model is a <a href="https://en.wikipedia.org/wiki/Polygon_mesh">collection</a> of 3D points (vertices) that define the shape and position of polygons (faces). Most models also attach UV coordinates to each vertex on a face, which control how textures are applied to the model.</dd>
-
-
-	<dt><dfn id="term-texture">texture</dfn></dt>
-	<dd>A <a href="https://en.wikipedia.org/wiki/Texture_mapping">texture</a> is a typical 2D image that is applied to a 3D surface.</dd>
-
-
-	<dt><dfn id="term-material">material</dfn></dt>
-	<dd>A collection of settings that are applied to a face. Textures are one part of a material. Audiosurf 2 lets us specify material settings via the <a href="skins.html#type-material">material</a> type. Some AS2 <a href="skins.html#customization-functions">customization functions</a> don't include the material type and instead expose a limited number of material settings.</dd>
-
-
-	<dt><dfn id="term-UV">UV</dfn></dt>
-	<dd>A <a href="https://en.wikipedia.org/wiki/UV_mapping">UV map</a> controls how a texture is applied to a model. Internally, each vertex on a face gets two numbers, U and V (X and Y) associated with it. {0, 0} is the bottom left of the texture and {1, 1} is the top right. Those points in the texture are stretched across the corresponding points on the face. By default, Blender displays UV coordinates scaled by the size of the image instead of their true values.</dd>
-
-
-	<dt><dfn id="term-vertex-color">vertex color</dfn></dt>
-	<dd>A color and alpha value associated with a specific vertex. When the vertices on a face have different vertex colors, they will form a color gradient going across the face. Vertex colors are how Audiosurf 2 colors different portions of the track according to the highway colors at that part of the track. The <code>colorMode</code> setting in <a href="skins.html#CreateRail">CreateRail</a> controls how it generates vertex colors. Vertex colors are also used for coloring <a href="skins.html#SetWake">SetWake</a> and <a href="skins.html#type-gameobject">thrusters</a>.</dd>
-
-
-	<dt><dfn id="term-vertex-normal">vertex normal</dfn></dt>
-	<dd>A vertex <a href="https://en.wikipedia.org/wiki/Vertex_normal">normal</a> is a vector3 associated with a specific vertex. It tells the shader which direction is up, relative to the model surface the vertex is a part of. Many shader techniques like smooth shading, specularity, and bump mapping depend on normals.</dd>
-
-
-	<dt><dfn id="term-vertex-tangent">vertex tangent</dfn></dt>
-	<dd>A vertex <a href="https://docs.unity3d.com/Documentation/ScriptReference/Mesh-tangents.html">tangent</a> is a vector4 associated with a specific vertex. When used with vertex normals and some heavy math, a shader can determine how the surface is oriented. Advanced shader techniques like bump and parallax mapping need this.</dd>
-
-
-	<dt><dfn id="term-sub-mesh">sub-mesh</dfn></dt>
-	<dd>The Unity engine can only apply one material to all faces in a mesh. When multiple materials are needed, the mesh faces must be grouped into sub-meshes. One material can be applied to each sub-mesh.</dd>
-
-
-	<dt><dfn id="term-cull">cull</dfn></dt>
-	<dd>In some cases the game engine may skip drawing an object, effectively making it invisible. This is referred to as &quot;culling&quot; the object. Culling is usually done in cases where it's obvious the player won't see the object either way, in an attempt to increase frames per second.</dd>
-
-
-	<dt><dfn id="term-bounding-box">bounding box</dfn></dt>
-	<dd>A simple axis-aligned box definition (aligned in model space) that should contain all parts of the model. The model will be culled if its bounding box is outside the player's view. If a model's shader transforms its shape so that parts of it stick out of the bounding box, the model might be culled incorrectly in some cases. This is an important obstacle for advanced techniques like shader-based animations and screen overlays.</dd>
-</dl>
-
-
-
-
-<h1 id="file-capabilities">File Capabilities</h1>
-
-
-<h2 id="model-capabilities">Models</h2>
-<p>Currently, Audiosurf 2 only supports loading models from the <a href="https://en.wikipedia.org/wiki/Wavefront_.obj_file">Wavefront .OBJ</a> file format via the Unity addon &quot;<a href="https://forum.unity3d.com/threads/181303-ObjReader-load-obj-files-at-runtime">ObjReader</a>&quot;. It does not support <a href="https://en.wikipedia.org/wiki/Wavefront_.obj_file#Material_template_library">MTL files</a> which often come with OBJ files; material settings must be specified by the script when it uses the model. ObjReader has internal support for MTL files so support for this might be added eventually. Dylan's skins often include MTL files anyways, presumably because he didn't bother to remove them or wanted to make it easier for us to examine his OBJ files in an external program. OBJ is a very simple and commonly supported format. The downside is there are limitations on the kind of data they can contain. AS2's engine, <a href="https://en.wikipedia.org/wiki/Unity_(game_engine)">Unity</a>, <a href="https://docs.unity3d.com/Documentation/ScriptReference/Mesh.html">internally</a> supports <a href="#term-vertex-color">vertex colors</a>, <a href="#term-vertex-normal">normals</a>, <a href="#term-vertex-tangent">tangents</a>, two sets of <a href="#term-UV">UV coordinates</a>, <a href="#term-sub-mesh">sub-meshes</a>, and a custom <a href="#term-bounding-box">bounding box</a>. OBJ files cannot contain vertex colors, tangents, more than one set of UVs, or a custom bounding box.</p>
-<p>In skins, models can also be dynamically generated or modified with the <a href="skins.html#BuildMesh">BuildMesh</a> function. BuildMesh is an advanced tool that allows skin scripts to directly control vertex positions, triangle definitions, the first set of UV coordinates, and vertex colors. It can also request automatically generated vertex normals. It is incapable of generating sub-meshes. BuildMesh is capable of applying changes to a model that was previously generated with BuildMesh, and such changes will be immediately applied to all instances of that model in the scene.</p>
-<p>In addition to generating a mesh from scratch, BuildMesh can also load a model file into a mesh object. When loading a model in this way, it's possible to specify some special options to the OBJ importer: calculateNormals, calculateTangents, submeshesWhenCombining. These options are the only way to get models with tangents and/or sub-meshes into Audiosurf 2.</p>
-<p>It is possible for BuildMesh to modify meshes loaded in this way but it can't read the data from the model before overwriting it. As long as BuildMesh doesn't overwrite the triangle definitions (<code>indextable</code>) the sub-mesh data will be preserved.</p>
-
-
-<h2 id="texture-capabilities">Textures</h2>
-<p>Textures can be loaded from PNG and JPEG files. PNG files can be loaded in RGBA32 or DXT5 format, and JPEG can be loaded in DXT1 or RGB24 format. RGBA32 / DXT1 are the default formats and can only be changed with a trick. See <a href="skins.html#shaders">here</a> for details.</p>
-<p>Textures repeat by default and can be set to <a href="https://encrypted.google.com/search?q=texture+repeat+clamp">clamp</a> mode with the <code>texturewrap = &quot;clamp&quot;</code> <a href="skins.html#type-material">material</a> setting.</p>
-<p>Mipmaps are automatically generated by default and the only available option is to disable them with the <code>usemipmaps = false</code> <a href="skins.html#type-material">material</a> setting.</p>
-<p>Texture filtering can be set to bilinear, trilinear, or point with the <code>texturefilter</code> <a href="skins.html#type-material">material</a> setting.</p>
-<p><a href="https://docs.unity3d.com/Documentation/Manual/Textures.html">Aniso Level</a> cannot be turned on.</p>
-<p>For materials with multiple textures, all textures must share the same settings.</p>
-
-
-<h2 id="shader-capabilities">Shaders</h2>
-<p>Only texture, float, and color settings are directly supported. Float4 settings can be supplied by treating them like colors, but AS2 doesn't allow any of the values to go above one. (below negative one is allowed) Skin scripts are unable to change any of the settings after creating the object; the only way to upload data to the shader at runtime is through per-vertex values in BuildMesh. Mod scripts can use the <a href="mods.html#SendCommand">ChangeShaderColors command</a> on ship clones.</p>
-<p>Shaders have to be compiled with the Unity editor. The free editor can compile &quot;Pro-only&quot; shader features like GrabPass, it just can't show previews of them. &quot;Fixed-function&quot; shaders do not need to be compiled.</p>
-<p>When you edit a shader, switching focus back to the Unity editor causes it to automatically compile all changed shaders. The last compiled shader can be found in &quot;Temp\CgBatchOutput.shader&quot;. You can force it to recompile a shader by right clicking on the shader in the asset list and choosing &quot;Reimport&quot;.</p>
+<p>Blender (<a href="https://www.blender.org/">www.blender.org</a>) is a <a href="https://en.wikipedia.org/wiki/FOSS">free open-source</a> 3D graphics design program. It can be used for many things but in our case we want to use it to create a <a href="glossary.html#model">model</a> for use in Audiosurf 2 skins and mods. As far as I know, it is the most feature-complete free <a href="https://en.wikipedia.org/wiki/3D_modeling_software">3D modeler</a> available. Another relatively powerful free modeler is <a href="http://www.wings3d.com/">Wings 3D</a>. Common commercial <a href="https://alternativeto.net/software/blender/">alternatives</a> are 3ds Max, Lightwave, Maya, and ZBrush.</p>
+<p>This article will explain how to get models from Blender into Audiosurf 2. Actually learning to make something in Blender is outside the scope of this article. If you don't know how to use Blender, there are many resources out there to help you learn it. The resource you should choose depends on how much you already know about 3D graphics and your preferences. The official Blender tutorials page is <a href="https://www.blender.org/support/tutorials/">here</a>. There are many other good resources on <a href="https://duckduckgo.com/?q=blender+learn">other sites</a> and there are several <a href="https://duckduckgo.com/?q=blender+book">books</a> as well. A 3D modeling class, if available to you, might not teach you Blender specifically but many of the things you learn there can be applied to Blender. Blender is an intimidating program but it is possible to produce simple models with only basic knowledge about how to use it. Just be careful not to make a model with a million polygons.</p>
+<p>An important thing to understand about Blender and most 3D modeling programs is they aren't specifically designed to make models for video games. Many of them, including Blender, focus on "rendering" capabilities for producing photorealistic images or videos from your models. Many 3D modeler features cannot survive the conversion process needed to load the model into a game. Features like shaders, materials, animations, and lighting typically cannot be converted or can only be partially converted with some extra work. In some cases Blender lacks simple functionality that would make producing game models much easier. Blender also has "game creation" tools, but they are used for Blender's own game engine and generally should be ignored. Keep this in mind when you look at Blender documentation and tutorials. Also, be aware of the version of Blender you are using. For example, Blender 2.6 had a big facelift and made the old "Doc:2.4" pages useless.</p>
+<ul class="seealso">
+	<li><a href="glossary.html#model">model</a></li>
+	<li><a href="glossary.html#mesh">mesh</a></li>
+	<li><a href="engine.html#meshes">Meshes in Audiosurf 2</a></li>
+	<li><a href="https://docs.blender.org/manual/en/latest/">Blender Reference Manual</a></li>
+</ul>
 
 
 
 
 <h1 id="export">Exporting from Blender</h1>
-<p>To create an OBJ file of your model, go to <strong>File</strong> -&gt; <strong>Export</strong> -&gt; <strong>Wavefront (.obj)</strong>. On the left there are some settings that change how the model is exported. The official documentation for OBJ export is <a href="https://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Import-Export/Wavefront_OBJ">here</a>. You should read the &quot;<a href="https://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Import-Export/Wavefront_OBJ#Export_Options">Export Options</a>&quot; section before reading the rest of this.</p>
+<p>To create an <a href="glossary.html#obj">OBJ file</a> of your model, go to <strong>File</strong> -&gt; <strong>Export</strong> -&gt; <strong>Wavefront (.obj)</strong>. On the left there are some settings that change how the model is exported. The official documentation for OBJ export is <a href="https://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Import-Export/Wavefront_OBJ">here</a>. You should read the "<a href="https://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Import-Export/Wavefront_OBJ#Export_Options">Export Options</a>" section before reading the rest of this.</p>
 <dl>
 	<dt>Selection Only</dt>
-	<dd>Useful if you want to make a scene around your object to preview how it will look in-game. If you don't want to export hidden objects you can do a &quot;select all&quot; before exporting and use this.</dd>
+	<dd>Useful if you want to make a scene around your object to preview how it will look in-game. If you don't want to export hidden objects you can do a "select all" before exporting and use this.</dd>
 
 
 	<dt>Animation</dt>
@@ -125,7 +59,7 @@
 
 
 	<dt>Include Normals</dt>
-	<dd>If you leave this off, AS2 can still automatically generate normals. I'm not sure if normal generation is faster or slower than parsing them from the obj file. Smoothing groups will influence the normals that Blender exports so you should turn this on when using them. Warning: AS2 normal options have misleading names like &quot;recalculateNormals&quot;. What they actually do is enable or disable normals. Normals in the file are ignored when it's turned off and loaded or calculated when it's turned on.</dd>
+	<dd>If you leave this off, AS2 can still automatically generate normals. I'm not sure if normal generation is faster or slower than parsing them from the obj file. Smoothing groups will influence the normals that Blender exports so you should turn this on when using them. Warning: AS2 normal options have misleading names like "recalculateNormals". What they actually do is enable or disable normals. Normals in the file are ignored when it's turned off and loaded or calculated when it's turned on.</dd>
 
 
 	<dt>Include UVs</dt>
@@ -153,7 +87,7 @@ Polygons which are not quads or triangles have been skipped</pre></dd>
 
 
 	<dt>Polygroups, Objects as OBJ Objects/Groups, Material Groups</dt>
-	<dd>You can switch these off unless you're doing <a href="#multiple-materials">multiple materials</a> or want to make it easier for other people to import your OBJ files back into Blender. By default AS2 combines the groups/objects into a single model.</dd>
+	<dd>You can switch these off unless you're doing <a href="engine.html#meshes-sub">multiple materials</a> or want to make it easier for other people to import your OBJ files back into Blender. By default AS2 combines the groups/objects into a single model.</dd>
 
 
 	<dt>Keep Vertex Order</dt>
@@ -161,14 +95,11 @@ Polygons which are not quads or triangles have been skipped</pre></dd>
 </dl>
 
 
-<h2 id="multiple-materials">Multiple Materials</h2>
-<p>Multiple materials per model is only supported for models that will be used in <a href="skins.html#type-gameobject">gameobject</a> definitions. In that case, a list of materials is specified in the gameobject <code>materials</code> setting. In order to use multiple materials, your model needs to have sub-meshes. The first material in the materials list will go to the first sub-mesh and so on. By default, Audiosurf 2's OBJ importer does not support sub-meshes. To enable support you must load the model with <a href="skins.html#BuildMesh">BuildMesh</a>'s <code>submeshesWhenCombining</code> option: </p>
-<pre class="NppLua"><code><span class="sc2">-- replace
-</span><span class="sc11">mesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc6">"example.obj"</span><span class="sc10">,</span><span class="sc0">
-</span><span class="sc2">-- with
-</span><span class="sc11">mesh</span><span class="sc0"> </span><span class="sc10">=</span><span class="sc0"> </span><span class="sc11">BuildMesh</span><span class="sc10">{</span><span class="sc11">mesh</span><span class="sc10">=</span><span class="sc6">"example.obj"</span><span class="sc10">,</span><span class="sc0"> </span><span class="sc11">submeshesWhenCombining</span><span class="sc10">=</span><span class="sc5">true</span><span class="sc10">},</span></code></pre>
-<p>With this enabled, different OBJ groups will go to different sub-meshes.
-	If you aren't sure what order the groups are in, open the OBJ file with Notepad++ and look for lines starting with &quot;g&quot; followed by a group name. All face definitions (&quot;f&quot;) after a group definition go in that group.</p>
+<h2 id="export-submesh">Exporting Sub-Meshes</h2>
+<ul class="seealso">
+	<li><a href="glossary.html#sub-mesh">sub-mesh</a></li>
+	<li><a href="engine.html#meshes-sub">Sub-Meshes in Audiosurf 2</a></li>
+</ul>
 <p>In the OBJ exporter, these are options that control how groups are created:</p>
 <dl>
 	<dt>Objects as OBJ Groups</dt>
@@ -176,24 +107,24 @@ Polygons which are not quads or triangles have been skipped</pre></dd>
 
 
 	<dt>Objects as OBJ Objects</dt>
-	<dd>This is like the above, but puts them in &quot;objects&quot; instead. It overrides the above setting, completely replacing the group definitions with object definitions. I think AS2 will treat objects the same as groups but I suggest leaving this off to keep things simple. I haven't tested how it interacts with the other export options.</dd>
+	<dd>This is like the above, but puts them in "objects" instead. It overrides the above setting, completely replacing the group definitions with object definitions. I think AS2 will treat objects the same as groups but I suggest leaving this off to keep things simple. I haven't tested how it interacts with the other export options.</dd>
 
 
 	<dt>Material Groups</dt>
-	<dd>Groups individual faces based on what material is assigned to them in Blender. According to my tests, <strong>each Blender object gets its own set of unique material groups</strong> even if two objects are using the same material and &quot;Objects as OBJ Groups&quot; is disabled. If you're trying to consolidate groups across multiple Blender objects this option won't work for you. On the other hand, if you want to keep everything inside of a single Blender object then this is the ideal option for you. This option still works when &quot;Write Materials&quot; is disabled.</dd>
+	<dd>Groups individual faces based on what material is assigned to them in Blender. According to my tests, <strong>each Blender object gets its own set of unique material groups</strong> even if two objects are using the same material and "Objects as OBJ Groups" is disabled. If you're trying to consolidate groups across multiple Blender objects this option won't work for you. On the other hand, if you want to keep everything inside of a single Blender object then this is the ideal option for you. This option still works when "Write Materials" is disabled.</dd>
 
 
 	<dt>Polygroups</dt>
-	<dd>Groups faces based on the vertex groups its vertices are in. It &quot;guesses&quot; in cases where not all of the face's vertices are in the same group. I haven't tested this option.</dd>
+	<dd>Groups faces based on the vertex groups its vertices are in. It "guesses" in cases where not all of the face's vertices are in the same group. I haven't tested this option.</dd>
 </dl>
 <p>Here is an example scene with multiple materials set up:<br>
 <img src="blender-multi-material.png" width="538" height="416" alt="blender screenshot"></p>
-<p>Exporting with &quot;Objects as OBJ Groups&quot; creates these groups in this order:</p>
+<p>Exporting with "Objects as OBJ Groups" creates these groups in this order:</p>
 <ul>
 	<li>objectB_meshB (6 faces)</li>
 	<li>objectA_meshA (6 faces)</li>
 </ul>
-<p>Exporting with &quot;Material Groups&quot;:</p>
+<p>Exporting with "Material Groups":</p>
 <ul>
 	<li>objectB_meshB_materialB (6 faces)</li>
 	<li>objectA_meshA_materialA (5 faces)</li>

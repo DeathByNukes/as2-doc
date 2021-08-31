@@ -90,7 +90,12 @@
 
 
 	<dt id="Unity"><dfn>Unity</dfn></dt>
-	<dd>Audiosurf 2 is built on the Unity engine. Unity is a closed-source multi-platform game engine and development tool with free and commercial licenses which has become popular in the game development community lately. AS2's Lua system is not part of Unity but reading Unity documentation can often help to understand the paradigm that AS2 works in. This is especially true of materials and shaders.</dd>
+	<dd>Audiosurf 2 is built on the Unity engine. Unity is a closed-source multi-platform game engine and development tool with free and commercial licenses which has become popular in the game development community lately. AS2's Lua system is not part of Unity but reading Unity documentation can often help to understand the paradigm that AS2 works in. This is especially true of materials and shaders.
+		<ul class="seealso">
+			<li><a href="engine.html">Game Engine</a></li>
+			<li><a href="lua.html">Lua Scripts</a></li>
+		</ul>
+	</dd>
 
 
 	<dt id="coordinate"><dfn>coordinate</dfn></dt>
@@ -145,18 +150,32 @@
 
 
 	<dt id="model"><dfn>model</dfn></dt>
-	<dd>A 3D shape. The surfer, ship, <a href="#block">blocks</a>, background objects, and <a href="#rail">rails</a> are examples of models.
+	<dd>In computer graphics, refers to a <a href="#mesh">mesh</a> and all of its associated <a href="#material">materials</a>, <a href="#texture">textures</a>, animations, etc. This term is generally not used in the Unity world because a model's components are imported separately and added to a <a href="#gameobject">gameobject</a>. Sometimes used interchangeably with "mesh".
 		<ul class="seealso">
+			<li><a href="#mesh">mesh</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/3D_model">3D model</a></li>
+			<li><a href="https://gamedev.stackexchange.com/questions/38412/whats-the-difference-between-mesh-and-a-model">What's the difference between mesh and a model?</a></li>
 		</ul>
 	</dd>
 
 
 	<dt id="mesh"><dfn>mesh</dfn></dt>
-	<dd>A model made out of polygons. In Audiosurf 2 most models are meshes. In this documentation, I will tend to prefer &quot;<a href="#model">model</a>&quot; in most cases and use &quot;mesh&quot; for models created by <code><a href="skins.html#BuildMesh" class="func">BuildMesh</a></code>.
+	<dd>A 3d shape made out of <a href="#face">faces</a> (polygons), which are made out of <a href="#triangle">triangles</a>, which are made of sets of 3 <a href="#vertex">vertices</a>. Typically a <a href="#texture">texture</a> is mapped on to a mesh with <a href="#UV">UV mapping</a>.
 		<ul class="seealso">
+			<li><a href="#model">model</a></li>
+			<li><a href="#sub-mesh">sub-mesh</a></li>
+			<li><a href="engine.html#meshes">Meshes in Audiosurf 2</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Polygon_mesh">Polygon mesh</a></li>
-			<li><a href="https://docs.unity3d.com/Documentation/ScriptReference/Mesh.html">Mesh</a></li>
+			<li><a href="https://docs.unity3d.com/Documentation/ScriptReference/Mesh.html">UnityEngine.Mesh</a></li>
+		</ul>
+	</dd>
+
+
+	<dt><dfn id="sub-mesh">sub-mesh</dfn></dt>
+	<dd>The Unity engine can only apply one <a href="#material">material</a> to all faces in a <a href="#mesh">mesh</a>. When multiple materials are needed, the mesh faces must be grouped into sub-meshes. One material can be applied to each sub-mesh.
+		<ul class="seealso">
+			<li><a href="#mesh">mesh</a></li>
+			<li><a href="engine.html#meshes-sub">Sub-Meshes in Audiosurf 2</a></li>
 		</ul>
 	</dd>
 
@@ -172,7 +191,7 @@
 
 
 	<dt id="face"><dfn>face</dfn></dt>
-	<dd>A polygon in a mesh. A face is defined by referring to 3 or more <a href="#vertex">vertices</a>.
+	<dd>A polygon in a <a href="#mesh">mesh</a>. A face is defined by referring to 3 or more <a href="#vertex">vertices</a>. (Technically, it's composed of one or more <a href="#triangle">triangles</a>.)
 		<ul class="seealso">
 			<li><a href="https://en.wikipedia.org/wiki/Face_(geometry)">Face (geometry)</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Polygon_mesh#Elements_of_mesh_modeling">Polygon mesh</a></li>
@@ -181,7 +200,7 @@
 
 
 	<dt id="triangle"><dfn>triangle</dfn></dt>
-	<dd>A <a href="#face">face</a> with 3 <a href="#vertex">vertices</a>. Internally, the engine only supports triangles. The OBJ file loader automatically converts 4-point faces (quads) to pairs of triangles and ignores all other face types.</dd>
+	<dd>A <a href="#face">face</a> with 3 <a href="#vertex">vertices</a>. Internally, the engine only supports triangles. The OBJ file loader automatically converts 4-point faces (<a href="#quad">quads</a>) to pairs of triangles and ignores all other face types.</dd>
 
 
 	<dt id="quad"><dfn>quad</dfn></dt>
@@ -189,7 +208,7 @@
 
 
 	<dt id="vertex"><dfn>vertex</dfn></dt>
-	<dd>A single point in a face. In addition to its <a href="#coordinate">coordinates</a>, a vertex can have various attributes associated with it. Attributes <a href="https://docs.unity3d.com/Documentation/ScriptReference/Mesh.html">supported</a> by Audiosurf's engine, Unity: <a href="#UV">UV</a>, UV2, <a href="#normal">normal</a>, <a href="#vertex-color">vertex color</a>, <a href="#tangent">tangent</a>. The attributes are <a href="#lerp">lerped</a> across the surface of the face.
+	<dd>A single point in a <a href="#face">face</a>. In addition to its <a href="#coordinate">coordinates</a>, a vertex can have <a href="engine.html#meshes">various attributes</a> associated with it. (<a href="#UV">UV</a>, UV2, <a href="#normal">normal</a>, <a href="#vertex-color">vertex color</a>, <a href="#tangent">tangent</a>.) On the GPU, vertices and their attributes are processed by the <a href="#vertex-shader">vertex shader</a> and then the resulting attributes are <a href="#lerp">lerped</a> across the surface of the face and converted into colors by the <a href="#pixel-shader">pixel shader</a>.
 		<ul class="seealso">
 			<li><a href="https://en.wikipedia.org/wiki/Vertex_(computer_graphics)">Vertex (computer graphics)</a></li>
 			<li><a href="https://en.wikipedia.org/wiki/Vertex_(geometry)">Vertex (geometry)</a></li>
