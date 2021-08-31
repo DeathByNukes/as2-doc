@@ -271,11 +271,9 @@ span[title] {
 		text-shadow: 0px 0px 2px rgba(176,215,255,0.25);
 	}
 }
-.seealso a[href^="https://en.wikipedia.org/"]:before,
-.seealso a[href^="https://docs.unity3d.com/"]:before,
-.seealso a[href^="https://forum.unity3d.com/"]:before,
-.seealso a[href^="https://wiki.blender.org/"]:before,
-.seealso a[href^="https://www.lua.org/"]:before {
+.seealso a[href^="https://"]:before,
+.seealso a[href^="http://"]:before {
+	background-image: url(file.svg);
 	background-size: 16px;
 	content: "";
 	display: inline-block;
@@ -288,10 +286,12 @@ span[title] {
 .seealso a[href^="https://en.wikipedia.org/"]:before {
 	background-image: url(https://en.wikipedia.org/favicon.ico);
 }
+.seealso a[href^="https://unity3d.com/"]:before,
 .seealso a[href^="https://docs.unity3d.com/"]:before,
 .seealso a[href^="https://forum.unity3d.com/"]:before {
 	background-image: url(https://docs.unity3d.com/StaticFilesManual/images/favicons/favicon.png);
 }
+.seealso a[href^="https://docs.blender.org/"]:before,
 .seealso a[href^="https://wiki.blender.org/"]:before {
 	background-image: url(https://www.blender.org/wp-content/themes/bthree/assets/images/favicon.ico);
 }
