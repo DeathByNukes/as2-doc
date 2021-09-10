@@ -818,7 +818,7 @@ bool allow_mod_block_scaling = true
 	int blockcolorid = nil
 }, ...}</code></pre>
 
-<h2 id="SetBlocks-prefab"><code><strong>gameobject</strong></code> Prefabs</h2>
+<h3 id="SetBlocks-prefab"><code><strong>gameobject</strong></code> Prefabs</h3>
 <p><code><strong>colorblocks</strong></code>, <code><strong>greyblocks</strong></code>, and <code><strong>powerups</strong></code> accept a <code><strong>gameobject</strong></code> setting but only specific aspects of the object <em>and the object's children</em> are referenced when rendering the blocks:</p>
 <ul>
 	<li>Mesh. (A reference to the object's <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/MeshFilter.html">MeshFilter</a> component is stored at the time the prefab is provided and the mesh is retrieved from that during each draw call.)</li>
