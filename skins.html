@@ -284,13 +284,15 @@ float crease_strength ?= 0 <em>-- Cannot be set back to 0 once changed.</em>
 float closecam_near ?= ? <em>-- Changes the near clip plane of the close <a href="engine.html#cameras">camera</a> (<a href="glossary.html#layer">layers</a> <a href="engine.html#layer-14">14</a> and <a href="engine.html#layer-15">15</a>).</em>
 float closecam_far ?= 50
 <em>-- if <strong>airdebris_count</strong> ~= nil or <strong>airdebris_density</strong> ~= nil or <strong>airdebris_particlesize</strong> ~= nil or <strong>airdebris_fieldsize</strong> ~= nil or <strong>airdebris_layer</strong> ~= nil</em>
+	<em>-- Air debris uses the <a href="shaders.html#shader-StarFieldBlack">StarFieldBlack</a> shader with default settings and a <a href="glossary.html#render-queue">render queue</a> of <a href="engine.html#render-queue">3900</a>.</em>
 	<a href="#type-int">int</a> <strong>airdebris_count</strong> = 500 <em>-- "Sprites per chunk".</em>
 	<a href="#type-int">int</a> <strong>airdebris_density</strong> = 10 <em>-- "Sprites each ring".</em>
 	float <strong>airdebris_particlesize</strong> = 1 <em>-- "Particle scaler".</em>
-	float <strong>airdebris_fieldsize</strong> <em>-- "Cell size".</em>
-	int <strong>airdebris_layer</strong> = 11
+	float <strong>airdebris_fieldsize</strong> = 300 <em>-- "Cell size".</em>
+	int <strong>airdebris_layer</strong> = <a href="engine.html#layer-11">11</a>
 <em>-- end</em>
-string airdebris_texture ?= ? <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureThenBroadcastTo">AsyncLoadTextureThenBroadcastTo</a>(mipmaps: yes, wrapMode: Clamp (BUG))</em>
+float airdebris_flashsizescaler = 1
+string airdebris_texture ?= UnityEngine.Resources.Load("particle_ellipse.png") <em>-- <a href="engine.html#textures-loader-AsyncLoadTextureThenBroadcastTo">AsyncLoadTextureThenBroadcastTo</a>(mipmaps: yes, wrapMode: Clamp (BUG))</em>
 <a href="#type-color">color</a> <strong>watertint</strong> ?= ?
 bool widewater ?= false <em>-- Water width is 11.25 normally or 16.25 wide. When turned off, width is not changed back to 11.25 but water simulation behavior does change back.</em>
 <a href="#type-float">float</a> <strong>minwaterrandomdarkness</strong> ?= 0.5 <em>-- Individual water cubes will be tinted to a random greyscale color between this and 1.</em>
