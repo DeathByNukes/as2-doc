@@ -1181,6 +1181,91 @@ float range ?= ?
 table shadows ?= nil <em>-- this is the same as <a href="#CreateLight">CreateLight</a>{<strong>shadows</strong>}. omitting it disables shadows.</em></code></pre>
 
 
+<h2 id="AssetBundles">AssetBundles = {string,AssetBundle}</h2>
+<p>AssetBundles is a special table that contains all asset bundles in your skin or mod, by name. The asset bundle objects are <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/AssetBundle.html">UnityEngine.AssetBundle</a>, but the only thing most people need to know about that object is it contains an instance method named <a href="https://docs.unity3d.com/2017.4/Documentation/ScriptReference/AssetBundle.LoadAsset.html">LoadAsset</a> that you can use like this:</p>
+<pre class=NppLua><code><span class="sc2">-- 2022-03-02: Warning: This code is untested and was written based on theory. I am publishing this early and will do testing later.</span>
+<span class="sc11">SetRings</span><span class="sc10">{</span>
+	<span class="sc11">material</span> <span class="sc10">=</span> <span class="sc11">BuildMaterial</span><span class="sc10">{</span>
+		<span class="sc2">-- Read a shader named "Example" that was stored in the top folder of the Unity project and built into to the bundle named "examples" (filename "examples.as2assets").</span>
+		<span class="sc11">shader</span> <span class="sc10">=</span> <span class="sc11">AssetBundles.examples:LoadAsset</span><span class="sc10">(</span><span class="sc7">'assets/Example.shader'</span><span class="sc10">),</span>
+		<span class="sc11">texture</span> <span class="sc10">=</span> <span class="sc6">"ring.png"</span><span class="sc10">,</span>
+		<span class="sc11">shadersettings</span> <span class="sc10">=</span> <span class="sc10">{</span>
+			<span class="sc11">_SpinSpeed</span> <span class="sc10">=</span> <span class="sc14">math.pi</span><span class="sc10">/</span><span class="sc4">64</span><span class="sc10">,</span>
+		<span class="sc10">},</span>
+	<span class="sc10">},</span>
+<span class="sc10">}</span>
+
+<span class="sc11">SetBlocks</span><span class="sc10">{</span>
+	<span class="sc11">colorblocks</span> <span class="sc10">=</span> <span class="sc10">{</span>
+		<span class="sc11">height</span> <span class="sc10">=</span> <span class="sc4">0.65</span><span class="sc10">,</span>
+		<span class="sc11">float_on_water</span> <span class="sc10">=</span> <span class="sc5">false</span><span class="sc10">,</span>
+		<span class="sc11">gameobject</span> <span class="sc10">=</span> <span class="sc10">{</span>
+			<span class="sc2">-- Normally you would need to instantiate a prefab (see below) but the traffic system already does something like that.</span>
+			<span class="sc11">go</span> <span class="sc10">=</span> <span class="sc11">AssetBundles.examples:LoadAsset</span><span class="sc10">(</span><span class="sc7">'assets/colorblock.prefab'</span><span class="sc10">),</span>
+		<span class="sc10">},</span>
+		<span class="sc11">scale</span> <span class="sc10">=</span> <span class="sc10">{</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">},</span>
+	<span class="sc10">},</span>
+	<span class="sc11">greyblocks</span> <span class="sc10">=</span> <span class="sc10">{</span>
+		<span class="sc11">height</span> <span class="sc10">=</span> <span class="sc4">0.65</span><span class="sc10">,</span>
+		<span class="sc11">float_on_water</span> <span class="sc10">=</span> <span class="sc5">false</span><span class="sc10">,</span>
+		<span class="sc11">gameobject</span> <span class="sc10">=</span> <span class="sc10">{</span>
+			<span class="sc2">-- If you prefer, Lua lets us omit the parentheses for function calls that only take one string or table argument.</span>
+			<span class="sc11">go</span> <span class="sc10">=</span> <span class="sc11">AssetBundles.examples:LoadAsset</span> <span class="sc7">'assets/greyblock.prefab'</span><span class="sc10">,</span>
+		<span class="sc10">},</span>
+		<span class="sc11">scale</span> <span class="sc10">=</span> <span class="sc10">{</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">,</span><span class="sc4">1</span><span class="sc10">},</span>
+	<span class="sc10">},</span>
+	<span class="sc11">powerups</span> <span class="sc10">=</span> <span class="sc10">{</span>
+		<span class="sc11">powerpellet</span> <span class="sc10">=</span> <span class="sc10">{</span>
+			<span class="sc11">gameobject</span> <span class="sc10">=</span> <span class="sc10">{</span>
+				<span class="sc11">go</span> <span class="sc10">=</span> <span class="sc11">AssetBundles.examples:LoadAsset</span><span class="sc10">(</span><span class="sc7">'assets/powerpellet.prefab'</span><span class="sc10">),</span>
+			<span class="sc10">},</span>
+		<span class="sc10">}</span>
+	<span class="sc10">},</span>
+	<span class="sc11">chainspans</span> <span class="sc10">=</span> <span class="sc10">{</span>
+		<span class="sc11">hide</span> <span class="sc10">=</span> <span class="sc5">false</span><span class="sc10">,</span>
+		<span class="sc11">material</span> <span class="sc10">=</span> <span class="sc11">AssetBundles.examples:LoadAsset</span><span class="sc10">(</span><span class="sc7">'assets/chainspans.mat'</span><span class="sc10">),</span>
+	<span class="sc10">},</span>
+<span class="sc10">}</span>
+
+<span class="sc11">Object</span> <span class="sc10">=</span> <span class="sc11">import_type</span> <span class="sc7">'UnityEngine.Object'</span>
+<span class="sc11">CreateObject</span><span class="sc10">{</span>
+	<span class="sc11">name</span><span class="sc10">=</span><span class="sc6">"EndCookie"</span><span class="sc10">,</span>
+	<span class="sc11">tracknode</span><span class="sc10">=</span><span class="sc6">"end"</span><span class="sc10">,</span>
+	<span class="sc11">gameobject</span><span class="sc10">={</span>
+		<span class="sc11">go</span> <span class="sc10">=</span> <span class="sc11">Object.Instantiate</span><span class="sc10">(</span><span class="sc11">AssetBundles.examples:LoadAsset</span><span class="sc10">(</span><span class="sc7">'assets/EndCookie.prefab'</span><span class="sc10">)),</span>
+	<span class="sc10">}</span>
+<span class="sc10">}</span></code></pre>
+<p>When you try to get an asset bundle from the table the first time it will be automatically loaded and added to the table for future reuse. (This is implemented with a <a href="https://www.lua.org/manual/5.1/manual.html#2.8">metatable</a> that calls <a href="LoadAssetBundle">LoadAssetBundle</a> with the file extension appended.)</p>
+
+<h3 id=AssetBundles-building>Building Asset Bundles</h3>
+<p>(A more thorough tutorial is in progress. <a href="index.html#contact">Contact me</a> if you need help.)</p>
+<ol>
+	<li>Install the Unity 2017.4 editor.</li>
+	<li>Create a new project.</li>
+	<li>Close the project.</li>
+	<li>Move the contents of the project folder into your existing skin or mod folder so that the <code>Assets</code> folder is next to your main Lua file.</li>
+	<li>Open your skin or mod folder as a project.</li>
+	<li>
+		Create an asset folder named <code>Editor</code> and copy these files into that folder.
+		<ul>
+			<li><code>AS2AssetBundles.cs</code> from <code>Audiosurf 2\Audiosurf2_Data\SkinningAssetBundles</code></li>
+			<li><code>Ionic.Zip.dll</code> from <code>Audiosurf 2\Audiosurf2_Data\Managed</code></li>
+		</ul>
+	</li>
+	<li>After making something you want to use, assign it to an asset bundle by typing a bundle name in the bottom right corner.</li>
+	<li>
+		To build or update the bundle, right click in an empty part of the folder view or select the <code>Assets</code> menu at the top, then choose <code>Build AS2 AssetBundles</code> from the menu.
+		<br>If the <code>Build AS2 AssetBundles</code> option is missing, you failed to add the editor script correctly or you have errors in the <code>Console</code> tab that need to be addressed before it will load new scripts.
+	</li>
+</ol>
+<p>When uploading to the workshop, Audiosurf 2 has been set up to automatically exclude the cache files from Unity project folders so you shouldn't need to clean those up yourself. See the <code>.as2ignore</code> file for details.</p>
+
+
+<h2 id="LoadAssetBundle">AssetBundle LoadAssetBundle(string file)</h2>
+<p>From the official documentation: Loads the asset bundle and adds it to the global <a href="#AssetBundles">AssetBundles</a> table. The table has a metamethod that calls this function if a key doesn't exist; it is the preferred way to load asset bundles.</p>
+<p><strong>You should ignore this function and use <a href="#AssetBundles">AssetBundles</a> unless you are building your own cache system.</strong></p>
+
+
 <h2 id="BuildMaterial"><a href="#type-UnityEngine.Material">UnityEngine.Material</a> BuildMaterial(<a href="#type-material">material</a>)</h2>
 <p>Creates a material object and returns a reference to it. This allows a single material to be used on multiple objects with less waste, and allows the material to be modified during <code><a href="#Update" class=func>Update</a>()</code> via <code><a href="#UpdateMaterial" class=func>UpdateMaterial</a>{}</code> or the object's members. The object's members also give access to advanced settings.</p>
 
