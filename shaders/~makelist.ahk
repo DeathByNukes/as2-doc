@@ -1,10 +1,52 @@
+; This script takes as its input all .shader files in the same folder. (No sub-folders.)
+; It expects all of those shaders to be hardlinked from a somewhere in a different folder named "Assets".
+; To produce this input:
+; 1. Make a hardlink clone of an (extracted) Unity Assets folder. (See: Link Shell Extension)
+; 2. Flatten the folder structure, renaming files when necessary.
+; 3. Remove non-shader files.
+
 #NoEnv
 SetWorkingDir %A_ScriptDir%
 SetBatchLines -1 ; gotta go fast
 
+if (A_IsUnicode || A_PtrSize != 4)
+{
+	if A_IsCompiled
+		throw "This script is compiled with the wrong version of AHK. Please recompile it as ANSI 32-bit."
+	cmd := IsMultiInstance ? "" : "/r"
+	cmd = "%A_AhkPath%\..\AutoHotkeyA32.exe" %cmd% "%A_ScriptFullPath%"
+	Loop %0%
+		cmd .= " """ %A_Index% """"
+	Run %cmd%
+	ExitApp
+}
+
+root =
 list =
 Loop, *.shader
 {
+	hardlinks := FileHardLinks(A_LoopFileFullPath)
+	if root =
+	{
+		for i,path in hardlinks
+		if !StartsWith(path, A_WorkingDir) && (i := InStr(path, "\Assets\")) != 0
+		{
+			root := SubStr(path, 1, i+1-1)
+			break
+		}
+		if root =
+			throw "Couldn't find the assets root path."
+	}
+	shader_path =
+	for i,path in hardlinks
+	if StartsWith(path, root)
+	{
+		shader_path := SubStr(path, 1+strlen(root))
+		break
+	}
+	if shader_path =
+		throw "Couldn't find the asset path of file: " + A_LoopFileFullPath
+
 	Loop, Read, %A_LoopFileFullPath%
 	{
 		shader := RegExReplace(A_LoopReadLine, "^\s*Shader\s+""([^""]*)"" {$", "$1")
@@ -15,7 +57,7 @@ Loop, *.shader
 			SplitPath, A_LoopFileFullPath,,,, shader
 			shader .= " (blank name)"
 		}
-		list .= shader . "`r" . A_LoopFileFullPath . "`n"
+		list .= shader . "`r" . A_LoopFileFullPath . "`r" . shader_path . "`n"
 		break
 	}
 }
@@ -29,7 +71,8 @@ Loop, Parse, list, `n
 	StringSplit, split, A_LoopField, `r
 	name := split1
 	file := split2
-	output2 .= file "`t" name "`n"
+	path := split3
+	output2 .= file "`t" path "`t" name "`n"
 	FileRead, text, %file%
 
 	; get the Properties { ... } section
@@ -66,8 +109,9 @@ Loop, Parse, list, `n
 		highlights := RegExReplace(highlights, "m`n)^[ `t]{" highlights_indent "}")
 
 	other_name =
-	if StrReplace(name, "/", "_") ".shader" != file
-		other_name := " <span class=filename>(" file ")</span>"
+	;if StrReplace(name, "/", "_") ".shader" != file
+	;	other_name := " <span class=filename>(" file ")</span>"
+	other_name := " <span class=filename>(" StrReplace(path, "\", "/") ")</span>"
 
 	text =
 	(
@@ -160,6 +204,15 @@ RepeatStr(string, times)
 	return out
 }
 
+StartsWith(string, search)
+{
+	return SubStr(string, 1, StrLen(search)) == search
+}
+EndsWith(string, search)
+{
+	return SubStr(string, 1 - StrLen(search)) == search
+}
+
 LastErrorException(prefix = "", what = -2, extra = "") {
 	return Exception(prefix LastErrorString(), what, extra)
 }
@@ -197,4 +250,62 @@ TryMakeHardlink(source, dest)
 		, "Str", dest   ; LPCTSTR lpFileName,
 		, "Str", source ; LPCTSTR lpExistingFileName,
 		, "Ptr", 0  )   ; LPSECURITY_ATTRIBUTES lpSecurityAttributes (Reserved; must be NULL.)
+}
+
+; gets an array of all the file's filenames. without include_drive, the paths start with a slash
+FileHardLinks(filename, include_drive = true)
+{
+	; todo: exceptions
+	if A_IsUnicode
+		throw "FileHardLinks doesn't support Unicode"
+
+	if include_drive
+	{
+		SplitPath, filename,,,,, drive
+		if drive =
+			SplitPath, A_WorkingDir,,,,, drive
+		if drive =
+		{
+			ErrorLevel := "couldn't determine the drive"
+			return ""
+		}
+	}
+	addr_len := VarSetCapacity(LinkName, 522 + StrLen(drive)*2 ) // 2 ; 522 == (MAX_PATH + 1) * 2
+	addr := &LinkName
+	LinkName_len := addr_len
+	if include_drive
+	{
+		; put the drive at the start of the buffer and pass a slice to the apis. saves having to do string concatenations in the loop
+		if (addr_len < StrLen(drive) + 1)
+			return "" ; out of memory
+		StrPut(drive, addr, "UTF-16")
+		addr_len -= StrLen(drive)
+		addr += StrLen(drive) * 2
+	}
+	hFindStream := DllCall("FindFirstFileNameW"
+		, "WStr", filename
+		, "UInt", 0
+		, "UInt*", addr_len + 0 ; pass an expression so it can't modify the variable
+		, "Ptr", addr
+		, "Ptr")
+	if (hFindStream == 0xffffffff) ; INVALID_HANDLE_VALUE
+	{
+		ErrorLevel := LastErrorString()
+		return ""
+	}
+	out := []
+	Loop
+	{
+		out.Insert(StrGet(&LinkName, LinkName_len, "UTF-16"))
+		if !DllCall("FindNextFileNameW", "Ptr", hFindStream, "UInt*", addr_len + 0, "Ptr", addr)
+			break
+	}
+	err := A_LastError
+	DllCall("FindClose", "Ptr", hFindStream)
+	if (err != 38) ; ERROR_HANDLE_EOF
+	{
+		ErrorLevel := LastErrorString(err)
+		return ""
+	}
+	return out
 }
