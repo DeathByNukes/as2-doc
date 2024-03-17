@@ -1240,7 +1240,12 @@ table shadows ?= nil <em>-- this is the same as <a href="#CreateLight">CreateLig
 <h3 id=AssetBundles-building>Building Asset Bundles</h3>
 <p>(A more thorough tutorial is in progress. <a href="index.html#contact">Contact me</a> if you need help.)</p>
 <ol>
-	<li>Install the Unity 2017.4 editor.</li>
+	<li>
+		Install the Unity 2017.4.40 editor. (<a href="https://unity.com/releases/editor/archive"/>Unity Download Archive</a>)<br>
+		It's safest to avoid the 64-bit version since AS2 is 32-bit.<br>
+		Make sure to also install Linux and Mac support. (If using Unity Hub or Unity Download Assistant, check the boxes for Linux and Mac. If doing manual downloads, look for Linux Build Support and Mac Build Support.)<br>
+		If you might use newer versions of Unity for other purposes, you can install this old version to a different folder such as <code>C:\Program Files\UnityAS2</code>. (Installing outside of the standard <code>Program Files</code> folders is not recommended.)
+	</li>
 	<li>Create a new project.</li>
 	<li>Close the project.</li>
 	<li>Move the contents of the project folder into your existing skin or mod folder so that the <code>Assets</code> folder is next to your main Lua file.</li>
